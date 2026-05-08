@@ -25,11 +25,9 @@ Verified on this machine:
 
 Not yet verified:
 
-- Real iPhone `.mov` capture quality and recommended FPS.
-- Full COLMAP reconstruction against real captured footage.
+- Mac-compatible capture quality sufficient for 3DGS training.
 - Mac-compatible 3D Gaussian Splat training.
 - SuperSplat cleanup/export round trip with a real scene.
-- GitHub Pages deployment from a connected GitHub repository.
 
 ## Success Target
 
@@ -55,28 +53,41 @@ Status: done
 
 ### Level 1: Local Preprocessing
 
-Status: done for smoke test, pending real capture
+Status: done
 
 - `scripts/extract_frames.sh` extracts frames.
 - `scripts/check_tools.sh` detects local dependencies.
 - `colmap` is installed.
+- Real input tested with `input/IMG_8593.MOV`.
 
-Next proof:
+Result:
 
-- Run frame extraction on a real iPhone video.
-- Compare `fps=1`, `fps=2`, and `fps=4` output size and reconstruction quality.
+- Source video: 149.74s, 2160x3840, H.264, 30fps, 450MB.
+- `fps=1`: 150 frames, 34MB.
+- `fps=2`: 299 frames, 67MB before COLMAP, 150MB after COLMAP.
+- `fps=4`: 599 frames, 136MB.
+- Current recommendation: use `fps=2` as the first local reconstruction test.
 
 ### Level 2: Local COLMAP Reconstruction
 
-Status: script exists, pending real capture
+Status: runs locally, capture quality needs improvement
 
 - `scripts/run_colmap.sh` runs `colmap automatic_reconstructor` in CPU mode.
+- The script uses a capture-local `HOME`/cache to avoid writing COLMAP cache files under the user's home directory.
+- The script uses `data_type individual` to avoid COLMAP's vocabulary-tree download path.
+
+Result from `img-8593-fps2`:
+
+- Runtime: 101.46s wall time.
+- Sparse output exists under `captures/img-8593-fps2/colmap/sparse`.
+- Model `sparse/0`: 8 registered images, 1160 points, 0.829px mean reprojection error.
+- Model `sparse/1`: 11 registered images, 823 points, 0.885px mean reprojection error.
+- This is not enough for a strong 3DGS training run. The video likely contains long low-feature or discontinuous sections.
 
 Next proof:
 
-- Run COLMAP on real extracted iPhone frames.
-- Confirm sparse model output exists under `captures/<name>/colmap`.
-- Record expected runtime and disk usage for M4 / 16GB RAM.
+- Create or select a tighter capture segment with continuous orbit motion and textured subject/background.
+- Re-run extraction and COLMAP until one model registers a useful share of frames.
 
 ### Level 3: 3DGS Training
 
@@ -137,18 +148,27 @@ Next proof:
 
 ### P0: Real iPhone Capture Test
 
-- [ ] Add one iPhone `.mov` file under `input/`.
-- [ ] Run `scripts/extract_frames.sh input/<video>.mov <capture-name> 2`.
-- [ ] Count extracted frames.
-- [ ] Check disk usage under `captures/<capture-name>`.
-- [ ] Adjust README if the recommended FPS changes.
+- [x] Add one iPhone `.mov` file under `input/`.
+- [x] Run `scripts/extract_frames.sh input/<video>.mov <capture-name> 2`.
+- [x] Count extracted frames.
+- [x] Check disk usage under `captures/<capture-name>`.
+- [x] Adjust README if the recommended FPS changes.
 
 ### P0: COLMAP Real Capture Test
 
-- [ ] Run `scripts/run_colmap.sh <capture-name>`.
-- [ ] Confirm COLMAP creates sparse reconstruction output.
-- [ ] Record runtime on this M4 / 16GB Mac.
-- [ ] If reconstruction fails, adjust capture guidance before changing code.
+- [x] Run `scripts/run_colmap.sh <capture-name>`.
+- [x] Confirm COLMAP creates sparse reconstruction output.
+- [x] Record runtime on this M4 / 16GB Mac.
+- [x] If reconstruction fails, adjust capture guidance before changing code.
+
+### P0: Improve Capture Input
+
+- [ ] Capture a shorter 30-60s video with continuous orbit around one subject.
+- [ ] Keep the subject and textured background visible throughout the shot.
+- [ ] Avoid pointing at blank walls, sky, glossy surfaces, or motion-blurred sections.
+- [ ] Re-run `scripts/extract_frames.sh input/<video>.mov <capture-name> 2`.
+- [ ] Re-run `scripts/run_colmap.sh <capture-name>`.
+- [ ] Confirm the largest sparse model registers at least 50 frames before attempting 3DGS training.
 
 ### P1: Pick the Mac Training Path
 
