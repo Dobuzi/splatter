@@ -89,6 +89,12 @@ http://localhost:8080
 
 The workflow in `.github/workflows/deploy-pages.yml` deploys the `public/` directory on pushes to `main` or `master`.
 
+Published URL:
+
+```text
+https://dobuzi.github.io/splatter/
+```
+
 In GitHub repository settings:
 
 1. Open Settings.

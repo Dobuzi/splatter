@@ -130,9 +130,10 @@ Next proof:
 
 ### P0: Clean Repository State
 
-- [ ] Decide whether to keep `docs/superpowers/*` in the repo.
-- [ ] Remove accidental `.DS_Store` before staging.
-- [ ] Create the first commit once the initial scaffold is accepted.
+- [x] Decide whether to keep `docs/superpowers/*` in the repo.
+  Keep the design and implementation plan for now because they document the current scaffold decisions.
+- [x] Remove accidental `.DS_Store` before staging.
+- [x] Create the first commit once the initial scaffold is accepted.
 
 ### P0: Real iPhone Capture Test
 
@@ -190,11 +191,11 @@ Next proof:
 
 ### P2: GitHub Pages End-to-End
 
-- [ ] Create or connect a GitHub repository.
-- [ ] Push the scaffold.
-- [ ] Enable GitHub Pages through Actions.
-- [ ] Confirm the deployed URL.
-- [ ] Add the deployed URL to README.
+- [x] Create or connect a GitHub repository.
+- [x] Push the scaffold.
+- [x] Enable GitHub Pages through Actions.
+- [x] Confirm the deployed URL.
+- [x] Add the deployed URL to README.
 
 ## Current Commands
 
@@ -227,4 +228,3 @@ Preview:
 ```sh
 npm run serve
 ```
-
