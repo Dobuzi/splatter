@@ -27,15 +27,41 @@ target_name=$(basename "$scene_file")
 target_path="public/assets/$target_name"
 cp "$scene_file" "$target_path"
 
+case "$target_name" in
+  *.sog) format="SOG" ;;
+  *.compressed.ply) format="Compressed PLY" ;;
+  *.ply) format="PLY" ;;
+esac
+
+bytes=$(wc -c < "$target_path" | tr -d ' ')
+file_size=$(awk -v bytes="$bytes" 'BEGIN {
+  if (bytes >= 1048576) {
+    printf "%.2f MB", bytes / 1048576
+  } else if (bytes >= 1024) {
+    printf "%.1f KB", bytes / 1024
+  } else {
+    printf "%d B", bytes
+  }
+}')
+
 safe_title="${title//\\/\\\\}"
 safe_title="${safe_title//\"/\\\"}"
 safe_target="${target_name//\\/\\\\}"
 safe_target="${safe_target//\"/\\\"}"
+safe_format="${format//\\/\\\\}"
+safe_format="${safe_format//\"/\\\"}"
+safe_file_size="${file_size//\\/\\\\}"
+safe_file_size="${safe_file_size//\"/\\\"}"
 
 cat > public/scene.json <<JSON
 {
   "title": "$safe_title",
-  "assetUrl": "assets/$safe_target"
+  "assetUrl": "assets/$safe_target",
+  "format": "$safe_format",
+  "fileSize": "$safe_file_size",
+  "camera": {
+    "position": [0, 0, 3]
+  }
 }
 JSON
 

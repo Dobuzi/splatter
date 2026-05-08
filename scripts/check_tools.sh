@@ -14,6 +14,10 @@ for tool in "${required[@]}"; do
 done
 
 for tool in "${optional[@]}"; do
+  if [[ "$tool" == "splat-transform" && -x node_modules/.bin/splat-transform ]]; then
+    continue
+  fi
+
   if ! command -v "$tool" >/dev/null 2>&1; then
     missing_optional+=("$tool")
   fi

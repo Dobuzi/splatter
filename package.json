@@ -1,6 +1,9 @@
 {
   "scripts": {
-    "check": "zsh -n scripts/*.sh",
+    "check": "zsh -n scripts/*.sh && node --check public/main.js",
     "serve": "python3 -m http.server 8080 --directory public"
+  },
+  "devDependencies": {
+    "@playcanvas/splat-transform": "^2.0.6"
   }
 }

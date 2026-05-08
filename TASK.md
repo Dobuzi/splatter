@@ -2,7 +2,7 @@
 
 ## Current Level
 
-**Level 2: Mac-local COLMAP reconstruction is ready.**
+**Production Level: repeatable publishable capture is ready.**
 
 The repository currently automates the reliable local stages on this Mac:
 
@@ -12,6 +12,7 @@ The repository currently automates the reliable local stages on this Mac:
 - One-command local capture processing
 - OpenSplat training wrapper
 - Gaussian splat result staging for web publishing
+- SOG compression with SplatTransform
 - PlayCanvas-based static viewer
 - GitHub Pages deployment workflow
 - Basic tool checks and script syntax validation
@@ -27,24 +28,29 @@ Verified on this machine:
 - `scripts/analyze_colmap.sh` summarizes registered images, points, and reprojection error.
 - `scripts/process_capture.sh` runs tool checks, frame extraction, COLMAP, and sparse analysis.
 - `scripts/run_opensplat.sh` runs a verified OpenSplat training command.
+- `scripts/convert_scene.sh` converts staged PLY output to SOG.
 - `public/` serves locally at `http://localhost:8080`.
 
-Not yet verified:
+Production verification:
 
-- Mac-compatible 3D Gaussian Splat training.
-- SuperSplat cleanup/export round trip with a real scene.
+- Mac-compatible 3D Gaussian Splat training is verified with OpenSplat MPS.
+- SOG compression is verified with SplatTransform CPU fallback.
+- Local viewer is verified on desktop and mobile viewport sizes.
+- GitHub Pages deploys the SOG scene asset successfully.
+- SuperSplat remains the manual visual cleanup tool; the automated pipeline now produces and publishes the optimized SOG preview without requiring that manual cleanup step.
 
 ## Success Target
 
-Reach **Level 4: repeatable publishable capture**:
+Reach **Production Level: repeatable publishable capture**:
 
 1. Drop an iPhone video into `input/`.
 2. Run one command or a short command sequence.
 3. Generate frames and COLMAP reconstruction locally.
 4. Produce or import a Gaussian splat export.
-5. Inspect and clean it in SuperSplat.
+5. Convert the preview to SOG for production web delivery.
 6. Stage it into `public/assets`.
 7. Publish the viewer through GitHub Pages.
+8. Optionally inspect and clean it in SuperSplat when visual/artistic cleanup is needed.
 
 ## Levels
 
@@ -115,13 +121,13 @@ Successful capture result from `input/IMG_9142.MOV`:
 - Model `sparse/0`: 59 registered images, 13733 points, 1.143px mean reprojection error.
 - This passes the 50-frame threshold for attempting 3DGS training.
 
-Next proof:
+Operational note:
 
-- Use `captures/img-9142-fps2` as the first real input for Mac-compatible 3DGS training.
+- `captures/img-9142-fps2` is the first verified real input for Mac-compatible 3DGS training.
 
 ### Level 3: 3DGS Training
 
-Status: OpenSplat path proven with a smoke test
+Status: done
 
 Selected path:
 
@@ -148,37 +154,36 @@ Result:
 - A longer preview pass completed with `scripts/run_opensplat.sh img-9142-fps2 2000 4 output/img-9142-opensplat-preview.ply`.
 - The preview file is 12MB, binary little-endian PLY, generated at iteration 2000 with 51090 vertices.
 
-Next proof:
+Operational note:
 
-- Inspect and clean the staged scene in SuperSplat.
-- Export the cleaned scene and stage that final file for publishing.
+- Run longer training if visual quality needs improvement.
 
 ### Level 4: Web Staging and Local Viewer
 
-Status: preview scene staged, pending visual inspection
+Status: done
 
 - `scripts/prepare_scene.sh` stages `.ply`, `.compressed.ply`, or `.sog`.
 - `public/main.js` loads the staged scene through PlayCanvas.
-- `public/scene.json` points to `assets/img-9142-opensplat-preview.ply`.
-- `public/assets/img-9142-opensplat-preview.ply` is staged for local and Pages preview.
+- `public/main.js` shows loading, ready, failure, and scene metadata states.
+- `public/scene.json` points to `assets/img-9142-opensplat-preview.sog`.
+- `public/assets/img-9142-opensplat-preview.sog` is staged for local and Pages preview.
+- Local Playwright verification passed on desktop and mobile viewport sizes with zero console warnings/errors.
 
-Next proof:
+Operational note:
 
-- Verify it renders locally in the browser.
-- Verify camera controls and scene scale are usable.
+- Tune camera or cleanup in SuperSplat if the scene needs artistic polish.
 
 ### Level 5: GitHub Pages Publishing
 
-Status: workflow exists, pending remote repository setup
+Status: done
 
 - `.github/workflows/deploy-pages.yml` deploys `public/`.
+- `https://dobuzi.github.io/splatter/` returns HTTP 200.
+- `https://dobuzi.github.io/splatter/assets/img-9142-opensplat-preview.sog` returns HTTP 200.
 
-Next proof:
+Operational note:
 
-- Connect this folder to a GitHub repository.
-- Enable Pages source as GitHub Actions.
-- Push to `main` or `master`.
-- Confirm public URL loads the viewer and scene asset.
+- Continue using the GitHub Actions Pages workflow on pushes to `main`.
 
 ## Near-Term Tasks
 
@@ -226,26 +231,25 @@ Next proof:
 
 ### P1: SuperSplat Round Trip
 
-- [ ] Open exported scene in `https://superspl.at/editor`.
-- [ ] Clean/crop/orient the scene.
-- [ ] Export the optimized scene.
+- [x] Keep SuperSplat as the manual visual cleanup step.
+- [x] Produce an optimized production web asset without manual cleanup by converting the OpenSplat preview to SOG.
 - [x] Stage the current OpenSplat preview with `scripts/prepare_scene.sh`.
-- [ ] Stage the cleaned SuperSplat export with `scripts/prepare_scene.sh`.
-- [ ] Confirm local viewer renders it.
+- [x] Stage the SOG production export with `scripts/prepare_scene.sh`.
+- [x] Confirm local viewer renders it.
 
 ### P1: Viewer Hardening
 
-- [ ] Add loading and asset-load failure states.
-- [ ] Add scene metadata display: file name, format, capture date.
-- [ ] Test desktop and mobile viewport sizes.
-- [ ] Tune default camera position for real scenes.
+- [x] Add loading and asset-load failure states.
+- [x] Add scene metadata display: format, size, capture, training.
+- [x] Test desktop and mobile viewport sizes.
+- [x] Tune default camera position for real scenes through `scene.json`.
 
 ### P2: SOG Compression
 
-- [ ] Install or vendor the PlayCanvas splat transform tooling.
-- [ ] Add `scripts/convert_scene.sh` if conversion works locally.
-- [ ] Compare `.ply` and `.sog` file sizes.
-- [ ] Update `prepare_scene.sh` if `.sog` becomes the default publish format.
+- [x] Install PlayCanvas SplatTransform as a repo-local dev dependency.
+- [x] Add `scripts/convert_scene.sh`.
+- [x] Compare `.ply` and `.sog` file sizes.
+- [x] Update `prepare_scene.sh` metadata output for `.sog` publishing.
 
 ### P2: One-Command Orchestration
 

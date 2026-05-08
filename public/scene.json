@@ -1,4 +1,11 @@
 {
   "title": "IMG 9142 OpenSplat Preview",
-  "assetUrl": "assets/img-9142-opensplat-preview.ply"
+  "assetUrl": "assets/img-9142-opensplat-preview.sog",
+  "format": "SOG",
+  "fileSize": "1.19 MB",
+  "capture": "IMG_9142, 30.43s, 59 COLMAP images",
+  "training": "OpenSplat MPS, 2000 iterations",
+  "camera": {
+    "position": [0, 0, 3]
+  }
 }

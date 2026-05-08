@@ -7,9 +7,10 @@ Mac-first pipeline for:
 3. COLMAP reconstruction
 4. Gaussian splat export staging
 5. SuperSplat inspection
-6. GitHub Pages publishing
+6. SOG compression
+7. GitHub Pages publishing
 
-This repository automates the parts that are reliable on an Apple Silicon Mac. The 3DGS training step is intentionally pluggable because most open 3DGS trainers are CUDA-first, while this Mac uses Apple Silicon/Metal.
+This repository automates the full Mac-local path that has been verified on this Apple Silicon Mac: frame extraction, COLMAP, OpenSplat MPS training, SOG compression, PlayCanvas preview, and GitHub Pages publishing.
 
 ## Requirements
 
@@ -34,6 +35,12 @@ Install COLMAP if needed:
 
 ```sh
 brew install colmap
+```
+
+Install project dependencies:
+
+```sh
+npm install
 ```
 
 ## Capture Workflow
@@ -116,11 +123,19 @@ Run a longer preview training pass:
 scripts/run_opensplat.sh img-9142-fps2 2000 4 output/img-9142-opensplat-preview.ply
 ```
 
-The current staged preview scene was generated with that command and staged with:
+Convert the preview PLY to production SOG:
 
 ```sh
-scripts/prepare_scene.sh output/img-9142-opensplat-preview.ply "IMG 9142 OpenSplat Preview"
+scripts/convert_scene.sh output/img-9142-opensplat-preview.ply output/img-9142-opensplat-preview.sog
 ```
+
+The current staged production scene was generated with that command and staged with:
+
+```sh
+scripts/prepare_scene.sh output/img-9142-opensplat-preview.sog "IMG 9142 OpenSplat Preview"
+```
+
+The SOG asset is about 1.19MB, compared with the 12.67MB PLY preview.
 
 For browser sharing, inspect and clean the exported file in SuperSplat:
 
@@ -167,4 +182,4 @@ In GitHub repository settings:
 
 GitHub-hosted GPU runners are paid larger runners. Standard free GitHub-hosted runners do not provide CUDA GPUs. For free processing, use this Mac where possible or connect your own GPU machine as a self-hosted runner.
 
-On this Mac, frame extraction and COLMAP CPU reconstruction are practical. Full 3DGS training depends on a Metal-compatible trainer or a manual export from a Mac app.
+On this Mac, frame extraction, COLMAP CPU reconstruction, OpenSplat MPS preview training, and SOG compression are practical. GitHub-hosted runners are still used only for static Pages deployment, not GPU training.

@@ -64,7 +64,7 @@ code {
   display: flex;
   align-items: center;
   gap: 14px;
-  max-width: 720px;
+  max-width: 860px;
   padding: 10px 12px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
@@ -77,8 +77,30 @@ code {
   color: #ffffff;
 }
 
-#hud span {
+.hud-main {
   flex: 1;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+#metadata,
+#status {
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+#metadata {
+  overflow: hidden;
+  color: #aeb8c7;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#status {
+  flex: 0 0 auto;
+  color: #dce7f6;
 }
 
 @media (max-width: 620px) {
@@ -86,5 +108,13 @@ code {
     align-items: flex-start;
     flex-direction: column;
     gap: 6px;
+  }
+
+  .hud-main {
+    width: 100%;
+  }
+
+  #metadata {
+    white-space: normal;
   }
 }

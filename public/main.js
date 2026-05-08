@@ -10,24 +10,63 @@ import {
 
 const empty = document.querySelector('#empty');
 const title = document.querySelector('#title');
+const status = document.querySelector('#status');
+const metadata = document.querySelector('#metadata');
 
-async function loadSceneConfig() {
-  const response = await fetch('scene.json', { cache: 'no-store' });
-  if (!response.ok) {
-    return null;
-  }
-
-  const config = await response.json();
-  if (!config.assetUrl) {
-    return null;
-  }
-
-  return config;
+function setStatus(message) {
+  status.textContent = message;
 }
 
-function showEmpty() {
+function setMetadata(config) {
+  const parts = [
+    config.format,
+    config.fileSize,
+    config.capture,
+    config.training
+  ].filter(Boolean);
+
+  metadata.textContent = parts.join(' · ');
+  metadata.hidden = parts.length === 0;
+}
+
+async function loadSceneConfig() {
+  try {
+    const response = await fetch('scene.json', { cache: 'no-store' });
+    if (!response.ok) {
+      return null;
+    }
+
+    const config = await response.json();
+    if (!config.assetUrl) {
+      return null;
+    }
+
+    return config;
+  } catch {
+    return null;
+  }
+}
+
+function showEmpty(message = 'No scene staged') {
   empty.hidden = false;
+  empty.querySelector('h1').textContent = message;
   title.textContent = 'Gaussian Splat Viewer';
+  setStatus('Waiting for scene');
+  metadata.hidden = true;
+}
+
+function createAssetLoader(assets, app) {
+  return new Promise((resolve, reject) => {
+    const loader = new AssetListLoader(assets, app.assets);
+    loader.load((failed) => {
+      if (failed && failed.length > 0) {
+        reject(new Error(`Failed to load ${failed.map((asset) => asset.name).join(', ')}`));
+        return;
+      }
+
+      resolve();
+    });
+  });
 }
 
 async function boot() {
@@ -38,6 +77,8 @@ async function boot() {
   }
 
   title.textContent = config.title || 'Gaussian Splat Viewer';
+  setStatus('Loading scene');
+  setMetadata(config);
 
   const canvas = document.createElement('canvas');
   document.body.appendChild(canvas);
@@ -64,11 +105,11 @@ async function boot() {
     })
   ];
 
-  const loader = new AssetListLoader(assets, app.assets);
-  await new Promise((resolve) => loader.load(resolve));
+  await createAssetLoader(assets, app);
 
   const camera = new Entity('Camera');
-  camera.setPosition(0, 0, 3);
+  const cameraPosition = config.camera?.position || [0, 0, 3];
+  camera.setPosition(cameraPosition[0], cameraPosition[1], cameraPosition[2]);
   camera.addComponent('camera');
   camera.addComponent('script');
   camera.script.create('cameraControls');
@@ -78,9 +119,10 @@ async function boot() {
   splat.setPosition(0, 0, 0);
   splat.addComponent('gsplat', { asset: assets[1] });
   app.root.addChild(splat);
+  setStatus('Ready');
 }
 
 boot().catch((error) => {
   console.error(error);
-  showEmpty();
+  showEmpty('Scene failed to load');
 });
