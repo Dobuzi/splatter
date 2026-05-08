@@ -1,0 +1,98 @@
+#!/usr/bin/env zsh
+set -euo pipefail
+
+version=$(node -e 'const pkg = require("./package.json"); console.log(pkg.version || "0.0.0");')
+
+show_help() {
+  cat <<'USAGE'
+splatter - local iPhone video to Gaussian Splat publish pipeline
+
+Usage:
+  splatter <command> [args]
+  splatter --help
+  splatter --version
+
+Commands:
+  check                                      Check local tools
+  validate                                   Validate deployable public viewer
+  capture <video> <name> [fps]               Extract frames, run COLMAP, analyze
+  analyze <name>                             Analyze COLMAP sparse models
+  train <name> [iters] [downscale] [ply]     Run OpenSplat
+  convert <input> [output]                   Convert scene formats, defaults to SOG
+  stage <scene> [title]                      Stage scene into public/assets
+  publish <video> <name> [fps] [iters] [downscale] [title] [stage|no-stage]
+                                             Run capture/train/convert/stage pipeline
+  serve                                      Serve public viewer on localhost:8080
+
+Examples:
+  splatter publish input/capture.mov my-capture 2 2000 4 "My Capture"
+  splatter publish input/IMG_9142.MOV img-9142-fps2 2 5 4 "Smoke" no-stage
+USAGE
+}
+
+if (( $# == 0 )); then
+  show_help
+  exit 0
+fi
+
+case "$1" in
+  -h|--help|help)
+    show_help
+    ;;
+  -v|--version|version)
+    echo "$version"
+    ;;
+  check)
+    shift
+    if (( $# != 0 )); then
+      echo "Usage: splatter check" >&2
+      exit 1
+    fi
+    scripts/check_tools.sh
+    ;;
+  validate)
+    shift
+    if (( $# != 0 )); then
+      echo "Usage: splatter validate" >&2
+      exit 1
+    fi
+    scripts/validate_public.sh
+    ;;
+  capture)
+    shift
+    scripts/process_capture.sh "$@"
+    ;;
+  analyze)
+    shift
+    scripts/analyze_colmap.sh "$@"
+    ;;
+  train)
+    shift
+    scripts/run_opensplat.sh "$@"
+    ;;
+  convert)
+    shift
+    scripts/convert_scene.sh "$@"
+    ;;
+  stage)
+    shift
+    scripts/prepare_scene.sh "$@"
+    ;;
+  publish)
+    shift
+    scripts/process_publish.sh "$@"
+    ;;
+  serve)
+    shift
+    if (( $# != 0 )); then
+      echo "Usage: splatter serve" >&2
+      exit 1
+    fi
+    npm run serve
+    ;;
+  *)
+    echo "Unknown command: $1" >&2
+    echo "Run 'splatter --help' for usage." >&2
+    exit 1
+    ;;
+esac

@@ -43,6 +43,19 @@ Install project dependencies:
 npm install
 ```
 
+Run the CLI directly:
+
+```sh
+bin/splatter --help
+```
+
+Or link it locally as `splatter`:
+
+```sh
+npm link
+splatter --help
+```
+
 ## Capture Workflow
 
 Place your iPhone video under `input/`, then extract frames:
@@ -72,7 +85,7 @@ scripts/process_capture.sh input/capture.mov my-capture 2
 Run the full local publish pipeline in one command:
 
 ```sh
-scripts/process_publish.sh input/capture.mov my-capture 2 2000 4 "My Capture"
+bin/splatter publish input/capture.mov my-capture 2 2000 4 "My Capture"
 ```
 
 If you already have an exported splat file, pass it as the fourth argument to stage it after COLMAP analysis:
@@ -146,7 +159,7 @@ The SOG asset is about 1.19MB, compared with the 12.67MB PLY preview.
 For a non-staging smoke test, use:
 
 ```sh
-scripts/process_publish.sh input/IMG_9142.MOV img-9142-fps2 2 5 4 "IMG 9142 Smoke" no-stage
+bin/splatter publish input/IMG_9142.MOV img-9142-fps2 2 5 4 "IMG 9142 Smoke" no-stage
 ```
 
 For browser sharing, inspect and clean the exported file in SuperSplat:

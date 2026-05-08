@@ -1,6 +1,13 @@
 {
+  "name": "splatter",
+  "version": "0.1.0",
+  "description": "Mac-local iPhone video to Gaussian Splat GitHub Pages pipeline",
+  "private": true,
+  "bin": {
+    "splatter": "bin/splatter"
+  },
   "scripts": {
-    "check": "zsh -n scripts/*.sh && node --check public/main.js && scripts/validate_public.sh",
+    "check": "zsh -n scripts/*.sh bin/splatter && node --check public/main.js && scripts/validate_public.sh && scripts/test_cli.sh",
     "serve": "python3 -m http.server 8080 --directory public"
   },
   "devDependencies": {

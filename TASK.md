@@ -2,7 +2,15 @@
 
 ## Current Level
 
-**Production Level: repeatable publishable capture is ready.**
+**Production Pipeline Level: repeatable publishable capture is ready.**
+
+CLI tool assessment:
+
+- Current status: deployable local pipeline with a first stable CLI entrypoint.
+- The repo can publish a capture end-to-end on this Mac with `scripts/process_publish.sh`.
+- `bin/splatter` now provides a single command surface for the existing pipeline scripts.
+- To call it a fully deployable CLI tool, it still needs broader documentation, release policy, and support matrix.
+- Target CLI name: `splatter`.
 
 The repository currently automates the reliable local stages on this Mac:
 
@@ -18,6 +26,18 @@ The repository currently automates the reliable local stages on this Mac:
 - GitHub Pages deployment workflow
 - CI validation before Pages deployment
 - Basic tool checks and script syntax validation
+
+CLI-tool complete:
+
+- Single `splatter` executable entrypoint via `bin/splatter`.
+- `splatter --help` and `splatter --version`.
+- Subcommands for `check`, `capture`, `analyze`, `train`, `convert`, `stage`, `publish`, `validate`, and `serve`.
+- CLI contract smoke tests through `scripts/test_cli.sh`.
+
+Not yet CLI-tool complete:
+
+- Install path documented for local use, for example `npm link` or `./bin/splatter`.
+- Release/versioning policy.
 
 Verified on this machine:
 
@@ -57,6 +77,15 @@ Reach **Production Level: repeatable publishable capture**:
 6. Stage it into `public/assets`.
 7. Publish the viewer through GitHub Pages.
 8. Optionally inspect and clean it in SuperSplat when visual/artistic cleanup is needed.
+
+Reach **Deployable CLI Tool Level**:
+
+1. Install or run one command named `splatter`.
+2. Show deterministic help/version output.
+3. Run each production pipeline stage through documented subcommands.
+4. Keep existing script internals reusable for direct debugging.
+5. Validate CLI command behavior in CI without requiring heavy COLMAP/OpenSplat jobs.
+6. Document dependencies, install steps, examples, and supported Mac-only scope.
 
 ## Levels
 
@@ -192,6 +221,45 @@ Operational note:
 - Continue using the GitHub Actions Pages workflow on pushes to `main`.
 
 ## Near-Term Tasks
+
+### P0: CLI Tool Packaging
+
+- [x] Add `bin/splatter` as the stable CLI entrypoint.
+- [x] Add package metadata: `name`, `version`, `bin`, and description.
+- [x] Implement `splatter --help`.
+- [x] Implement `splatter --version`.
+- [x] Add subcommands that delegate to existing scripts:
+  `check`, `capture`, `analyze`, `train`, `convert`, `stage`, `publish`, `validate`, `serve`.
+- [x] Keep backward-compatible `scripts/*.sh` commands.
+- [x] Add `npm link` or local execution instructions.
+
+### P0: CLI Contract Tests
+
+- [x] Add a lightweight CLI smoke test script.
+- [x] Verify `splatter --help`.
+- [x] Verify `splatter --version`.
+- [x] Verify invalid command rejects with non-zero exit.
+- [x] Verify `splatter publish` rejects missing required input with non-zero exit.
+- [x] Verify `splatter validate` succeeds against the staged public viewer.
+- [x] Run CLI contract tests in `npm run check`.
+- [x] Run CLI contract tests in GitHub Actions before Pages deployment.
+
+### P1: CLI Documentation
+
+- [ ] Add README quickstart using `splatter`.
+- [ ] Document Mac-only dependency requirements.
+- [ ] Document full publish command for a new video.
+- [ ] Document smoke-test command that does not overwrite the staged production scene.
+- [ ] Document expected outputs and ignored working directories.
+- [ ] Document known limits: local MPS requirement, SuperSplat manual cleanup, GitHub Actions no GPU training.
+
+### P1: Release Readiness
+
+- [ ] Add versioning policy.
+- [ ] Add changelog or release notes section.
+- [ ] Add license decision.
+- [ ] Add support matrix for macOS / Apple Silicon / COLMAP / OpenSplat.
+- [ ] Decide whether `.local/OpenSplat` stays external or becomes a documented bootstrap command.
 
 ### P0: Clean Repository State
 
