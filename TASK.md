@@ -84,9 +84,19 @@ Result from `img-8593-fps2`:
 - Model `sparse/1`: 11 registered images, 823 points, 0.885px mean reprojection error.
 - This is not enough for a strong 3DGS training run. The video likely contains long low-feature or discontinuous sections.
 
+Segment retest from `input/IMG_8593.MOV`:
+
+- `img-8593-000-030-fps4`: first 30s, 120 frames, COLMAP runtime 149.55s wall time.
+- `img-8593-000-030-fps4/sparse/0`: 23 registered images, 3119 points, 0.825px mean reprojection error.
+- `img-8593-085-115-fps4`: 85-115s segment, 120 frames, COLMAP runtime 181.82s wall time.
+- `img-8593-085-115-fps4/sparse/0`: 10 registered images, 5052 points, 0.491px mean reprojection error.
+- `img-8593-085-115-fps4/sparse/1`: 15 registered images, 2228 points, 0.831px mean reprojection error.
+- `img-8593-085-115-fps4/sparse/2`: 11 registered images, 1829 points, 0.805px mean reprojection error.
+- Best result improved from 11 to 23 registered images, but still misses the 50-frame threshold for 3DGS training.
+
 Next proof:
 
-- Create or select a tighter capture segment with continuous orbit motion and textured subject/background.
+- Capture a tighter source video with continuous orbit motion and textured subject/background.
 - Re-run extraction and COLMAP until one model registers a useful share of frames.
 
 ### Level 3: 3DGS Training
@@ -166,6 +176,9 @@ Next proof:
 - [ ] Capture a shorter 30-60s video with continuous orbit around one subject.
 - [ ] Keep the subject and textured background visible throughout the shot.
 - [ ] Avoid pointing at blank walls, sky, glossy surfaces, or motion-blurred sections.
+- [x] Select tighter 30s segments from the existing `input/IMG_8593.MOV` as a fallback test.
+- [x] Re-run extraction and COLMAP on existing-video segments.
+- [x] Record that the best existing-video segment reached 23 registered frames.
 - [ ] Re-run `scripts/extract_frames.sh input/<video>.mov <capture-name> 2`.
 - [ ] Re-run `scripts/run_colmap.sh <capture-name>`.
 - [ ] Confirm the largest sparse model registers at least 50 frames before attempting 3DGS training.
