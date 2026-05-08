@@ -16,6 +16,7 @@ The repository currently automates the reliable local stages on this Mac:
 - SOG compression with SplatTransform
 - PlayCanvas-based static viewer
 - GitHub Pages deployment workflow
+- CI validation before Pages deployment
 - Basic tool checks and script syntax validation
 
 Verified on this machine:
@@ -31,6 +32,7 @@ Verified on this machine:
 - `scripts/run_opensplat.sh` runs a verified OpenSplat training command.
 - `scripts/convert_scene.sh` converts staged PLY output to SOG.
 - `scripts/process_publish.sh` runs capture reuse/processing, OpenSplat, SOG conversion, and optional staging.
+- `scripts/validate_public.sh` validates `public/scene.json`, the staged asset path, format, and asset size.
 - `public/` serves locally at `http://localhost:8080`.
 
 Production verification:
@@ -38,6 +40,7 @@ Production verification:
 - Mac-compatible 3D Gaussian Splat training is verified with OpenSplat MPS.
 - SOG compression is verified with SplatTransform CPU fallback.
 - One-command production publish is verified in `no-stage` smoke mode.
+- CI blocks Pages deployment if the viewer manifest or scene asset is invalid.
 - Local viewer is verified on desktop and mobile viewport sizes.
 - GitHub Pages deploys the SOG scene asset successfully.
 - SuperSplat remains the manual visual cleanup tool; the automated pipeline now produces and publishes the optimized SOG preview without requiring that manual cleanup step.
@@ -274,12 +277,26 @@ Operational note:
 - [x] Confirm the deployed URL.
 - [x] Add the deployed URL to README.
 
+### P2: Production CI Gate
+
+- [x] Add `scripts/validate_public.sh`.
+- [x] Validate `public/scene.json` is parseable and points to a local asset.
+- [x] Validate staged asset exists, is non-empty, uses a supported format, and stays under the production size limit.
+- [x] Add `npm run check` to the GitHub Pages workflow before artifact upload.
+- [x] Verify the CI gate locally.
+
 ## Current Commands
 
 Check tools:
 
 ```sh
 scripts/check_tools.sh
+```
+
+Validate deployable public viewer:
+
+```sh
+scripts/validate_public.sh
 ```
 
 Extract frames:

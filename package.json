@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "check": "zsh -n scripts/*.sh && node --check public/main.js",
+    "check": "zsh -n scripts/*.sh && node --check public/main.js && scripts/validate_public.sh",
     "serve": "python3 -m http.server 8080 --directory public"
   },
   "devDependencies": {
