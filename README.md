@@ -50,6 +50,24 @@ Run COLMAP reconstruction:
 scripts/run_colmap.sh my-capture
 ```
 
+Analyze COLMAP reconstruction quality:
+
+```sh
+scripts/analyze_colmap.sh my-capture
+```
+
+Or run local preprocessing and COLMAP in one command:
+
+```sh
+scripts/process_capture.sh input/capture.mov my-capture 2
+```
+
+If you already have an exported splat file, pass it as the fourth argument to stage it after COLMAP analysis:
+
+```sh
+scripts/process_capture.sh input/capture.mov my-capture 2 output/scene.ply
+```
+
 This writes:
 
 - `captures/my-capture/images`

@@ -8,6 +8,8 @@ The repository currently automates the reliable local stages on this Mac:
 
 - iPhone/video frame extraction with `ffmpeg`
 - COLMAP CPU reconstruction entrypoint
+- COLMAP sparse model analysis
+- One-command local capture processing
 - Gaussian splat result staging for web publishing
 - PlayCanvas-based static viewer
 - GitHub Pages deployment workflow
@@ -21,6 +23,8 @@ Verified on this machine:
 - `scripts/check_tools.sh` runs successfully.
 - `npm run check` passes shell syntax validation.
 - `scripts/extract_frames.sh` extracted frames from a generated smoke-test video.
+- `scripts/analyze_colmap.sh` summarizes registered images, points, and reprojection error.
+- `scripts/process_capture.sh` runs tool checks, frame extraction, COLMAP, and sparse analysis.
 - `public/` serves locally at `http://localhost:8080`.
 
 Not yet verified:
@@ -93,6 +97,11 @@ Segment retest from `input/IMG_8593.MOV`:
 - `img-8593-085-115-fps4/sparse/1`: 15 registered images, 2228 points, 0.831px mean reprojection error.
 - `img-8593-085-115-fps4/sparse/2`: 11 registered images, 1829 points, 0.805px mean reprojection error.
 - Best result improved from 11 to 23 registered images, but still misses the 50-frame threshold for 3DGS training.
+
+One-command smoke test:
+
+- `scripts/process_capture.sh input/IMG_8593_000_030.MOV img-8593-process-smoke-fps2 2` completed.
+- It extracted 60 frames, ran COLMAP, and reported 11 registered images in the best sparse model.
 
 Next proof:
 
@@ -215,12 +224,13 @@ Next proof:
 
 ### P2: One-Command Orchestration
 
-- [ ] Add `scripts/process_capture.sh`.
-- [ ] Run tool checks.
-- [ ] Extract frames.
-- [ ] Run COLMAP.
-- [ ] Print the next exact training step.
-- [ ] Optionally stage a provided exported scene.
+- [x] Add `scripts/process_capture.sh`.
+- [x] Run tool checks.
+- [x] Extract frames.
+- [x] Run COLMAP.
+- [x] Add `scripts/analyze_colmap.sh` to summarize sparse reconstruction quality.
+- [x] Print the next exact training step.
+- [x] Optionally stage a provided exported scene.
 
 ### P2: GitHub Pages End-to-End
 
@@ -248,6 +258,24 @@ Run COLMAP:
 
 ```sh
 scripts/run_colmap.sh my-capture
+```
+
+Analyze COLMAP:
+
+```sh
+scripts/analyze_colmap.sh my-capture
+```
+
+Process a capture:
+
+```sh
+scripts/process_capture.sh input/capture.mov my-capture 2
+```
+
+Process a capture and stage an exported scene:
+
+```sh
+scripts/process_capture.sh input/capture.mov my-capture 2 output/scene.ply
 ```
 
 Stage a scene:
