@@ -11,6 +11,7 @@ The repository currently automates the reliable local stages on this Mac:
 - COLMAP sparse model analysis
 - One-command local capture processing
 - OpenSplat training wrapper
+- One-command production publish pipeline
 - Gaussian splat result staging for web publishing
 - SOG compression with SplatTransform
 - PlayCanvas-based static viewer
@@ -29,12 +30,14 @@ Verified on this machine:
 - `scripts/process_capture.sh` runs tool checks, frame extraction, COLMAP, and sparse analysis.
 - `scripts/run_opensplat.sh` runs a verified OpenSplat training command.
 - `scripts/convert_scene.sh` converts staged PLY output to SOG.
+- `scripts/process_publish.sh` runs capture reuse/processing, OpenSplat, SOG conversion, and optional staging.
 - `public/` serves locally at `http://localhost:8080`.
 
 Production verification:
 
 - Mac-compatible 3D Gaussian Splat training is verified with OpenSplat MPS.
 - SOG compression is verified with SplatTransform CPU fallback.
+- One-command production publish is verified in `no-stage` smoke mode.
 - Local viewer is verified on desktop and mobile viewport sizes.
 - GitHub Pages deploys the SOG scene asset successfully.
 - SuperSplat remains the manual visual cleanup tool; the automated pipeline now produces and publishes the optimized SOG preview without requiring that manual cleanup step.
@@ -254,12 +257,14 @@ Operational note:
 ### P2: One-Command Orchestration
 
 - [x] Add `scripts/process_capture.sh`.
+- [x] Add `scripts/process_publish.sh`.
 - [x] Run tool checks.
 - [x] Extract frames.
 - [x] Run COLMAP.
 - [x] Add `scripts/analyze_colmap.sh` to summarize sparse reconstruction quality.
 - [x] Print the next exact training step.
 - [x] Optionally stage a provided exported scene.
+- [x] Optionally run full train/convert/stage publish flow.
 
 ### P2: GitHub Pages End-to-End
 
@@ -299,6 +304,12 @@ Process a capture:
 
 ```sh
 scripts/process_capture.sh input/capture.mov my-capture 2
+```
+
+Process, train, convert, and stage:
+
+```sh
+scripts/process_publish.sh input/capture.mov my-capture 2 2000 4 "My Capture"
 ```
 
 Process a capture and stage an exported scene:

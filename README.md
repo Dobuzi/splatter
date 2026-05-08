@@ -69,6 +69,12 @@ Or run local preprocessing and COLMAP in one command:
 scripts/process_capture.sh input/capture.mov my-capture 2
 ```
 
+Run the full local publish pipeline in one command:
+
+```sh
+scripts/process_publish.sh input/capture.mov my-capture 2 2000 4 "My Capture"
+```
+
 If you already have an exported splat file, pass it as the fourth argument to stage it after COLMAP analysis:
 
 ```sh
@@ -136,6 +142,12 @@ scripts/prepare_scene.sh output/img-9142-opensplat-preview.sog "IMG 9142 OpenSpl
 ```
 
 The SOG asset is about 1.19MB, compared with the 12.67MB PLY preview.
+
+For a non-staging smoke test, use:
+
+```sh
+scripts/process_publish.sh input/IMG_9142.MOV img-9142-fps2 2 5 4 "IMG 9142 Smoke" no-stage
+```
 
 For browser sharing, inspect and clean the exported file in SuperSplat:
 
