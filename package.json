@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "check": "zsh -n scripts/*.sh",
+    "serve": "python3 -m http.server 8080 --directory public"
+  }
+}

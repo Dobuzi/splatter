@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gaussian Splat Viewer</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="styles.css">
+    <script type="importmap">
+      {
+        "imports": {
+          "playcanvas": "https://cdn.jsdelivr.net/npm/playcanvas/+esm"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <main id="app">
+      <section id="empty" class="panel" hidden>
+        <h1>No scene staged</h1>
+        <p>Run <code>scripts/prepare_scene.sh path/to/scene.ply</code> to publish a Gaussian splat into this viewer.</p>
+        <a href="https://superspl.at/editor" rel="noreferrer">Open SuperSplat</a>
+      </section>
+    </main>
+    <div id="hud">
+      <strong id="title">Gaussian Splat Viewer</strong>
+      <span>Drag to orbit, scroll to zoom</span>
+      <a href="https://superspl.at/editor" rel="noreferrer">SuperSplat</a>
+    </div>
+    <script type="module" src="main.js"></script>
+  </body>
+</html>
