@@ -2,7 +2,7 @@
 
 ## Current Level
 
-**Level 1: Mac-local pipeline scaffold is ready.**
+**Level 2: Mac-local COLMAP reconstruction is ready.**
 
 The repository currently automates the reliable local stages on this Mac:
 
@@ -29,7 +29,6 @@ Verified on this machine:
 
 Not yet verified:
 
-- Mac-compatible capture quality sufficient for 3DGS training.
 - Mac-compatible 3D Gaussian Splat training.
 - SuperSplat cleanup/export round trip with a real scene.
 
@@ -63,6 +62,7 @@ Status: done
 - `scripts/check_tools.sh` detects local dependencies.
 - `colmap` is installed.
 - Real input tested with `input/IMG_8593.MOV`.
+- Improved input tested with `input/IMG_9142.MOV`.
 
 Result:
 
@@ -70,11 +70,12 @@ Result:
 - `fps=1`: 150 frames, 34MB.
 - `fps=2`: 299 frames, 67MB before COLMAP, 150MB after COLMAP.
 - `fps=4`: 599 frames, 136MB.
+- Improved source video: 30.43s, 2160x3840, H.264, 30fps, 94MB.
 - Current recommendation: use `fps=2` as the first local reconstruction test.
 
 ### Level 2: Local COLMAP Reconstruction
 
-Status: runs locally, capture quality needs improvement
+Status: done for `input/IMG_9142.MOV`
 
 - `scripts/run_colmap.sh` runs `colmap automatic_reconstructor` in CPU mode.
 - The script uses a capture-local `HOME`/cache to avoid writing COLMAP cache files under the user's home directory.
@@ -103,10 +104,18 @@ One-command smoke test:
 - `scripts/process_capture.sh input/IMG_8593_000_030.MOV img-8593-process-smoke-fps2 2` completed.
 - It extracted 60 frames, ran COLMAP, and reported 11 registered images in the best sparse model.
 
+Successful capture result from `input/IMG_9142.MOV`:
+
+- `scripts/process_capture.sh input/IMG_9142.MOV img-9142-fps2 2` completed.
+- Source video: 30.43s, 2160x3840, H.264, 30fps, 94MB.
+- Extracted 61 frames at `fps=2`.
+- Capture output size: 109MB total, including 47MB images and 62MB COLMAP output.
+- Model `sparse/0`: 59 registered images, 13733 points, 1.143px mean reprojection error.
+- This passes the 50-frame threshold for attempting 3DGS training.
+
 Next proof:
 
-- Capture a tighter source video with continuous orbit motion and textured subject/background.
-- Re-run extraction and COLMAP until one model registers a useful share of frames.
+- Use `captures/img-9142-fps2` as the first real input for Mac-compatible 3DGS training.
 
 ### Level 3: 3DGS Training
 
@@ -182,15 +191,15 @@ Next proof:
 
 ### P0: Improve Capture Input
 
-- [ ] Capture a shorter 30-60s video with continuous orbit around one subject.
-- [ ] Keep the subject and textured background visible throughout the shot.
-- [ ] Avoid pointing at blank walls, sky, glossy surfaces, or motion-blurred sections.
+- [x] Capture a shorter 30-60s video with continuous orbit around one subject.
+- [x] Keep the subject and textured background visible throughout the shot.
+- [x] Avoid pointing at blank walls, sky, glossy surfaces, or motion-blurred sections.
 - [x] Select tighter 30s segments from the existing `input/IMG_8593.MOV` as a fallback test.
 - [x] Re-run extraction and COLMAP on existing-video segments.
 - [x] Record that the best existing-video segment reached 23 registered frames.
-- [ ] Re-run `scripts/extract_frames.sh input/<video>.mov <capture-name> 2`.
-- [ ] Re-run `scripts/run_colmap.sh <capture-name>`.
-- [ ] Confirm the largest sparse model registers at least 50 frames before attempting 3DGS training.
+- [x] Re-run `scripts/extract_frames.sh input/<video>.mov <capture-name> 2`.
+- [x] Re-run `scripts/run_colmap.sh <capture-name>`.
+- [x] Confirm the largest sparse model registers at least 50 frames before attempting 3DGS training.
 
 ### P1: Pick the Mac Training Path
 

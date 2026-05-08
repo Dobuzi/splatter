@@ -73,7 +73,7 @@ This writes:
 - `captures/my-capture/images`
 - `captures/my-capture/colmap`
 
-For a first local run, `fps=2` is a practical default on this M4 / 16GB Mac. A 149.74s iPhone test video produced 299 frames and completed COLMAP CPU reconstruction in about 102 seconds, but the reconstruction only registered small frame clusters. Segment retests at `fps=4` improved the best model to 23 registered frames, still below the 50-frame threshold for a useful 3DGS attempt. For better 3DGS input, capture a shorter 30-60s continuous orbit around one subject with textured surroundings.
+For a first local run, `fps=2` is a practical default on this M4 / 16GB Mac. The first 149.74s iPhone test video only registered small frame clusters. A better 30.43s capture, `input/IMG_9142.MOV`, produced 61 extracted frames and registered 59 images in one COLMAP sparse model, passing the 50-frame threshold for attempting 3DGS training.
 
 Use the generated capture with a Mac-compatible 3D Gaussian Splat trainer. Export one of:
 
