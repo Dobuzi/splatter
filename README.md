@@ -81,6 +81,47 @@ Use the generated capture with a Mac-compatible 3D Gaussian Splat trainer. Expor
 - `.compressed.ply`
 - `.sog`
 
+## Train with OpenSplat
+
+This Mac has been verified with OpenSplat as the first local 3DGS training path:
+
+- OpenSplat source: `https://github.com/pierotofy/OpenSplat`
+- Local build path: `.local/OpenSplat`
+- Runtime: MPS when run outside the Codex sandbox
+- Input: `captures/<capture-name>/colmap` plus `captures/<capture-name>/images`
+- Output: `.ply`
+
+Build prerequisites used on this Mac:
+
+```sh
+brew install opencv pytorch
+xcodebuild -downloadComponent MetalToolchain
+git clone https://github.com/pierotofy/OpenSplat .local/OpenSplat
+cmake -S .local/OpenSplat -B .local/OpenSplat/build \
+  -DCMAKE_PREFIX_PATH=/opt/homebrew/Cellar/pytorch/2.11.0/libexec/lib/python3.14/site-packages/torch \
+  -DOpenCV_DIR=/opt/homebrew/Cellar/opencv/4.13.0_10/lib/cmake/opencv4 \
+  -DGPU_RUNTIME=MPS
+cmake --build .local/OpenSplat/build --parallel 10
+```
+
+Run a quick smoke test:
+
+```sh
+scripts/run_opensplat.sh img-9142-fps2 5 4 output/img-9142-opensplat-smoke.ply
+```
+
+Run a longer preview training pass:
+
+```sh
+scripts/run_opensplat.sh img-9142-fps2 2000 4 output/img-9142-opensplat-preview.ply
+```
+
+The current staged preview scene was generated with that command and staged with:
+
+```sh
+scripts/prepare_scene.sh output/img-9142-opensplat-preview.ply "IMG 9142 OpenSplat Preview"
+```
+
 For browser sharing, inspect and clean the exported file in SuperSplat:
 
 https://superspl.at/editor

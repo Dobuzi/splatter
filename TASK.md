@@ -10,6 +10,7 @@ The repository currently automates the reliable local stages on this Mac:
 - COLMAP CPU reconstruction entrypoint
 - COLMAP sparse model analysis
 - One-command local capture processing
+- OpenSplat training wrapper
 - Gaussian splat result staging for web publishing
 - PlayCanvas-based static viewer
 - GitHub Pages deployment workflow
@@ -25,6 +26,7 @@ Verified on this machine:
 - `scripts/extract_frames.sh` extracted frames from a generated smoke-test video.
 - `scripts/analyze_colmap.sh` summarizes registered images, points, and reprojection error.
 - `scripts/process_capture.sh` runs tool checks, frame extraction, COLMAP, and sparse analysis.
+- `scripts/run_opensplat.sh` runs a verified OpenSplat training command.
 - `public/` serves locally at `http://localhost:8080`.
 
 Not yet verified:
@@ -119,36 +121,49 @@ Next proof:
 
 ### Level 3: 3DGS Training
 
-Status: not automated yet
+Status: OpenSplat path proven with a smoke test
 
-Current blocker:
+Selected path:
 
-- Most open 3DGS training stacks are CUDA-first.
-- This Mac has Apple Silicon/Metal, not CUDA.
+- OpenSplat from `https://github.com/pierotofy/OpenSplat`.
+- Local build under `.local/OpenSplat`.
+- Required Homebrew packages installed: `opencv`, `pytorch`.
+- Required Xcode component installed: Metal Toolchain.
+- OpenSplat accepts `captures/img-9142-fps2/colmap` with `--colmap-image-path captures/img-9142-fps2/images`.
+- OpenSplat exports `.ply`, suitable for SuperSplat inspection.
+- MPS is available outside the Codex sandbox. Inside the sandbox, PyTorch reports MPS unavailable and falls back to CPU.
+
+Verified command:
+
+```sh
+scripts/run_opensplat.sh img-9142-fps2 5 4 output/img-9142-opensplat-mps-smoke.ply
+```
+
+Result:
+
+- OpenSplat printed `Using MPS`.
+- It read 13733 COLMAP points.
+- It wrote `output/img-9142-opensplat-mps-smoke.ply`.
+- Output file is a binary little-endian PLY with 13733 vertices.
+- A longer preview pass completed with `scripts/run_opensplat.sh img-9142-fps2 2000 4 output/img-9142-opensplat-preview.ply`.
+- The preview file is 12MB, binary little-endian PLY, generated at iteration 2000 with 51090 vertices.
 
 Next proof:
 
-- Select one Mac-compatible training path.
-- Confirm it accepts COLMAP output.
-- Confirm it exports `.ply`, `.compressed.ply`, or `.sog`.
-
-Candidate paths:
-
-- A Mac Metal 3D Gaussian Splatting app with manual or scriptable export.
-- A Python/Metal-compatible trainer if stable enough.
-- A self-hosted GPU runner later, if local Mac training is too slow or blocked.
+- Inspect and clean the staged scene in SuperSplat.
+- Export the cleaned scene and stage that final file for publishing.
 
 ### Level 4: Web Staging and Local Viewer
 
-Status: scaffold done, pending real scene
+Status: preview scene staged, pending visual inspection
 
 - `scripts/prepare_scene.sh` stages `.ply`, `.compressed.ply`, or `.sog`.
 - `public/main.js` loads the staged scene through PlayCanvas.
-- Empty-state UI appears when no scene is staged.
+- `public/scene.json` points to `assets/img-9142-opensplat-preview.ply`.
+- `public/assets/img-9142-opensplat-preview.ply` is staged for local and Pages preview.
 
 Next proof:
 
-- Stage a real splat file.
 - Verify it renders locally in the browser.
 - Verify camera controls and scene scale are usable.
 
@@ -203,18 +218,19 @@ Next proof:
 
 ### P1: Pick the Mac Training Path
 
-- [ ] Test at least one Mac-compatible 3DGS trainer or app.
-- [ ] Confirm input format from COLMAP.
-- [ ] Confirm export format for SuperSplat or PlayCanvas.
-- [ ] Document the exact training command or manual steps.
-- [ ] Add an automation wrapper only after the path is proven.
+- [x] Test at least one Mac-compatible 3DGS trainer or app.
+- [x] Confirm input format from COLMAP.
+- [x] Confirm export format for SuperSplat or PlayCanvas.
+- [x] Document the exact training command or manual steps.
+- [x] Add an automation wrapper only after the path is proven.
 
 ### P1: SuperSplat Round Trip
 
 - [ ] Open exported scene in `https://superspl.at/editor`.
 - [ ] Clean/crop/orient the scene.
 - [ ] Export the optimized scene.
-- [ ] Stage it with `scripts/prepare_scene.sh`.
+- [x] Stage the current OpenSplat preview with `scripts/prepare_scene.sh`.
+- [ ] Stage the cleaned SuperSplat export with `scripts/prepare_scene.sh`.
 - [ ] Confirm local viewer renders it.
 
 ### P1: Viewer Hardening
