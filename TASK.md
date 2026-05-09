@@ -58,6 +58,8 @@ Production verification:
 - Mac-compatible 3D Gaussian Splat training is verified with OpenSplat MPS.
 - SOG compression is verified with SplatTransform CPU fallback.
 - One-command production publish is verified in `no-stage` smoke mode.
+- A higher-quality web scene is staged from `5000 iterations / downscale 3`, decimated to 100K gaussians with SH1.
+- Over-budget HQ candidates were rejected: raw `7000 iterations / downscale 2` and uncapped `5000 iterations / downscale 3` exceeded practical SOG conversion limits.
 - CI blocks Pages deployment if the viewer manifest or scene asset is invalid.
 - Local viewer is verified on desktop and mobile viewport sizes.
 - GitHub Pages deploys the SOG scene asset successfully.
@@ -316,12 +318,26 @@ Operational note:
 - [x] Test desktop and mobile viewport sizes.
 - [x] Tune default camera position for real scenes through `scene.json`.
 
+### P1: Rendering Quality Improvement
+
+- [x] Define strict deployable quality gates: 50+ COLMAP images, MPS training, practical SOG conversion, asset under 25MB, desktop/mobile viewer `Ready`, zero console warnings/errors, nonblank screenshots.
+- [x] Test over-budget HQ candidate: 7000 iterations, downscale 2.
+- [x] Reject over-budget HQ candidate because 793K vertices / 188MB PLY exceeded SOG conversion time budget.
+- [x] Test deployable HQ candidate: 5000 iterations, downscale 3.
+- [x] Add `SPLAT_DECIMATE`, `SPLAT_HARMONICS`, and `SPLAT_SOG_ITERATIONS` controls to `scripts/convert_scene.sh`.
+- [x] Convert deployable HQ candidate to 100K gaussians with SH1.
+- [x] Preserve optional capture/training metadata through `scripts/prepare_scene.sh`.
+- [x] Stage `public/assets/img-9142-opensplat-webhq-5000-d3-100k-h1.sog`.
+- [x] Verify local viewer on desktop and mobile with zero console warnings/errors.
+- [x] Verify screenshots are nonblank.
+
 ### P2: SOG Compression
 
 - [x] Install PlayCanvas SplatTransform as a repo-local dev dependency.
 - [x] Add `scripts/convert_scene.sh`.
 - [x] Compare `.ply` and `.sog` file sizes.
 - [x] Update `prepare_scene.sh` metadata output for `.sog` publishing.
+- [x] Add optional decimation and harmonic-band controls for web-quality SOG output.
 
 ### P2: One-Command Orchestration
 

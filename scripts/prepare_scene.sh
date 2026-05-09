@@ -52,6 +52,20 @@ safe_format="${format//\\/\\\\}"
 safe_format="${safe_format//\"/\\\"}"
 safe_file_size="${file_size//\\/\\\\}"
 safe_file_size="${safe_file_size//\"/\\\"}"
+safe_capture="${SCENE_CAPTURE:-}"
+safe_capture="${safe_capture//\\/\\\\}"
+safe_capture="${safe_capture//\"/\\\"}"
+safe_training="${SCENE_TRAINING:-}"
+safe_training="${safe_training//\\/\\\\}"
+safe_training="${safe_training//\"/\\\"}"
+
+metadata_lines=()
+if [[ -n "$safe_capture" ]]; then
+  metadata_lines+=("  \"capture\": \"$safe_capture\",")
+fi
+if [[ -n "$safe_training" ]]; then
+  metadata_lines+=("  \"training\": \"$safe_training\",")
+fi
 
 cat > public/scene.json <<JSON
 {
@@ -59,6 +73,7 @@ cat > public/scene.json <<JSON
   "assetUrl": "assets/$safe_target",
   "format": "$safe_format",
   "fileSize": "$safe_file_size",
+$(printf '%s\n' "${metadata_lines[@]}")
   "camera": {
     "position": [0, 0, 3]
   }

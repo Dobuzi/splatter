@@ -97,6 +97,32 @@ For a smoke test that does not overwrite the staged production scene:
 bin/splatter publish input/IMG_9142.MOV img-9142-fps2 2 5 4 "IMG 9142 Smoke" no-stage
 ```
 
+## Quality Workflow
+
+The current production scene uses a higher-quality local training pass with a web-safe conversion cap:
+
+```sh
+bin/splatter train img-9142-fps2 5000 3 output/img-9142-opensplat-webhq-5000-d3.ply
+SPLAT_DECIMATE=100000 SPLAT_HARMONICS=1 \
+  bin/splatter convert output/img-9142-opensplat-webhq-5000-d3.ply \
+  output/img-9142-opensplat-webhq-5000-d3-100k-h1.sog
+SCENE_CAPTURE="IMG_9142, 30.43s, 59 COLMAP images" \
+SCENE_TRAINING="OpenSplat MPS, 5000 iterations, downscale 3, decimated 100k, SH1" \
+  bin/splatter stage output/img-9142-opensplat-webhq-5000-d3-100k-h1.sog \
+  "IMG 9142 Web HQ"
+```
+
+Quality gates used before staging:
+
+- COLMAP registers at least 50 images.
+- Training runs on MPS, not CPU fallback.
+- Web asset stays under the 25MB Pages gate.
+- SOG conversion finishes in practical local time.
+- Viewer reaches `Ready` on desktop and mobile viewports with zero console warnings/errors.
+- Screenshot checks show a nonblank rendered canvas.
+
+Avoid publishing raw high-density PLY output directly. In testing, `7000 iterations / downscale 2` produced a 188MB PLY with 793K vertices but exceeded the SOG conversion time budget. The deployable balance is the 5000/d3 training result converted to 100K gaussians with SH1.
+
 ## CLI Commands
 
 ```sh
@@ -123,6 +149,12 @@ Expected generated outputs:
 - `output/<name>-opensplat-<iterations>.sog`: compressed PlayCanvas asset
 - `public/assets/<scene>.sog`: staged production web asset
 - `public/scene.json`: viewer manifest
+
+Optional SOG conversion controls:
+
+- `SPLAT_DECIMATE=<count|percent>`: cap Gaussian count for browser delivery.
+- `SPLAT_HARMONICS=<0..3>`: remove spherical harmonic bands above the chosen level.
+- `SPLAT_SOG_ITERATIONS=<count>`: tune SOG SH compression iterations.
 
 Ignored local working directories:
 
