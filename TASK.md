@@ -2,14 +2,14 @@
 
 ## Current Level
 
-**Production Pipeline Level: repeatable publishable capture is ready.**
+**Deployable Local CLI Level: repeatable publishable capture is ready.**
 
 CLI tool assessment:
 
-- Current status: deployable local pipeline with a first stable CLI entrypoint.
-- The repo can publish a capture end-to-end on this Mac with `scripts/process_publish.sh`.
-- `bin/splatter` now provides a single command surface for the existing pipeline scripts.
-- To call it a fully deployable CLI tool, it still needs broader documentation, release policy, and support matrix.
+- Current status: deployable local Mac CLI for the verified iPhone video to Gaussian Splat to GitHub Pages pipeline.
+- The repo can publish a capture end-to-end on this Mac with `bin/splatter publish`.
+- `bin/splatter` provides a single command surface for the existing pipeline scripts.
+- README documents local install, dependencies, full publish usage, smoke testing, expected outputs, ignored working directories, known limits, support matrix, and release policy.
 - Target CLI name: `splatter`.
 
 The repository currently automates the reliable local stages on this Mac:
@@ -33,11 +33,9 @@ CLI-tool complete:
 - `splatter --help` and `splatter --version`.
 - Subcommands for `check`, `capture`, `analyze`, `train`, `convert`, `stage`, `publish`, `validate`, and `serve`.
 - CLI contract smoke tests through `scripts/test_cli.sh`.
-
-Not yet CLI-tool complete:
-
-- Install path documented for local use, for example `npm link` or `./bin/splatter`.
-- Release/versioning policy.
+- Install path documented for local use with `./bin/splatter` and `npm link`.
+- Release/versioning policy documented in README.
+- Support matrix documented for macOS, Apple Silicon, COLMAP, OpenSplat, PlayCanvas SOG, and GitHub Actions.
 
 Verified on this machine:
 
@@ -246,20 +244,20 @@ Operational note:
 
 ### P1: CLI Documentation
 
-- [ ] Add README quickstart using `splatter`.
-- [ ] Document Mac-only dependency requirements.
-- [ ] Document full publish command for a new video.
-- [ ] Document smoke-test command that does not overwrite the staged production scene.
-- [ ] Document expected outputs and ignored working directories.
-- [ ] Document known limits: local MPS requirement, SuperSplat manual cleanup, GitHub Actions no GPU training.
+- [x] Add README quickstart using `splatter`.
+- [x] Document Mac-only dependency requirements.
+- [x] Document full publish command for a new video.
+- [x] Document smoke-test command that does not overwrite the staged production scene.
+- [x] Document expected outputs and ignored working directories.
+- [x] Document known limits: local MPS requirement, SuperSplat manual cleanup, GitHub Actions no GPU training.
 
 ### P1: Release Readiness
 
-- [ ] Add versioning policy.
-- [ ] Add changelog or release notes section.
-- [ ] Add license decision.
-- [ ] Add support matrix for macOS / Apple Silicon / COLMAP / OpenSplat.
-- [ ] Decide whether `.local/OpenSplat` stays external or becomes a documented bootstrap command.
+- [x] Add versioning policy.
+- [x] Add changelog or release notes section.
+- [x] Add license decision.
+- [x] Add support matrix for macOS / Apple Silicon / COLMAP / OpenSplat.
+- [x] Decide whether `.local/OpenSplat` stays external or becomes a documented bootstrap command.
 
 ### P0: Clean Repository State
 
