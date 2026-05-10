@@ -60,6 +60,8 @@ Production verification:
 - One-command production publish is verified in `no-stage` smoke mode.
 - A progressive higher-quality web scene is staged from `5000 iterations / downscale 3`: 20K SH0 preview plus 200K SH1 final asset.
 - Compared with the prior 100K SH1 asset, first-render payload is about 7.5x smaller and final Gaussian count is 2x higher.
+- The viewer camera targets the measured dense splat center instead of the world origin.
+- Mac mouse/trackpad and iPhone touch controls are verified through browser event tests.
 - Over-budget HQ candidates were rejected: raw `7000 iterations / downscale 2` and uncapped `5000 iterations / downscale 3` exceeded practical SOG conversion limits.
 - CI blocks Pages deployment if the viewer manifest or scene asset is invalid.
 - Local viewer is verified on desktop and mobile viewport sizes.
@@ -318,6 +320,10 @@ Operational note:
 - [x] Add scene metadata display: format, size, capture, training.
 - [x] Test desktop and mobile viewport sizes.
 - [x] Tune default camera position for real scenes through `scene.json`.
+- [x] Set initial camera target from measured SOG center instead of assuming world origin.
+- [x] Add touch-safe canvas behavior with `touch-action: none`.
+- [x] Add one-finger/mouse orbit, wheel/pinch zoom, and touch/trackpad/mouse pan support.
+- [x] Verify Mac mouse drag, Shift-drag pan, wheel zoom, and iPhone-style touch pinch/pan by browser event tests.
 
 ### P1: Rendering Quality Improvement
 

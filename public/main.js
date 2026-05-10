@@ -75,56 +75,191 @@ async function loadAsset(asset, app) {
   return asset;
 }
 
-function installOrbitControls(canvas, camera) {
-  const target = { x: 0, y: 0, z: 0 };
-  const orbit = {
-    yaw: 0,
-    pitch: 0,
-    distance: camera.getPosition().length()
+function vec3FromConfig(value, fallback) {
+  return Array.isArray(value) && value.length === 3
+    ? { x: value[0], y: value[1], z: value[2] }
+    : fallback;
+}
+
+function installOrbitControls(canvas, camera, config) {
+  const target = vec3FromConfig(config.camera?.target, { x: 0, y: 0, z: 0 });
+  const startPosition = camera.getPosition();
+  const offset = {
+    x: startPosition.x - target.x,
+    y: startPosition.y - target.y,
+    z: startPosition.z - target.z
   };
-  let dragging = false;
-  let lastX = 0;
-  let lastY = 0;
+  const startDistance = Math.hypot(offset.x, offset.y, offset.z);
+  const minDistance = config.camera?.minDistance || 0.2;
+  const maxDistance = config.camera?.maxDistance || 20;
+  const orbit = {
+    yaw: Math.atan2(offset.x, offset.z),
+    pitch: Math.asin(offset.y / Math.max(startDistance, 0.0001)),
+    distance: config.camera?.distance || startDistance
+  };
+  const pointers = new Map();
+  let gesture = null;
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
 
   function updateCamera() {
     const cosPitch = Math.cos(orbit.pitch);
     const x = Math.sin(orbit.yaw) * cosPitch * orbit.distance;
     const y = Math.sin(orbit.pitch) * orbit.distance;
     const z = Math.cos(orbit.yaw) * cosPitch * orbit.distance;
-    camera.setPosition(x, y, z);
+    camera.setPosition(target.x + x, target.y + y, target.z + z);
     camera.lookAt(target.x, target.y, target.z);
   }
 
+  function panBy(deltaX, deltaY) {
+    const position = camera.getPosition();
+    const forward = {
+      x: target.x - position.x,
+      y: target.y - position.y,
+      z: target.z - position.z
+    };
+    const forwardLength = Math.hypot(forward.x, forward.y, forward.z) || 1;
+    forward.x /= forwardLength;
+    forward.y /= forwardLength;
+    forward.z /= forwardLength;
+
+    const right = {
+      x: forward.z,
+      y: 0,
+      z: -forward.x
+    };
+    const rightLength = Math.hypot(right.x, right.y, right.z) || 1;
+    right.x /= rightLength;
+    right.z /= rightLength;
+
+    const up = {
+      x: right.y * forward.z - right.z * forward.y,
+      y: right.z * forward.x - right.x * forward.z,
+      z: right.x * forward.y - right.y * forward.x
+    };
+    const panScale = orbit.distance * 0.0015;
+    target.x += (-deltaX * right.x + deltaY * up.x) * panScale;
+    target.y += (-deltaX * right.y + deltaY * up.y) * panScale;
+    target.z += (-deltaX * right.z + deltaY * up.z) * panScale;
+    updateCamera();
+  }
+
+  function zoomBy(delta) {
+    orbit.distance = clamp(orbit.distance * Math.exp(delta * 0.0015), minDistance, maxDistance);
+    updateCamera();
+  }
+
+  function pointerDistance(a, b) {
+    return Math.hypot(a.x - b.x, a.y - b.y);
+  }
+
+  function pointerMidpoint(a, b) {
+    return {
+      x: (a.x + b.x) / 2,
+      y: (a.y + b.y) / 2
+    };
+  }
+
+  function currentPointerPair() {
+    return Array.from(pointers.values()).slice(0, 2);
+  }
+
   canvas.addEventListener('pointerdown', (event) => {
-    dragging = true;
-    lastX = event.clientX;
-    lastY = event.clientY;
-    canvas.setPointerCapture(event.pointerId);
+    pointers.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY,
+      button: event.button,
+      buttons: event.buttons,
+      pointerType: event.pointerType
+    });
+    if (pointers.size === 2) {
+      const [a, b] = currentPointerPair();
+      gesture = {
+        distance: pointerDistance(a, b),
+        midpoint: pointerMidpoint(a, b)
+      };
+    }
+    try {
+      canvas.setPointerCapture(event.pointerId);
+    } catch {
+      // Synthetic touch tests and some browser edge cases can lack an active pointer.
+    }
   });
 
   canvas.addEventListener('pointermove', (event) => {
-    if (!dragging) {
+    const previous = pointers.get(event.pointerId);
+    if (!previous) {
       return;
     }
 
-    orbit.yaw -= (event.clientX - lastX) * 0.006;
-    orbit.pitch = Math.max(-1.2, Math.min(1.2, orbit.pitch - (event.clientY - lastY) * 0.006));
-    lastX = event.clientX;
-    lastY = event.clientY;
-    updateCamera();
+    pointers.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY,
+      button: previous.button,
+      buttons: event.buttons,
+      pointerType: event.pointerType
+    });
+
+    if (pointers.size >= 2) {
+      const [a, b] = currentPointerPair();
+      const nextDistance = pointerDistance(a, b);
+      const nextMidpoint = pointerMidpoint(a, b);
+      if (gesture) {
+        zoomBy(gesture.distance - nextDistance);
+        panBy(nextMidpoint.x - gesture.midpoint.x, nextMidpoint.y - gesture.midpoint.y);
+      }
+      gesture = {
+        distance: nextDistance,
+        midpoint: nextMidpoint
+      };
+      return;
+    }
+
+    const deltaX = event.clientX - previous.x;
+    const deltaY = event.clientY - previous.y;
+    const isPan = event.shiftKey || event.altKey || event.button === 1 || event.button === 2 || (event.buttons & 4) || (event.buttons & 2);
+
+    if (isPan) {
+      panBy(deltaX, deltaY);
+    } else {
+      orbit.yaw -= deltaX * 0.006;
+      orbit.pitch = clamp(orbit.pitch - deltaY * 0.006, -1.35, 1.35);
+      updateCamera();
+    }
   });
 
-  canvas.addEventListener('pointerup', (event) => {
-    dragging = false;
-    canvas.releasePointerCapture(event.pointerId);
-  });
+  function endPointer(event) {
+    pointers.delete(event.pointerId);
+    gesture = null;
+    if (canvas.hasPointerCapture(event.pointerId)) {
+      canvas.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  canvas.addEventListener('pointerup', endPointer);
+  canvas.addEventListener('pointercancel', endPointer);
+  canvas.addEventListener('contextmenu', (event) => event.preventDefault());
 
   canvas.addEventListener('wheel', (event) => {
     event.preventDefault();
-    orbit.distance = Math.max(0.5, Math.min(12, orbit.distance + event.deltaY * 0.003));
-    updateCamera();
+    if (event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY)) {
+      panBy(event.deltaX, event.deltaY);
+    } else {
+      zoomBy(event.deltaY);
+    }
   }, { passive: false });
 
+  window.__splatterControls = {
+    getState: () => ({
+      target: { ...target },
+      yaw: orbit.yaw,
+      pitch: orbit.pitch,
+      distance: orbit.distance,
+      position: camera.getPosition().toArray()
+    })
+  };
   updateCamera();
 }
 
@@ -161,7 +296,7 @@ async function boot() {
   camera.setPosition(cameraPosition[0], cameraPosition[1], cameraPosition[2]);
   camera.addComponent('camera');
   app.root.addChild(camera);
-  installOrbitControls(canvas, camera);
+  installOrbitControls(canvas, camera, config);
 
   const previewAssetUrl = config.previewAssetUrl || config.assetUrl;
   const previewAsset = await loadAsset(new Asset('capture-preview', 'gsplat', {

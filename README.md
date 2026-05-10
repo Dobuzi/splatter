@@ -201,6 +201,17 @@ The GitHub Actions workflow in `.github/workflows/deploy-pages.yml` runs `npm ru
 
 GitHub Pages source should be set to GitHub Actions in repository settings.
 
+## Viewer Controls
+
+The viewer targets the dense center of the current splat instead of the world origin. For the current `IMG_9142` scene, the camera target is `[-1.15, 0.69, 0.18]`, based on SOG coordinate summaries.
+
+Controls:
+
+- iPhone / touch: one-finger drag orbits, two-finger pinch zooms, two-finger drag pans.
+- Mac mouse: left drag orbits, wheel zooms, right or middle drag pans.
+- Mac trackpad: scroll zooms, horizontal or Shift-scroll pans.
+- Keyboard modifier: Shift or Option/Alt while dragging pans.
+
 ## SuperSplat
 
 The automated pipeline publishes a SOG preview without requiring manual cleanup. Use SuperSplat when visual cleanup, cropping, or artistic adjustment is needed:
