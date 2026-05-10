@@ -212,6 +212,14 @@ Controls:
 - Mac trackpad: scroll zooms, horizontal or Shift-scroll pans.
 - Keyboard modifier: Shift or Option/Alt while dragging pans.
 
+Coordinate tools:
+
+- `Flip Y` is applied by default for the current scene to correct the upside-down axis.
+- `Flip X`, `Flip Z`, and `X/Y/Z 90` adjust the viewer transform around the measured scene pivot.
+- `Save` persists the transform in browser `localStorage`.
+- `Copy JSON` copies the current `scene.json` content with the active transform for committing back to the repo.
+- `Reset` restores the transform from `public/scene.json`.
+
 ## SuperSplat
 
 The automated pipeline publishes a SOG preview without requiring manual cleanup. Use SuperSplat when visual cleanup, cropping, or artistic adjustment is needed:

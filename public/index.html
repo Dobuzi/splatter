@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Gaussian Splat Viewer</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="styles.css?v=controls-20260510">
+    <link rel="stylesheet" href="styles.css?v=transform-editor-20260510">
     <script type="importmap">
       {
         "imports": {
@@ -30,6 +30,17 @@
       <span id="status">Starting</span>
       <a href="https://superspl.at/editor" rel="noreferrer">SuperSplat</a>
     </div>
-    <script type="module" src="main.js?v=controls-20260510"></script>
+    <div id="tools" aria-label="Coordinate tools">
+      <button type="button" data-action="flip-y">Flip Y</button>
+      <button type="button" data-action="flip-x">Flip X</button>
+      <button type="button" data-action="flip-z">Flip Z</button>
+      <button type="button" data-action="rotate-x">X 90</button>
+      <button type="button" data-action="rotate-y">Y 90</button>
+      <button type="button" data-action="rotate-z">Z 90</button>
+      <button type="button" data-action="save">Save</button>
+      <button type="button" data-action="copy">Copy JSON</button>
+      <button type="button" data-action="reset">Reset</button>
+    </div>
+    <script type="module" src="main.js?v=transform-editor-20260510"></script>
   </body>
 </html>

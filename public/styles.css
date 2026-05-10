@@ -105,6 +105,34 @@ code {
   color: #dce7f6;
 }
 
+#tools {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 900px;
+  pointer-events: auto;
+}
+
+#tools button {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  background: rgba(5, 6, 9, 0.72);
+  color: #f5f7fb;
+  font: inherit;
+  font-size: 12px;
+  backdrop-filter: blur(14px);
+}
+
+#tools button:active {
+  background: rgba(143, 211, 255, 0.22);
+}
+
 @media (max-width: 620px) {
   #hud {
     align-items: flex-start;
@@ -118,5 +146,17 @@ code {
 
   #metadata {
     white-space: normal;
+  }
+
+  #tools {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    gap: 6px;
+  }
+
+  #tools button {
+    min-height: 30px;
+    padding: 0 8px;
   }
 }

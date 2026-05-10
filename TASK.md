@@ -62,6 +62,8 @@ Production verification:
 - Compared with the prior 100K SH1 asset, first-render payload is about 7.5x smaller and final Gaussian count is 2x higher.
 - The viewer camera targets the measured dense splat center instead of the world origin.
 - Mac mouse/trackpad and iPhone touch controls are verified through browser event tests.
+- The current scene applies a viewer-side Y-axis flip around the measured pivot to correct upside-down orientation.
+- Viewer coordinate edits can be saved to browser localStorage or copied as `scene.json`.
 - Over-budget HQ candidates were rejected: raw `7000 iterations / downscale 2` and uncapped `5000 iterations / downscale 3` exceeded practical SOG conversion limits.
 - CI blocks Pages deployment if the viewer manifest or scene asset is invalid.
 - Local viewer is verified on desktop and mobile viewport sizes.
@@ -324,6 +326,10 @@ Operational note:
 - [x] Add touch-safe canvas behavior with `touch-action: none`.
 - [x] Add one-finger/mouse orbit, wheel/pinch zoom, and touch/trackpad/mouse pan support.
 - [x] Verify Mac mouse drag, Shift-drag pan, wheel zoom, and iPhone-style touch pinch/pan by browser event tests.
+- [x] Add viewer-side coordinate transform root with pivot-preserving flip/rotate controls.
+- [x] Set default transform to flip Y around the measured splat pivot.
+- [x] Add local save/reset and copyable JSON for transform edits.
+- [x] Verify transform save/reload/reset behavior through browser tests.
 
 ### P1: Rendering Quality Improvement
 

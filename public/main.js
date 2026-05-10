@@ -12,6 +12,7 @@ const empty = document.querySelector('#empty');
 const title = document.querySelector('#title');
 const status = document.querySelector('#status');
 const metadata = document.querySelector('#metadata');
+const tools = document.querySelector('#tools');
 
 function setStatus(message) {
   status.textContent = message;
@@ -79,6 +80,142 @@ function vec3FromConfig(value, fallback) {
   return Array.isArray(value) && value.length === 3
     ? { x: value[0], y: value[1], z: value[2] }
     : fallback;
+}
+
+function tupleFromConfig(value, fallback) {
+  return Array.isArray(value) && value.length === 3
+    ? value.map(Number)
+    : [...fallback];
+}
+
+function transformStorageKey(config) {
+  return `splatter:transform:${config.assetUrl}`;
+}
+
+function baseTransform(config) {
+  const pivot = tupleFromConfig(config.transform?.pivot, config.camera?.target || [0, 0, 0]);
+  return {
+    pivot,
+    position: tupleFromConfig(config.transform?.position, [0, 0, 0]),
+    rotation: tupleFromConfig(config.transform?.rotation, [0, 0, 0]),
+    scale: tupleFromConfig(config.transform?.scale, [1, 1, 1])
+  };
+}
+
+function loadSavedTransform(config) {
+  try {
+    const saved = localStorage.getItem(transformStorageKey(config));
+    if (!saved) {
+      return null;
+    }
+    const parsed = JSON.parse(saved);
+    return {
+      pivot: tupleFromConfig(parsed.pivot, config.transform?.pivot || config.camera?.target || [0, 0, 0]),
+      position: tupleFromConfig(parsed.position, [0, 0, 0]),
+      rotation: tupleFromConfig(parsed.rotation, [0, 0, 0]),
+      scale: tupleFromConfig(parsed.scale, [1, 1, 1])
+    };
+  } catch {
+    return null;
+  }
+}
+
+function cloneTransform(transform) {
+  return {
+    pivot: [...transform.pivot],
+    position: [...transform.position],
+    rotation: [...transform.rotation],
+    scale: [...transform.scale]
+  };
+}
+
+function applySplatTransform(root, child, transform) {
+  root.setPosition(
+    transform.pivot[0] + transform.position[0],
+    transform.pivot[1] + transform.position[1],
+    transform.pivot[2] + transform.position[2]
+  );
+  root.setEulerAngles(transform.rotation[0], transform.rotation[1], transform.rotation[2]);
+  root.setLocalScale(transform.scale[0], transform.scale[1], transform.scale[2]);
+  child.setLocalPosition(-transform.pivot[0], -transform.pivot[1], -transform.pivot[2]);
+}
+
+function installTransformTools(config, root, child, transform) {
+  if (!tools) {
+    return;
+  }
+
+  function save() {
+    localStorage.setItem(transformStorageKey(config), JSON.stringify(transform));
+    setStatus('Saved');
+  }
+
+  function copyConfig() {
+    const nextConfig = {
+      ...config,
+      transform: cloneTransform(transform)
+    };
+    navigator.clipboard?.writeText(JSON.stringify(nextConfig, null, 2));
+    setStatus('Copied JSON');
+  }
+
+  function reset() {
+    const next = baseTransform(config);
+    transform.pivot = next.pivot;
+    transform.position = next.position;
+    transform.rotation = next.rotation;
+    transform.scale = next.scale;
+    localStorage.removeItem(transformStorageKey(config));
+    applySplatTransform(root, child, transform);
+    setStatus('Reset');
+  }
+
+  tools.addEventListener('click', (event) => {
+    const button = event.target.closest('button[data-action]');
+    if (!button) {
+      return;
+    }
+
+    const action = button.dataset.action;
+    if (action === 'flip-x') {
+      transform.scale[0] *= -1;
+    } else if (action === 'flip-y') {
+      transform.scale[1] *= -1;
+    } else if (action === 'flip-z') {
+      transform.scale[2] *= -1;
+    } else if (action === 'rotate-x') {
+      transform.rotation[0] = (transform.rotation[0] + 90) % 360;
+    } else if (action === 'rotate-y') {
+      transform.rotation[1] = (transform.rotation[1] + 90) % 360;
+    } else if (action === 'rotate-z') {
+      transform.rotation[2] = (transform.rotation[2] + 90) % 360;
+    } else if (action === 'save') {
+      save();
+      return;
+    } else if (action === 'copy') {
+      copyConfig();
+      return;
+    } else if (action === 'reset') {
+      reset();
+      return;
+    }
+
+    applySplatTransform(root, child, transform);
+    setStatus('Adjusted');
+  });
+
+  window.__splatterTransform = {
+    getState: () => cloneTransform(transform),
+    setState: (nextTransform) => {
+      transform.pivot = tupleFromConfig(nextTransform.pivot, transform.pivot);
+      transform.position = tupleFromConfig(nextTransform.position, transform.position);
+      transform.rotation = tupleFromConfig(nextTransform.rotation, transform.rotation);
+      transform.scale = tupleFromConfig(nextTransform.scale, transform.scale);
+      applySplatTransform(root, child, transform);
+    },
+    save,
+    reset
+  };
 }
 
 function installOrbitControls(canvas, camera, config) {
@@ -303,10 +440,15 @@ async function boot() {
     url: previewAssetUrl
   }), app);
 
+  const transform = loadSavedTransform(config) || baseTransform(config);
+  const splatRoot = new Entity('Splat Transform');
   const splat = new Entity('Gaussian Splat');
+  app.root.addChild(splatRoot);
+  splatRoot.addChild(splat);
   splat.setPosition(0, 0, 0);
+  applySplatTransform(splatRoot, splat, transform);
+  installTransformTools(config, splatRoot, splat, transform);
   splat.addComponent('gsplat', { asset: previewAsset });
-  app.root.addChild(splat);
   setStatus('Ready');
   window.__splatterMetrics = {
     previewReadyMs: Math.round(performance.now() - bootStart),
