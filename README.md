@@ -99,16 +99,21 @@ bin/splatter publish input/IMG_9142.MOV img-9142-fps2 2 5 4 "IMG 9142 Smoke" no-
 
 ## Quality Workflow
 
-The current production scene uses a higher-quality local training pass with a web-safe conversion cap:
+The current production scene uses progressive delivery: a tiny preview reaches the first usable render, then the higher-quality 200K-Gaussian asset replaces it.
 
 ```sh
 bin/splatter train img-9142-fps2 5000 3 output/img-9142-opensplat-webhq-5000-d3.ply
-SPLAT_DECIMATE=100000 SPLAT_HARMONICS=1 \
+SPLAT_DECIMATE=20000 SPLAT_HARMONICS=0 \
   bin/splatter convert output/img-9142-opensplat-webhq-5000-d3.ply \
-  output/img-9142-opensplat-webhq-5000-d3-100k-h1.sog
+  output/img-9142-opensplat-webhq-5000-d3-20k-h0.sog
+SPLAT_DECIMATE=200000 SPLAT_HARMONICS=1 \
+  bin/splatter convert output/img-9142-opensplat-webhq-5000-d3.ply \
+  output/img-9142-opensplat-webhq-5000-d3-200k-h1.sog
 SCENE_CAPTURE="IMG_9142, 30.43s, 59 COLMAP images" \
-SCENE_TRAINING="OpenSplat MPS, 5000 iterations, downscale 3, decimated 100k, SH1" \
-  bin/splatter stage output/img-9142-opensplat-webhq-5000-d3-100k-h1.sog \
+SCENE_TRAINING="OpenSplat MPS, 5000 iterations, downscale 3, final 200k SH1" \
+SCENE_DELIVERY="Progressive preview: 20k SH0, 259KB" \
+SCENE_PREVIEW_ASSET="output/img-9142-opensplat-webhq-5000-d3-20k-h0.sog" \
+  bin/splatter stage output/img-9142-opensplat-webhq-5000-d3-200k-h1.sog \
   "IMG 9142 Web HQ"
 ```
 
@@ -120,8 +125,17 @@ Quality gates used before staging:
 - SOG conversion finishes in practical local time.
 - Viewer reaches `Ready` on desktop and mobile viewports with zero console warnings/errors.
 - Screenshot checks show a nonblank rendered canvas.
+- Final quality asset is at least 2x the previous staged Gaussian count.
+- First render payload is at least 2x smaller than the previous staged asset.
 
-Avoid publishing raw high-density PLY output directly. In testing, `7000 iterations / downscale 2` produced a 188MB PLY with 793K vertices but exceeded the SOG conversion time budget. The deployable balance is the 5000/d3 training result converted to 100K gaussians with SH1.
+Actual measured result:
+
+- Previous staged asset: 100K gaussians, SH1, 1.89MB.
+- New preview asset: 20K gaussians, SH0, 259KB, about 7.5x less first-render payload.
+- New final asset: 200K gaussians, SH1, 3.24MB, 2x the previous Gaussian count.
+- Local Playwright app metrics: preview `Ready` generally 36-65ms; HQ replacement generally 75-105ms.
+
+Avoid publishing raw high-density PLY output directly. In testing, `7000 iterations / downscale 2` produced a 188MB PLY with 793K vertices but exceeded the SOG conversion time budget. The deployable balance is progressive 20K preview plus 200K final SOG from the 5000/d3 training result.
 
 ## CLI Commands
 

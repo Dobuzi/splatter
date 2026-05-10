@@ -1,10 +1,12 @@
 {
   "title": "IMG 9142 Web HQ",
-  "assetUrl": "assets/img-9142-opensplat-webhq-5000-d3-100k-h1.sog",
+  "assetUrl": "assets/img-9142-opensplat-webhq-5000-d3-200k-h1.sog",
   "format": "SOG",
-  "fileSize": "1.89 MB",
+  "fileSize": "3.24 MB",
+  "previewAssetUrl": "assets/img-9142-opensplat-webhq-5000-d3-20k-h0.sog",
   "capture": "IMG_9142, 30.43s, 59 COLMAP images",
-  "training": "OpenSplat MPS, 5000 iterations, downscale 3, decimated 100k, SH1",
+  "training": "OpenSplat MPS, 5000 iterations, downscale 3, final 200k SH1",
+  "delivery": "Progressive preview: 20k SH0, 259KB",
   "camera": {
     "position": [0, 0, 3]
   }

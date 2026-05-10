@@ -58,7 +58,8 @@ Production verification:
 - Mac-compatible 3D Gaussian Splat training is verified with OpenSplat MPS.
 - SOG compression is verified with SplatTransform CPU fallback.
 - One-command production publish is verified in `no-stage` smoke mode.
-- A higher-quality web scene is staged from `5000 iterations / downscale 3`, decimated to 100K gaussians with SH1.
+- A progressive higher-quality web scene is staged from `5000 iterations / downscale 3`: 20K SH0 preview plus 200K SH1 final asset.
+- Compared with the prior 100K SH1 asset, first-render payload is about 7.5x smaller and final Gaussian count is 2x higher.
 - Over-budget HQ candidates were rejected: raw `7000 iterations / downscale 2` and uncapped `5000 iterations / downscale 3` exceeded practical SOG conversion limits.
 - CI blocks Pages deployment if the viewer manifest or scene asset is invalid.
 - Local viewer is verified on desktop and mobile viewport sizes.
@@ -326,10 +327,14 @@ Operational note:
 - [x] Test deployable HQ candidate: 5000 iterations, downscale 3.
 - [x] Add `SPLAT_DECIMATE`, `SPLAT_HARMONICS`, and `SPLAT_SOG_ITERATIONS` controls to `scripts/convert_scene.sh`.
 - [x] Convert deployable HQ candidate to 100K gaussians with SH1.
-- [x] Preserve optional capture/training metadata through `scripts/prepare_scene.sh`.
-- [x] Stage `public/assets/img-9142-opensplat-webhq-5000-d3-100k-h1.sog`.
+- [x] Convert final quality asset to 200K gaussians with SH1.
+- [x] Convert progressive preview asset to 20K gaussians with SH0.
+- [x] Preserve optional capture/training/delivery metadata through `scripts/prepare_scene.sh`.
+- [x] Add progressive `previewAssetUrl` validation.
+- [x] Stage `public/assets/img-9142-opensplat-webhq-5000-d3-200k-h1.sog`.
 - [x] Verify local viewer on desktop and mobile with zero console warnings/errors.
 - [x] Verify screenshots are nonblank.
+- [x] Measure speed/quality uplift: 259KB preview vs 1.89MB prior first asset, 200K final gaussians vs 100K prior final asset.
 
 ### P2: SOG Compression
 

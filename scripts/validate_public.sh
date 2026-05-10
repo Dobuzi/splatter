@@ -21,7 +21,7 @@ if [[ ! -f "$scene_file" ]]; then
   exit 1
 fi
 
-asset_url=$(node -e '
+asset_urls=$(node -e '
 const fs = require("fs");
 const config = JSON.parse(fs.readFileSync("public/scene.json", "utf8"));
 if (!config.title || typeof config.title !== "string") {
@@ -33,12 +33,24 @@ if (!config.assetUrl || typeof config.assetUrl !== "string") {
 if (config.assetUrl.startsWith("/") || config.assetUrl.includes("..")) {
   throw new Error("assetUrl must be a relative path inside public/");
 }
+if (config.previewAssetUrl) {
+  if (typeof config.previewAssetUrl !== "string") {
+    throw new Error("scene.json previewAssetUrl must be a string when set");
+  }
+  if (config.previewAssetUrl.startsWith("/") || config.previewAssetUrl.includes("..")) {
+    throw new Error("previewAssetUrl must be a relative path inside public/");
+  }
+}
 if (!["SOG", "PLY", "Compressed PLY"].includes(config.format)) {
   throw new Error("scene.json format must be SOG, PLY, or Compressed PLY");
 }
 console.log(config.assetUrl);
+if (config.previewAssetUrl) {
+  console.log(config.previewAssetUrl);
+}
 ')
 
+for asset_url in ${(f)asset_urls}; do
 asset_path="public/$asset_url"
 
 if [[ ! -f "$asset_path" ]]; then
@@ -68,3 +80,4 @@ fi
 echo "Validated public viewer"
 echo "Scene asset: $asset_path"
 echo "Asset bytes: $asset_bytes"
+done

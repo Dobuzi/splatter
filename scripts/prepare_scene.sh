@@ -27,6 +27,19 @@ target_name=$(basename "$scene_file")
 target_path="public/assets/$target_name"
 cp "$scene_file" "$target_path"
 
+preview_name=""
+if [[ -n "${SCENE_PREVIEW_ASSET:-}" ]]; then
+  if [[ -f "$SCENE_PREVIEW_ASSET" ]]; then
+    preview_name=$(basename "$SCENE_PREVIEW_ASSET")
+    cp "$SCENE_PREVIEW_ASSET" "public/assets/$preview_name"
+  elif [[ -f "public/assets/$SCENE_PREVIEW_ASSET" ]]; then
+    preview_name="$SCENE_PREVIEW_ASSET"
+  else
+    echo "Preview asset not found: $SCENE_PREVIEW_ASSET" >&2
+    exit 1
+  fi
+fi
+
 case "$target_name" in
   *.sog) format="SOG" ;;
   *.compressed.ply) format="Compressed PLY" ;;
@@ -48,6 +61,9 @@ safe_title="${title//\\/\\\\}"
 safe_title="${safe_title//\"/\\\"}"
 safe_target="${target_name//\\/\\\\}"
 safe_target="${safe_target//\"/\\\"}"
+safe_preview="$preview_name"
+safe_preview="${safe_preview//\\/\\\\}"
+safe_preview="${safe_preview//\"/\\\"}"
 safe_format="${format//\\/\\\\}"
 safe_format="${safe_format//\"/\\\"}"
 safe_file_size="${file_size//\\/\\\\}"
@@ -58,13 +74,22 @@ safe_capture="${safe_capture//\"/\\\"}"
 safe_training="${SCENE_TRAINING:-}"
 safe_training="${safe_training//\\/\\\\}"
 safe_training="${safe_training//\"/\\\"}"
+safe_delivery="${SCENE_DELIVERY:-}"
+safe_delivery="${safe_delivery//\\/\\\\}"
+safe_delivery="${safe_delivery//\"/\\\"}"
 
 metadata_lines=()
+if [[ -n "$safe_preview" ]]; then
+  metadata_lines+=("  \"previewAssetUrl\": \"assets/$safe_preview\",")
+fi
 if [[ -n "$safe_capture" ]]; then
   metadata_lines+=("  \"capture\": \"$safe_capture\",")
 fi
 if [[ -n "$safe_training" ]]; then
   metadata_lines+=("  \"training\": \"$safe_training\",")
+fi
+if [[ -n "$safe_delivery" ]]; then
+  metadata_lines+=("  \"delivery\": \"$safe_delivery\",")
 fi
 
 cat > public/scene.json <<JSON
