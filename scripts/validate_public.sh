@@ -44,6 +44,26 @@ if (config.previewAssetUrl) {
 if (!["SOG", "PLY", "Compressed PLY"].includes(config.format)) {
   throw new Error("scene.json format must be SOG, PLY, or Compressed PLY");
 }
+if (config.viewer) {
+  if (typeof config.viewer !== "object" || Array.isArray(config.viewer)) {
+    throw new Error("scene.json viewer must be an object when set");
+  }
+  if (config.viewer.background !== undefined) {
+    if (!Array.isArray(config.viewer.background) || config.viewer.background.length !== 3) {
+      throw new Error("scene.json viewer.background must be an RGB array");
+    }
+    for (const value of config.viewer.background) {
+      if (typeof value !== "number" || value < 0 || value > 1) {
+        throw new Error("scene.json viewer.background values must be numbers from 0 to 1");
+      }
+    }
+  }
+  if (config.viewer.fov !== undefined) {
+    if (typeof config.viewer.fov !== "number" || config.viewer.fov < 20 || config.viewer.fov > 90) {
+      throw new Error("scene.json viewer.fov must be a number from 20 to 90");
+    }
+  }
+}
 console.log(config.assetUrl);
 if (config.previewAssetUrl) {
   console.log(config.previewAssetUrl);

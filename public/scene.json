@@ -7,6 +7,10 @@
   "capture": "IMG_9142, 30.43s, 59 COLMAP images",
   "training": "OpenSplat MPS, 5000 iterations, downscale 3, final 200k SH1",
   "delivery": "Progressive preview: 20k SH0, 259KB",
+  "viewer": {
+    "background": [0.02, 0.025, 0.03],
+    "fov": 42
+  },
   "transform": {
     "pivot": [-1.15, 0.69, 0.18],
     "position": [0, 0, 0],

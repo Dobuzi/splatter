@@ -117,6 +117,23 @@ SCENE_PREVIEW_ASSET="output/img-9142-opensplat-webhq-5000-d3-20k-h0.sog" \
   "IMG 9142 Web HQ"
 ```
 
+For the repeatable version of that workflow, use the quality commands:
+
+```sh
+bin/splatter quality-report img-9142-fps2 \
+  public/assets/img-9142-opensplat-webhq-5000-d3-200k-h1.sog
+
+bin/splatter quality-stage output/img-9142-opensplat-webhq-5000-d3.ply \
+  "IMG 9142 Web HQ" web
+```
+
+Quality staging presets:
+
+- `web`: preview 20K SH0, final 200K SH1.
+- `web-hq`: preview 30K SH0, final 300K SH1.
+
+Use `SPLAT_QUALITY_DRY_RUN=1` to inspect the conversion plan without running SOG conversion.
+
 Quality gates used before staging:
 
 - COLMAP registers at least 50 images.
@@ -147,6 +164,8 @@ bin/splatter analyze my-capture
 bin/splatter train my-capture 2000 4 output/my-capture.ply
 bin/splatter convert output/my-capture.ply output/my-capture.sog
 bin/splatter stage output/my-capture.sog "My Capture"
+bin/splatter quality-report my-capture output/my-capture.sog
+bin/splatter quality-stage output/my-capture.ply "My Capture" web
 bin/splatter publish input/capture.mov my-capture 2 2000 4 "My Capture"
 bin/splatter serve
 ```
@@ -169,6 +188,11 @@ Optional SOG conversion controls:
 - `SPLAT_DECIMATE=<count|percent>`: cap Gaussian count for browser delivery.
 - `SPLAT_HARMONICS=<0..3>`: remove spherical harmonic bands above the chosen level.
 - `SPLAT_SOG_ITERATIONS=<count>`: tune SOG SH compression iterations.
+
+Optional viewer presentation controls in `public/scene.json`:
+
+- `viewer.background`: RGB values from 0 to 1.
+- `viewer.fov`: camera field of view from 20 to 90 degrees.
 
 Ignored local working directories:
 

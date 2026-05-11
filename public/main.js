@@ -88,6 +88,10 @@ function tupleFromConfig(value, fallback) {
     : [...fallback];
 }
 
+function numberFromConfig(value, fallback) {
+  return Number.isFinite(value) ? value : fallback;
+}
+
 function transformStorageKey(config) {
   return `splatter:transform:${config.assetUrl}`;
 }
@@ -423,7 +427,8 @@ async function boot() {
 
   app.setCanvasFillMode(FILLMODE_FILL_WINDOW);
   app.setCanvasResolution(RESOLUTION_AUTO);
-  app.scene.clearColor = new Color(0.02, 0.025, 0.03);
+  const background = tupleFromConfig(config.viewer?.background, [0.02, 0.025, 0.03]);
+  app.scene.clearColor = new Color(background[0], background[1], background[2]);
   app.start();
 
   window.addEventListener('resize', () => app.resizeCanvas());
@@ -431,7 +436,9 @@ async function boot() {
   const camera = new Entity('Camera');
   const cameraPosition = config.camera?.position || [0, 0, 3];
   camera.setPosition(cameraPosition[0], cameraPosition[1], cameraPosition[2]);
-  camera.addComponent('camera');
+  camera.addComponent('camera', {
+    fov: numberFromConfig(config.viewer?.fov, 45)
+  });
   app.root.addChild(camera);
   installOrbitControls(canvas, camera, config);
 
