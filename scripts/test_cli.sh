@@ -39,7 +39,7 @@ SPLAT_QUALITY_DRY_RUN=1 "$cli" quality-stage public/assets/img-9142-opensplat-we
   exit 1
 }
 
-dry_run_output=$(SPLAT_QUALITY_DRY_RUN=1 "$cli" quality-stage output/img-9142-opensplat-webhq-5000-d3.ply "Dry Run" web-hq)
+dry_run_output=$(SPLAT_QUALITY_DRY_RUN=1 "$cli" quality-stage output/nonexistent-quality-source.ply "Dry Run" web-hq)
 printf '%s\n' "$dry_run_output" | grep -q "Preset: web-hq"
 printf '%s\n' "$dry_run_output" | grep -q "SPLAT_DECIMATE=30000"
 printf '%s\n' "$dry_run_output" | grep -q "SPLAT_DECIMATE=300000"

@@ -10,11 +10,6 @@ input_scene="$1"
 title="$2"
 preset="${3:-web}"
 
-if [[ ! -f "$input_scene" ]]; then
-  echo "Input scene not found: $input_scene" >&2
-  exit 1
-fi
-
 case "$input_scene" in
   *.ply|*.compressed.ply) ;;
   *)
@@ -42,6 +37,11 @@ case "$preset" in
     exit 1
     ;;
 esac
+
+if [[ ! -f "$input_scene" && "${SPLAT_QUALITY_DRY_RUN:-}" != "1" ]]; then
+  echo "Input scene not found: $input_scene" >&2
+  exit 1
+fi
 
 base="${input_scene%.*}"
 preview_output="${base}-$(( preview_count / 1000 ))k-h${preview_harmonics}.sog"
