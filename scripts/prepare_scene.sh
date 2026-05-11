@@ -57,53 +57,46 @@ file_size=$(awk -v bytes="$bytes" 'BEGIN {
   }
 }')
 
-safe_title="${title//\\/\\\\}"
-safe_title="${safe_title//\"/\\\"}"
-safe_target="${target_name//\\/\\\\}"
-safe_target="${safe_target//\"/\\\"}"
-safe_preview="$preview_name"
-safe_preview="${safe_preview//\\/\\\\}"
-safe_preview="${safe_preview//\"/\\\"}"
-safe_format="${format//\\/\\\\}"
-safe_format="${safe_format//\"/\\\"}"
-safe_file_size="${file_size//\\/\\\\}"
-safe_file_size="${safe_file_size//\"/\\\"}"
-safe_capture="${SCENE_CAPTURE:-}"
-safe_capture="${safe_capture//\\/\\\\}"
-safe_capture="${safe_capture//\"/\\\"}"
-safe_training="${SCENE_TRAINING:-}"
-safe_training="${safe_training//\\/\\\\}"
-safe_training="${safe_training//\"/\\\"}"
-safe_delivery="${SCENE_DELIVERY:-}"
-safe_delivery="${safe_delivery//\\/\\\\}"
-safe_delivery="${safe_delivery//\"/\\\"}"
+node - "$title" "$target_name" "$format" "$file_size" "$preview_name" <<'NODE'
+const fs = require('fs');
 
-metadata_lines=()
-if [[ -n "$safe_preview" ]]; then
-  metadata_lines+=("  \"previewAssetUrl\": \"assets/$safe_preview\",")
-fi
-if [[ -n "$safe_capture" ]]; then
-  metadata_lines+=("  \"capture\": \"$safe_capture\",")
-fi
-if [[ -n "$safe_training" ]]; then
-  metadata_lines+=("  \"training\": \"$safe_training\",")
-fi
-if [[ -n "$safe_delivery" ]]; then
-  metadata_lines+=("  \"delivery\": \"$safe_delivery\",")
-fi
+const [, , title, targetName, format, fileSize, previewName] = process.argv;
+const scenePath = 'public/scene.json';
+let existing = {};
 
-cat > public/scene.json <<JSON
-{
-  "title": "$safe_title",
-  "assetUrl": "assets/$safe_target",
-  "format": "$safe_format",
-  "fileSize": "$safe_file_size",
-$(printf '%s\n' "${metadata_lines[@]}")
-  "camera": {
-    "position": [0, 0, 3]
-  }
+if (fs.existsSync(scenePath)) {
+  existing = JSON.parse(fs.readFileSync(scenePath, 'utf8'));
 }
-JSON
+
+const next = {
+  ...existing,
+  title,
+  assetUrl: `assets/${targetName}`,
+  format,
+  fileSize
+};
+
+if (previewName) {
+  next.previewAssetUrl = `assets/${previewName}`;
+} else {
+  delete next.previewAssetUrl;
+}
+
+if (process.env.SCENE_CAPTURE) {
+  next.capture = process.env.SCENE_CAPTURE;
+}
+if (process.env.SCENE_TRAINING) {
+  next.training = process.env.SCENE_TRAINING;
+}
+if (process.env.SCENE_DELIVERY) {
+  next.delivery = process.env.SCENE_DELIVERY;
+}
+if (!next.camera) {
+  next.camera = { position: [0, 0, 3] };
+}
+
+fs.writeFileSync(scenePath, `${JSON.stringify(next, null, 2)}\n`);
+NODE
 
 echo "Prepared $target_path"
 echo "Open SuperSplat for inspection: https://superspl.at/editor"
