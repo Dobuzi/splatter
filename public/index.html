@@ -3,9 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Cache-Control" content="no-store">
     <title>Gaussian Splat Viewer</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="styles.css?v=transform-editor-20260510">
+    <link rel="stylesheet" href="styles.css?v=scene-selector-20260511">
     <script type="importmap">
       {
         "imports": {
@@ -27,6 +28,7 @@
         <strong id="title">Gaussian Splat Viewer</strong>
         <span id="metadata" hidden></span>
       </div>
+      <select id="sceneSelect" aria-label="Scene" hidden></select>
       <span id="status">Starting</span>
       <a href="https://superspl.at/editor" rel="noreferrer">SuperSplat</a>
     </div>
@@ -41,6 +43,6 @@
       <button type="button" data-action="copy">Copy JSON</button>
       <button type="button" data-action="reset">Reset</button>
     </div>
-    <script type="module" src="main.js?v=transform-editor-20260510"></script>
+    <script type="module" src="main.js?v=scene-selector-20260511"></script>
   </body>
 </html>

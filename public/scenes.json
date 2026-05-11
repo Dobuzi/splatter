@@ -1,0 +1,17 @@
+{
+  "defaultScene": "img-9142",
+  "scenes": [
+    {
+      "id": "img-9142",
+      "input": "IMG_9142.MOV",
+      "label": "IMG 9142 Web HQ",
+      "sceneUrl": "scene.json"
+    },
+    {
+      "id": "img-9189",
+      "input": "IMG_9189.MOV",
+      "label": "IMG 9189 Preview",
+      "sceneUrl": "scenes/img-9189/scene.json"
+    }
+  ]
+}

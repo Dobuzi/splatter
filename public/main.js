@@ -13,6 +13,7 @@ const title = document.querySelector('#title');
 const status = document.querySelector('#status');
 const metadata = document.querySelector('#metadata');
 const tools = document.querySelector('#tools');
+const sceneSelect = document.querySelector('#sceneSelect');
 
 function setStatus(message) {
   status.textContent = message;
@@ -31,9 +32,9 @@ function setMetadata(config) {
   metadata.hidden = parts.length === 0;
 }
 
-async function loadSceneConfig() {
+async function loadSceneConfig(sceneUrl = 'scene.json') {
   try {
-    const response = await fetch('scene.json', { cache: 'no-store' });
+    const response = await fetch(sceneUrl, { cache: 'no-store' });
     if (!response.ok) {
       return null;
     }
@@ -47,6 +48,59 @@ async function loadSceneConfig() {
   } catch {
     return null;
   }
+}
+
+async function loadSceneManifest() {
+  try {
+    const response = await fetch('scenes.json', { cache: 'no-store' });
+    if (!response.ok) {
+      return null;
+    }
+
+    const manifest = await response.json();
+    if (!Array.isArray(manifest.scenes) || manifest.scenes.length === 0) {
+      return null;
+    }
+
+    return manifest;
+  } catch {
+    return null;
+  }
+}
+
+function selectedSceneId(manifest) {
+  const requested = new URLSearchParams(window.location.search).get('scene');
+  if (requested && manifest.scenes.some((scene) => scene.id === requested)) {
+    return requested;
+  }
+
+  if (manifest.defaultScene && manifest.scenes.some((scene) => scene.id === manifest.defaultScene)) {
+    return manifest.defaultScene;
+  }
+
+  return manifest.scenes[0].id;
+}
+
+function installSceneSelector(manifest, activeSceneId) {
+  if (!sceneSelect || !manifest) {
+    return;
+  }
+
+  sceneSelect.replaceChildren();
+  for (const scene of manifest.scenes) {
+    const option = document.createElement('option');
+    option.value = scene.id;
+    option.textContent = scene.input || scene.label || scene.id;
+    sceneSelect.appendChild(option);
+  }
+
+  sceneSelect.value = activeSceneId;
+  sceneSelect.hidden = manifest.scenes.length < 2;
+  sceneSelect.addEventListener('change', () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('scene', sceneSelect.value);
+    window.location.assign(url);
+  });
 }
 
 function showEmpty(message = 'No scene staged') {
@@ -406,7 +460,12 @@ function installOrbitControls(canvas, camera, config) {
 
 async function boot() {
   const bootStart = performance.now();
-  const config = await loadSceneConfig();
+  const manifest = await loadSceneManifest();
+  const activeSceneId = manifest ? selectedSceneId(manifest) : null;
+  const activeScene = manifest?.scenes.find((scene) => scene.id === activeSceneId);
+  installSceneSelector(manifest, activeSceneId);
+
+  const config = await loadSceneConfig(activeScene?.sceneUrl || 'scene.json');
   if (!config) {
     showEmpty();
     return;
@@ -458,6 +517,7 @@ async function boot() {
   splat.addComponent('gsplat', { asset: previewAsset });
   setStatus('Ready');
   window.__splatterMetrics = {
+    sceneId: activeSceneId,
     previewReadyMs: Math.round(performance.now() - bootStart),
     highQualityReadyMs: null
   };

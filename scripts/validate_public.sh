@@ -21,54 +21,92 @@ if [[ ! -f "$scene_file" ]]; then
   exit 1
 fi
 
-asset_urls=$(node -e '
+asset_urls=$(node <<'NODE'
 const fs = require("fs");
-const config = JSON.parse(fs.readFileSync("public/scene.json", "utf8"));
-if (!config.title || typeof config.title !== "string") {
-  throw new Error("scene.json requires a string title");
+const path = require("path");
+
+function readJson(file) {
+  return JSON.parse(fs.readFileSync(file, "utf8"));
 }
-if (!config.assetUrl || typeof config.assetUrl !== "string") {
-  throw new Error("scene.json requires a string assetUrl");
-}
-if (config.assetUrl.startsWith("/") || config.assetUrl.includes("..")) {
-  throw new Error("assetUrl must be a relative path inside public/");
-}
-if (config.previewAssetUrl) {
-  if (typeof config.previewAssetUrl !== "string") {
-    throw new Error("scene.json previewAssetUrl must be a string when set");
+
+function assertPublicRelative(value, label) {
+  if (typeof value !== "string" || value.length === 0) {
+    throw new Error(`${label} must be a non-empty string`);
   }
-  if (config.previewAssetUrl.startsWith("/") || config.previewAssetUrl.includes("..")) {
-    throw new Error("previewAssetUrl must be a relative path inside public/");
+  if (value.startsWith("/") || value.includes("..")) {
+    throw new Error(`${label} must be a relative path inside public/`);
   }
 }
-if (!["SOG", "PLY", "Compressed PLY"].includes(config.format)) {
-  throw new Error("scene.json format must be SOG, PLY, or Compressed PLY");
-}
-if (config.viewer) {
-  if (typeof config.viewer !== "object" || Array.isArray(config.viewer)) {
-    throw new Error("scene.json viewer must be an object when set");
+
+function validateSceneConfig(config, file) {
+  if (!config.title || typeof config.title !== "string") {
+    throw new Error(`${file} requires a string title`);
   }
-  if (config.viewer.background !== undefined) {
-    if (!Array.isArray(config.viewer.background) || config.viewer.background.length !== 3) {
-      throw new Error("scene.json viewer.background must be an RGB array");
+  assertPublicRelative(config.assetUrl, `${file} assetUrl`);
+  if (config.previewAssetUrl) {
+    assertPublicRelative(config.previewAssetUrl, `${file} previewAssetUrl`);
+  }
+  if (!["SOG", "PLY", "Compressed PLY"].includes(config.format)) {
+    throw new Error(`${file} format must be SOG, PLY, or Compressed PLY`);
+  }
+  if (config.viewer) {
+    if (typeof config.viewer !== "object" || Array.isArray(config.viewer)) {
+      throw new Error(`${file} viewer must be an object when set`);
     }
-    for (const value of config.viewer.background) {
-      if (typeof value !== "number" || value < 0 || value > 1) {
-        throw new Error("scene.json viewer.background values must be numbers from 0 to 1");
+    if (config.viewer.background !== undefined) {
+      if (!Array.isArray(config.viewer.background) || config.viewer.background.length !== 3) {
+        throw new Error(`${file} viewer.background must be an RGB array`);
+      }
+      for (const value of config.viewer.background) {
+        if (typeof value !== "number" || value < 0 || value > 1) {
+          throw new Error(`${file} viewer.background values must be numbers from 0 to 1`);
+        }
+      }
+    }
+    if (config.viewer.fov !== undefined) {
+      if (typeof config.viewer.fov !== "number" || config.viewer.fov < 20 || config.viewer.fov > 90) {
+        throw new Error(`${file} viewer.fov must be a number from 20 to 90`);
       }
     }
   }
-  if (config.viewer.fov !== undefined) {
-    if (typeof config.viewer.fov !== "number" || config.viewer.fov < 20 || config.viewer.fov > 90) {
-      throw new Error("scene.json viewer.fov must be a number from 20 to 90");
+  return [config.assetUrl, config.previewAssetUrl].filter(Boolean);
+}
+
+const assetUrls = new Set(validateSceneConfig(readJson("public/scene.json"), "scene.json"));
+
+if (fs.existsSync("public/scenes.json")) {
+  const manifest = readJson("public/scenes.json");
+  if (!Array.isArray(manifest.scenes) || manifest.scenes.length === 0) {
+    throw new Error("scenes.json requires a non-empty scenes array");
+  }
+  const ids = new Set();
+  for (const scene of manifest.scenes) {
+    if (!scene.id || typeof scene.id !== "string") {
+      throw new Error("scenes.json scene.id must be a string");
+    }
+    if (ids.has(scene.id)) {
+      throw new Error(`Duplicate scene id: ${scene.id}`);
+    }
+    ids.add(scene.id);
+    assertPublicRelative(scene.sceneUrl, `scenes.json ${scene.id} sceneUrl`);
+    const scenePath = path.join("public", scene.sceneUrl);
+    if (!fs.existsSync(scenePath)) {
+      throw new Error(`Missing scene config: ${scenePath}`);
+    }
+    for (const assetUrl of validateSceneConfig(readJson(scenePath), scene.sceneUrl)) {
+      assetUrls.add(assetUrl);
     }
   }
+  if (manifest.defaultScene && !ids.has(manifest.defaultScene)) {
+    throw new Error("scenes.json defaultScene must match a scene id");
+  }
 }
-console.log(config.assetUrl);
-if (config.previewAssetUrl) {
-  console.log(config.previewAssetUrl);
+
+for (const assetUrl of assetUrls) {
+  console.log(assetUrl);
 }
-')
+NODE
+)
 
 for asset_url in ${(f)asset_urls}; do
 asset_path="public/$asset_url"

@@ -100,6 +100,19 @@ code {
   white-space: nowrap;
 }
 
+#sceneSelect {
+  flex: 0 0 auto;
+  min-height: 32px;
+  max-width: 190px;
+  padding: 0 26px 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  background: rgba(5, 6, 9, 0.78);
+  color: #f5f7fb;
+  font: inherit;
+  font-size: 12px;
+}
+
 #status {
   flex: 0 0 auto;
   color: #dce7f6;
@@ -142,6 +155,11 @@ code {
 
   .hud-main {
     width: 100%;
+  }
+
+  #sceneSelect {
+    width: 100%;
+    max-width: none;
   }
 
   #metadata {

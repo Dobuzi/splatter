@@ -181,7 +181,8 @@ Expected generated outputs:
 - `output/<name>-opensplat-<iterations>.ply`: OpenSplat training result
 - `output/<name>-opensplat-<iterations>.sog`: compressed PlayCanvas asset
 - `public/assets/<scene>.sog`: staged production web asset
-- `public/scene.json`: viewer manifest
+- `public/scene.json`: default viewer scene
+- `public/scenes.json`: optional multi-scene manifest for the viewer selector
 
 Optional SOG conversion controls:
 
@@ -213,6 +214,12 @@ Open:
 
 ```text
 http://localhost:8080
+```
+
+The viewer reads `public/scenes.json` when present and shows a scene selector using the original input filenames. Open a specific scene with:
+
+```text
+http://localhost:8080/?scene=img-9189
 ```
 
 Validate the deployable viewer:
