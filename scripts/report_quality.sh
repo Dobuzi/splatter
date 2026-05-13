@@ -17,8 +17,8 @@ if [[ ! -d "$images_dir" ]]; then
   exit 1
 fi
 
-frame_count=$(find "$images_dir" -type f -name '*.jpg' | wc -l | tr -d ' ')
-first_image=$(find "$images_dir" -type f -name '*.jpg' | sort | head -n 1)
+frame_count=$(find -L "$images_dir" -type f -name '*.jpg' | wc -l | tr -d ' ')
+first_image=$(find -L "$images_dir" -type f -name '*.jpg' | sort | head -n 1)
 dimensions="unknown"
 
 if [[ -n "$first_image" ]] && command -v ffprobe >/dev/null 2>&1; then

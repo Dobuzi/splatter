@@ -12,6 +12,7 @@ images_dir="$capture_dir/images"
 workspace_dir="$capture_dir/colmap"
 cache_dir="$capture_dir/cache"
 home_dir="$capture_dir/home"
+camera_model="${COLMAP_CAMERA_MODEL:-OPENCV}"
 
 if [[ ! -d "$images_dir" ]]; then
   echo "Images directory not found: $images_dir" >&2
@@ -32,7 +33,7 @@ colmap automatic_reconstructor \
   --workspace_path "$workspace_dir" \
   --image_path "$images_dir" \
   --data_type individual \
-  --camera_model OPENCV \
+  --camera_model "$camera_model" \
   --single_camera 1 \
   --quality medium \
   --sparse 1 \
@@ -40,4 +41,5 @@ colmap automatic_reconstructor \
   --use_gpu 0
 
 echo "COLMAP reconstruction written to $workspace_dir"
+echo "COLMAP camera model: $camera_model"
 echo "Use this capture with a Mac-compatible 3DGS trainer, then export .ply, .compressed.ply, or .sog."

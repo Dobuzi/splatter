@@ -1,12 +1,12 @@
 {
   "title": "Video 2026-05-14 03:42",
-  "assetUrl": "assets/video-20260514-034200-opensplat-5000-d1-h1.sog",
+  "assetUrl": "assets/video-20260514-034200-opensplat-10000-d1-fps12-pinhole-h1.sog",
   "format": "SOG",
-  "fileSize": "835 KB",
-  "previewAssetUrl": "assets/video-20260514-034200-opensplat-5000-d1-h0.sog",
-  "capture": "2026-05-14-03-42-00.mov, 23.54s, 94 COLMAP images",
-  "training": "OpenSplat CPU, 5000 iterations, downscale 1, PINHOLE COLMAP, 40.4k gaussians",
-  "delivery": "Progressive preview: SH0 522KB, final SH1 835KB",
+  "fileSize": "3.0 MB",
+  "previewAssetUrl": "assets/video-20260514-034200-opensplat-10000-d1-fps12-pinhole-h0.sog",
+  "capture": "2026-05-14-03-42-00.mov, 23.54s, 283 COLMAP images",
+  "training": "OpenSplat CPU, 10000 iterations, downscale 1, 12fps PINHOLE COLMAP, 188.4k gaussians",
+  "delivery": "Progressive preview: SH0 2.2MB, final SH1 3.0MB",
   "viewer": {
     "background": [
       0.02,
@@ -17,9 +17,9 @@
   },
   "transform": {
     "pivot": [
-      -0.17,
-      0.12,
-      3.81
+      -0.14,
+      -0.05,
+      5.06
     ],
     "position": [
       0,
@@ -39,14 +39,14 @@
   },
   "camera": {
     "target": [
-      -0.17,
-      0.12,
-      3.81
+      -0.14,
+      -0.05,
+      5.06
     ],
     "position": [
-      -0.17,
-      0.12,
-      11.81
+      -0.14,
+      -0.05,
+      13.06
     ],
     "distance": 8,
     "minDistance": 0.25,
