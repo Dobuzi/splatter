@@ -12,6 +12,12 @@
       "input": "IMG_9189.MOV",
       "label": "IMG 9189 Preview",
       "sceneUrl": "scenes/img-9189/scene.json"
+    },
+    {
+      "id": "video-20260514-034200",
+      "input": "2026-05-14-03-42-00.mov",
+      "label": "Video 2026-05-14 03:42",
+      "sceneUrl": "scenes/video-20260514-034200/scene.json"
     }
   ]
 }
