@@ -57,7 +57,9 @@ printf '%s\n' "$dry_run_output" | grep -q "Preset: web-hq"
 printf '%s\n' "$dry_run_output" | grep -q "SPLAT_DECIMATE=30000"
 printf '%s\n' "$dry_run_output" | grep -q "SPLAT_DECIMATE=300000"
 
-sweep_output=$("$cli" quality-sweep input/IMG_9142.MOV dry-run-title "Dry Run")
+temp_video=$(mktemp "${TMPDIR:-/tmp}/splatter-quality-sweep.XXXXXX.mov")
+trap 'rm -f "$temp_video"' EXIT
+sweep_output=$("$cli" quality-sweep "$temp_video" dry-run-title "Dry Run")
 printf '%s\n' "$sweep_output" | grep -q "Execute: 0"
 printf '%s\n' "$sweep_output" | grep -q "COLMAP_CAMERA_MODEL=PINHOLE"
 printf '%s\n' "$sweep_output" | grep -q "OPENSPLAT_SAVE_EVERY=1000"
