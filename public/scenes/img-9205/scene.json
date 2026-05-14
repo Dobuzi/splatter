@@ -1,0 +1,55 @@
+{
+  "title": "IMG 9205 Preview",
+  "assetUrl": "assets/img-9205-opensplat-5000-d4-200k-h1.sog",
+  "format": "SOG",
+  "fileSize": "2.1 MB",
+  "previewAssetUrl": "assets/img-9205-opensplat-5000-d4-20k-h0.sog",
+  "capture": "IMG_9205.MOV, 157.99s, 80 COLMAP images",
+  "training": "OpenSplat CPU, 5000 iterations, downscale 4, 1fps PINHOLE COLMAP, 117.8k gaussians",
+  "delivery": "Progressive preview: SH0 254KB, final SH1 2.1MB",
+  "viewer": {
+    "background": [
+      0.02,
+      0.025,
+      0.03
+    ],
+    "fov": 42
+  },
+  "transform": {
+    "pivot": [
+      -0.14,
+      -0.03,
+      0.4
+    ],
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "rotation": [
+      0,
+      0,
+      0
+    ],
+    "scale": [
+      1,
+      -1,
+      1
+    ]
+  },
+  "camera": {
+    "target": [
+      -0.14,
+      -0.03,
+      0.4
+    ],
+    "position": [
+      -0.14,
+      -0.03,
+      12.4
+    ],
+    "distance": 12,
+    "minDistance": 0.25,
+    "maxDistance": 80
+  }
+}
