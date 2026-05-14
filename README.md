@@ -148,6 +148,12 @@ SPLAT_SWEEP_ITERS_LIST="5000" \
 SPLAT_SWEEP_DOWNSCALES="1 2" \
   bin/splatter quality-sweep input/capture.mov capture-name "Capture Name"
 
+# Compare a validation render against its withheld source frame.
+bin/splatter compare-holdout \
+  captures/capture-name-fps12-pinhole/images/frame_00010.jpg \
+  output/metrics/capture-name-fps12-pinhole-opensplat-5000-d1/5000.png \
+  output/metrics/capture-name-fps12-pinhole-opensplat-5000-d1/holdout-metrics.json
+
 # Build a sharper, less redundant frame set from an existing capture.
 bin/splatter select-frames capture-name-fps12 selected-capture 180
 COLMAP_CAMERA_MODEL=PINHOLE scripts/run_colmap.sh selected-capture
@@ -161,7 +167,9 @@ OPENSPLAT_SAVE_EVERY=1000 OPENSPLAT_DEVICE=cpu \
   bin/splatter train selected-capture 10000 1 output/selected-capture-10000-d1.ply
 ```
 
-Additional OpenSplat flags can be passed with `OPENSPLAT_EXTRA_ARGS`, for example `--ssim-weight 0.1 --sh-degree 2`. Use `bin/splatter mlx-smoke` to check whether the local `gsplat-mlx` install is viable before trying MLX-based experiments.
+Additional OpenSplat flags can be passed with `OPENSPLAT_EXTRA_ARGS`, for example `--ssim-weight 0.1 --sh-degree 2`. Use `bin/splatter mlx-smoke` to check whether the local `gsplat-mlx` install is viable before trying MLX-based experiments. If the smoke run produces `nan`, use `bin/splatter mlx-diagnose --lr 1e-5` to identify whether the first backward pass or optimizer update is the source.
+
+`quality-sweep` uses a middle capture frame as the default holdout and writes PSNR/SSIM metrics under `output/metrics/`. Set `SPLAT_SWEEP_VAL_IMAGE=none` to disable holdout validation, or set it to a specific frame filename such as `frame_00042.jpg`.
 
 Quality gates used before staging:
 
@@ -195,9 +203,11 @@ bin/splatter select-frames my-capture my-capture-selected 180
 bin/splatter convert output/my-capture.ply output/my-capture.sog
 bin/splatter stage output/my-capture.sog "My Capture"
 bin/splatter quality-report my-capture output/my-capture.sog
+bin/splatter compare-holdout captures/my-capture/images/frame_00010.jpg output/metrics/my-capture/5000.png
 bin/splatter quality-stage output/my-capture.ply "My Capture" web
 bin/splatter quality-sweep input/capture.mov my-capture "My Capture"
 bin/splatter mlx-smoke
+bin/splatter mlx-diagnose --lr 1e-5
 bin/splatter publish input/capture.mov my-capture 2 2000 4 "My Capture"
 bin/splatter serve
 ```

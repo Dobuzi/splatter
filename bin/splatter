@@ -22,9 +22,12 @@ Commands:
   convert <input> [output]                   Convert scene formats, defaults to SOG
   stage <scene> [title]                      Stage scene into public/assets
   quality-report <name> [scene]              Report capture, COLMAP, and scene quality signals
+  compare-holdout <reference> <render> [json]
+                                             Compute holdout PSNR/SSIM metrics
   quality-stage <ply> <title> [preset]       Convert and stage progressive quality assets
   quality-sweep <video> <base-name> [title]  Plan or run quality experiment matrix
   mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
+  mlx-diagnose [args]                        Diagnose gsplat-mlx NaN sources
   publish <video> <name> [fps] [iters] [downscale] [title] [stage|no-stage]
                                              Run capture/train/convert/stage pipeline
   serve                                      Serve public viewer on localhost:8080
@@ -91,6 +94,10 @@ case "$1" in
     shift
     scripts/report_quality.sh "$@"
     ;;
+  compare-holdout)
+    shift
+    scripts/compare_holdout.sh "$@"
+    ;;
   quality-stage)
     shift
     scripts/stage_quality_scene.sh "$@"
@@ -102,6 +109,10 @@ case "$1" in
   mlx-smoke)
     shift
     scripts/check_mlx_gsplat.sh "$@"
+    ;;
+  mlx-diagnose)
+    shift
+    scripts/diagnose_mlx_gsplat.sh "$@"
     ;;
   publish)
     shift

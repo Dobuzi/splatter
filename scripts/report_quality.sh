@@ -88,6 +88,27 @@ if [[ -n "$scene_file" ]]; then
   echo "- Size: $scene_size"
 fi
 
+metrics_files=()
+while IFS= read -r metrics_file; do
+  metrics_files+=("$metrics_file")
+done < <(find output/metrics -type f -name 'holdout-metrics*.json' -path "*/${capture_name}-opensplat-*/*" 2>/dev/null | sort)
+
+if (( ${#metrics_files[@]} > 0 )); then
+  echo
+  echo "Holdout Metrics"
+  for metrics_file in "${metrics_files[@]}"; do
+    python3 - "$metrics_file" <<'PY'
+import json
+import sys
+
+path = sys.argv[1]
+with open(path, encoding="utf-8") as handle:
+    metrics = json.load(handle)
+print(f"- {path}: PSNR {metrics['psnr_db']:.3f} dB, SSIM {metrics['ssim']:.4f}, MSE {metrics['mse']:.6f}")
+PY
+  done
+fi
+
 echo
 echo "Recommendations"
 

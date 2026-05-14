@@ -10,10 +10,12 @@ fi
 
 "$cli" --help | grep -q "splatter - local iPhone video"
 "$cli" --help | grep -q "quality-report"
+"$cli" --help | grep -q "compare-holdout"
 "$cli" --help | grep -q "quality-stage"
 "$cli" --help | grep -q "quality-sweep"
 "$cli" --help | grep -q "select-frames"
 "$cli" --help | grep -q "mlx-smoke"
+"$cli" --help | grep -q "mlx-diagnose"
 "$cli" --version | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+'
 "$cli" validate >/dev/null
 
@@ -61,6 +63,7 @@ temp_video=$(mktemp "${TMPDIR:-/tmp}/splatter-quality-sweep.XXXXXX.mov")
 trap 'rm -f "$temp_video"' EXIT
 sweep_output=$("$cli" quality-sweep "$temp_video" dry-run-title "Dry Run")
 printf '%s\n' "$sweep_output" | grep -q "Execute: 0"
+printf '%s\n' "$sweep_output" | grep -q "Holdout: auto"
 printf '%s\n' "$sweep_output" | grep -q "COLMAP_CAMERA_MODEL=PINHOLE"
 printf '%s\n' "$sweep_output" | grep -q "OPENSPLAT_SAVE_EVERY=1000"
 
