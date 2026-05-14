@@ -34,11 +34,45 @@ fi
 
 mkdir -p "$(dirname "$output_file")"
 
-"$opensplat_bin" "$colmap_dir" \
+opensplat_args=("$colmap_dir" \
   --colmap-image-path "$images_dir" \
   -n "$iters" \
   -d "$downscale" \
-  -o "$output_file"
+  -o "$output_file")
+
+case "${OPENSPLAT_DEVICE:-auto}" in
+  auto|mps) ;;
+  cpu)
+    opensplat_args+=(--cpu)
+    ;;
+  *)
+    echo "OPENSPLAT_DEVICE must be auto, mps, or cpu." >&2
+    exit 1
+    ;;
+esac
+
+if [[ -n "${OPENSPLAT_SAVE_EVERY:-}" ]]; then
+  opensplat_args+=(--save-every "$OPENSPLAT_SAVE_EVERY")
+fi
+
+if [[ "${OPENSPLAT_VAL:-0}" == "1" ]]; then
+  opensplat_args+=(--val)
+fi
+
+if [[ -n "${OPENSPLAT_VAL_IMAGE:-}" ]]; then
+  opensplat_args+=(--val-image "$OPENSPLAT_VAL_IMAGE")
+fi
+
+if [[ -n "${OPENSPLAT_VAL_RENDER:-}" ]]; then
+  mkdir -p "$OPENSPLAT_VAL_RENDER"
+  opensplat_args+=(--val-render "$OPENSPLAT_VAL_RENDER")
+fi
+
+if [[ -n "${OPENSPLAT_EXTRA_ARGS:-}" ]]; then
+  opensplat_args+=(${(z)OPENSPLAT_EXTRA_ARGS})
+fi
+
+"$opensplat_bin" "${opensplat_args[@]}"
 
 echo "OpenSplat output written to $output_file"
 echo "Next: inspect and clean the scene in SuperSplat: https://superspl.at/editor"

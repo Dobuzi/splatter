@@ -18,10 +18,13 @@ Commands:
   capture <video> <name> [fps]               Extract frames, run COLMAP, analyze
   analyze <name>                             Analyze COLMAP sparse models
   train <name> [iters] [downscale] [ply]     Run OpenSplat
+  select-frames <src> <dst> [max-frames]     Select sharp, diverse capture frames
   convert <input> [output]                   Convert scene formats, defaults to SOG
   stage <scene> [title]                      Stage scene into public/assets
   quality-report <name> [scene]              Report capture, COLMAP, and scene quality signals
   quality-stage <ply> <title> [preset]       Convert and stage progressive quality assets
+  quality-sweep <video> <base-name> [title]  Plan or run quality experiment matrix
+  mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
   publish <video> <name> [fps] [iters] [downscale] [title] [stage|no-stage]
                                              Run capture/train/convert/stage pipeline
   serve                                      Serve public viewer on localhost:8080
@@ -72,6 +75,10 @@ case "$1" in
     shift
     scripts/run_opensplat.sh "$@"
     ;;
+  select-frames)
+    shift
+    scripts/select_frames.sh "$@"
+    ;;
   convert)
     shift
     scripts/convert_scene.sh "$@"
@@ -87,6 +94,14 @@ case "$1" in
   quality-stage)
     shift
     scripts/stage_quality_scene.sh "$@"
+    ;;
+  quality-sweep)
+    shift
+    scripts/sweep_quality.sh "$@"
+    ;;
+  mlx-smoke)
+    shift
+    scripts/check_mlx_gsplat.sh "$@"
     ;;
   publish)
     shift

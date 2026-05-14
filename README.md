@@ -134,6 +134,35 @@ Quality staging presets:
 
 Use `SPLAT_QUALITY_DRY_RUN=1` to inspect the conversion plan without running SOG conversion.
 
+Quality experiment helpers:
+
+```sh
+# Print a matrix of candidate capture/training runs.
+bin/splatter quality-sweep input/capture.mov capture-name "Capture Name"
+
+# Execute the matrix. Keep the lists narrow; this can run for hours.
+SPLAT_SWEEP_EXECUTE=1 \
+SPLAT_SWEEP_FPS_LIST="8 12" \
+SPLAT_SWEEP_CAMERA_MODELS="PINHOLE SIMPLE_PINHOLE" \
+SPLAT_SWEEP_ITERS_LIST="5000" \
+SPLAT_SWEEP_DOWNSCALES="1 2" \
+  bin/splatter quality-sweep input/capture.mov capture-name "Capture Name"
+
+# Build a sharper, less redundant frame set from an existing capture.
+bin/splatter select-frames capture-name-fps12 selected-capture 180
+COLMAP_CAMERA_MODEL=PINHOLE scripts/run_colmap.sh selected-capture
+bin/splatter analyze selected-capture
+```
+
+Long OpenSplat runs should leave checkpoints:
+
+```sh
+OPENSPLAT_SAVE_EVERY=1000 OPENSPLAT_DEVICE=cpu \
+  bin/splatter train selected-capture 10000 1 output/selected-capture-10000-d1.ply
+```
+
+Additional OpenSplat flags can be passed with `OPENSPLAT_EXTRA_ARGS`, for example `--ssim-weight 0.1 --sh-degree 2`. Use `bin/splatter mlx-smoke` to check whether the local `gsplat-mlx` install is viable before trying MLX-based experiments.
+
 Quality gates used before staging:
 
 - COLMAP registers at least 50 images.
@@ -162,10 +191,13 @@ bin/splatter validate
 bin/splatter capture input/capture.mov my-capture 2
 bin/splatter analyze my-capture
 bin/splatter train my-capture 2000 4 output/my-capture.ply
+bin/splatter select-frames my-capture my-capture-selected 180
 bin/splatter convert output/my-capture.ply output/my-capture.sog
 bin/splatter stage output/my-capture.sog "My Capture"
 bin/splatter quality-report my-capture output/my-capture.sog
 bin/splatter quality-stage output/my-capture.ply "My Capture" web
+bin/splatter quality-sweep input/capture.mov my-capture "My Capture"
+bin/splatter mlx-smoke
 bin/splatter publish input/capture.mov my-capture 2 2000 4 "My Capture"
 bin/splatter serve
 ```
