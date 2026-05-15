@@ -1,12 +1,12 @@
 {
-  "title": "IMG 9205 Preview",
-  "assetUrl": "assets/img-9205-opensplat-5000-d4-200k-h1.sog",
+  "title": "IMG 9205 Improved",
+  "assetUrl": "assets/img-9205-083-127-fps4-pinhole-opensplat-5000-d3-2000-143k-h1.sog",
   "format": "SOG",
-  "fileSize": "2.1 MB",
-  "previewAssetUrl": "assets/img-9205-opensplat-5000-d4-20k-h0.sog",
-  "capture": "IMG_9205.MOV, 157.99s, 80 COLMAP images",
-  "training": "OpenSplat CPU, 5000 iterations, downscale 4, 1fps PINHOLE COLMAP, 117.8k gaussians",
-  "delivery": "Progressive preview: SH0 254KB, final SH1 2.1MB",
+  "fileSize": "2.4 MB",
+  "previewAssetUrl": "assets/img-9205-083-127-fps4-pinhole-opensplat-5000-d3-2000-30k-h0.sog",
+  "capture": "IMG_9205.MOV, 83-128s segment, 180 frames at 4fps, 117 COLMAP images",
+  "training": "OpenSplat CPU, stable 2000-step checkpoint from 5000-iteration run, downscale 3, PINHOLE COLMAP, 143.3k gaussians",
+  "delivery": "Progressive preview: SH0 379KB, final SH1 2.4MB",
   "viewer": {
     "background": [
       0.02,
@@ -17,9 +17,9 @@
   },
   "transform": {
     "pivot": [
-      -0.14,
       -0.03,
-      0.4
+      -0.07,
+      1.04
     ],
     "position": [
       0,
@@ -39,14 +39,14 @@
   },
   "camera": {
     "target": [
-      -0.14,
       -0.03,
-      0.4
+      -0.07,
+      1.04
     ],
     "position": [
-      -0.14,
       -0.03,
-      12.4
+      -0.07,
+      13.04
     ],
     "distance": 12,
     "minDistance": 0.25,
