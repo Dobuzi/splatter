@@ -1,0 +1,59 @@
+{
+  "title": "2026-05-14-03-42-00.mov OpenMVS Mesh",
+  "assetUrl": "assets/video-20260514-034200-openmvs-scene_refined.ply",
+  "format": "PLY Mesh",
+  "fileSize": "1.59 MB",
+  "capture": "video-20260514-034200-fps12-pinhole, 283 frames, 283 COLMAP images",
+  "training": "OpenMVS CPU dense, 3753027 dense points, 44073 vertices, 87316 faces",
+  "delivery": "Mesh 1.59 MB; dense point cloud kept in captures for local inspection",
+  "viewer": {
+    "background": [
+      0.02,
+      0.025,
+      0.03
+    ],
+    "fov": 42,
+    "meshColor": [
+      0.72,
+      0.78,
+      0.84
+    ]
+  },
+  "transform": {
+    "pivot": [
+      0,
+      0,
+      0
+    ],
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "rotation": [
+      0,
+      0,
+      0
+    ],
+    "scale": [
+      1,
+      -1,
+      1
+    ]
+  },
+  "camera": {
+    "target": [
+      0,
+      0,
+      0
+    ],
+    "position": [
+      0,
+      0,
+      10
+    ],
+    "distance": 10,
+    "minDistance": 0.25,
+    "maxDistance": 120
+  }
+}

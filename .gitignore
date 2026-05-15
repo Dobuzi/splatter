@@ -2,6 +2,7 @@ captures/
 input/
 output/
 *.log
+public/assets/*-openmvs-scene_dense.ply
 __pycache__/
 *.pyc
 .DS_Store

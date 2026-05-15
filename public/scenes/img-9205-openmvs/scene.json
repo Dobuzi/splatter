@@ -1,0 +1,59 @@
+{
+  "title": "IMG_9205.MOV OpenMVS Mesh",
+  "assetUrl": "assets/img-9205-openmvs-scene_refined.ply",
+  "format": "PLY Mesh",
+  "fileSize": "1.19 MB",
+  "capture": "img-9205-fps1-pinhole, 158 frames, 80 COLMAP images",
+  "training": "OpenMVS CPU dense, 710260 dense points, 33032 vertices, 65581 faces",
+  "delivery": "Mesh 1.19 MB; dense point cloud kept in captures for local inspection",
+  "viewer": {
+    "background": [
+      0.02,
+      0.025,
+      0.03
+    ],
+    "fov": 42,
+    "meshColor": [
+      0.72,
+      0.78,
+      0.84
+    ]
+  },
+  "transform": {
+    "pivot": [
+      0,
+      0,
+      0
+    ],
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "rotation": [
+      0,
+      0,
+      0
+    ],
+    "scale": [
+      1,
+      -1,
+      1
+    ]
+  },
+  "camera": {
+    "target": [
+      0,
+      0,
+      0
+    ],
+    "position": [
+      0,
+      0,
+      10
+    ],
+    "distance": 10,
+    "minDistance": 0.25,
+    "maxDistance": 120
+  }
+}

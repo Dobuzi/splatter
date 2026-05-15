@@ -46,8 +46,11 @@ function validateSceneConfig(config, file) {
   if (config.previewAssetUrl) {
     assertPublicRelative(config.previewAssetUrl, `${file} previewAssetUrl`);
   }
-  if (!["SOG", "PLY", "Compressed PLY"].includes(config.format)) {
-    throw new Error(`${file} format must be SOG, PLY, or Compressed PLY`);
+  if (!["SOG", "PLY", "Compressed PLY", "PLY Mesh"].includes(config.format)) {
+    throw new Error(`${file} format must be SOG, PLY, Compressed PLY, or PLY Mesh`);
+  }
+  if (config.pointCloudAssetUrl) {
+    assertPublicRelative(config.pointCloudAssetUrl, `${file} pointCloudAssetUrl`);
   }
   if (config.viewer) {
     if (typeof config.viewer !== "object" || Array.isArray(config.viewer)) {
@@ -69,7 +72,7 @@ function validateSceneConfig(config, file) {
       }
     }
   }
-  return [config.assetUrl, config.previewAssetUrl].filter(Boolean);
+  return [config.assetUrl, config.previewAssetUrl, config.pointCloudAssetUrl].filter(Boolean);
 }
 
 const assetUrls = new Set(validateSceneConfig(readJson("public/scene.json"), "scene.json"));

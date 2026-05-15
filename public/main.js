@@ -5,7 +5,10 @@ import {
   Color,
   Entity,
   FILLMODE_FILL_WINDOW,
-  RESOLUTION_AUTO
+  MeshInstance,
+  RESOLUTION_AUTO,
+  StandardMaterial,
+  createMesh
 } from 'playcanvas';
 
 const empty = document.querySelector('#empty');
@@ -144,6 +147,10 @@ function tupleFromConfig(value, fallback) {
 
 function numberFromConfig(value, fallback) {
   return Number.isFinite(value) ? value : fallback;
+}
+
+function isMeshScene(config) {
+  return config.format === 'PLY Mesh';
 }
 
 function transformStorageKey(config) {
@@ -458,6 +465,258 @@ function installOrbitControls(canvas, camera, config) {
   updateCamera();
 }
 
+function plyScalarSize(type) {
+  return {
+    char: 1,
+    uchar: 1,
+    int8: 1,
+    uint8: 1,
+    short: 2,
+    ushort: 2,
+    int16: 2,
+    uint16: 2,
+    int: 4,
+    uint: 4,
+    int32: 4,
+    uint32: 4,
+    float: 4,
+    float32: 4,
+    double: 8,
+    float64: 8
+  }[type];
+}
+
+function readPlyScalar(view, offset, type, littleEndian) {
+  switch (type) {
+    case 'char':
+    case 'int8':
+      return [view.getInt8(offset), offset + 1];
+    case 'uchar':
+    case 'uint8':
+      return [view.getUint8(offset), offset + 1];
+    case 'short':
+    case 'int16':
+      return [view.getInt16(offset, littleEndian), offset + 2];
+    case 'ushort':
+    case 'uint16':
+      return [view.getUint16(offset, littleEndian), offset + 2];
+    case 'int':
+    case 'int32':
+      return [view.getInt32(offset, littleEndian), offset + 4];
+    case 'uint':
+    case 'uint32':
+      return [view.getUint32(offset, littleEndian), offset + 4];
+    case 'float':
+    case 'float32':
+      return [view.getFloat32(offset, littleEndian), offset + 4];
+    case 'double':
+    case 'float64':
+      return [view.getFloat64(offset, littleEndian), offset + 8];
+    default:
+      throw new Error(`Unsupported PLY scalar type: ${type}`);
+  }
+}
+
+function parsePlyHeader(text) {
+  const lines = text.split(/\r?\n/);
+  const elements = [];
+  let format = null;
+  let current = null;
+
+  for (const line of lines) {
+    const parts = line.trim().split(/\s+/);
+    if (parts[0] === 'format') {
+      format = parts[1];
+    } else if (parts[0] === 'element') {
+      current = { name: parts[1], count: Number(parts[2]), properties: [] };
+      elements.push(current);
+    } else if (parts[0] === 'property' && current) {
+      if (parts[1] === 'list') {
+        current.properties.push({
+          kind: 'list',
+          countType: parts[2],
+          itemType: parts[3],
+          name: parts[4]
+        });
+      } else {
+        current.properties.push({
+          kind: 'scalar',
+          type: parts[1],
+          name: parts[2]
+        });
+      }
+    }
+  }
+
+  return { format, elements };
+}
+
+function locatePlyBody(buffer) {
+  const bytes = new Uint8Array(buffer);
+  const marker = new TextEncoder().encode('end_header');
+  for (let i = 0; i <= bytes.length - marker.length; i += 1) {
+    let matched = true;
+    for (let j = 0; j < marker.length; j += 1) {
+      if (bytes[i + j] !== marker[j]) {
+        matched = false;
+        break;
+      }
+    }
+    if (matched) {
+      let offset = i + marker.length;
+      if (bytes[offset] === 13) {
+        offset += 1;
+      }
+      if (bytes[offset] === 10) {
+        offset += 1;
+      }
+      return offset;
+    }
+  }
+  throw new Error('Invalid PLY header');
+}
+
+function computeNormals(positions, indices) {
+  const normals = new Array(positions.length).fill(0);
+  for (let i = 0; i < indices.length; i += 3) {
+    const ia = indices[i] * 3;
+    const ib = indices[i + 1] * 3;
+    const ic = indices[i + 2] * 3;
+    const ab = [
+      positions[ib] - positions[ia],
+      positions[ib + 1] - positions[ia + 1],
+      positions[ib + 2] - positions[ia + 2]
+    ];
+    const ac = [
+      positions[ic] - positions[ia],
+      positions[ic + 1] - positions[ia + 1],
+      positions[ic + 2] - positions[ia + 2]
+    ];
+    const normal = [
+      ab[1] * ac[2] - ab[2] * ac[1],
+      ab[2] * ac[0] - ab[0] * ac[2],
+      ab[0] * ac[1] - ab[1] * ac[0]
+    ];
+    for (const index of [ia, ib, ic]) {
+      normals[index] += normal[0];
+      normals[index + 1] += normal[1];
+      normals[index + 2] += normal[2];
+    }
+  }
+  for (let i = 0; i < normals.length; i += 3) {
+    const length = Math.hypot(normals[i], normals[i + 1], normals[i + 2]) || 1;
+    normals[i] /= length;
+    normals[i + 1] /= length;
+    normals[i + 2] /= length;
+  }
+  return normals;
+}
+
+function parseBinaryPly(buffer) {
+  const headerBytes = locatePlyBody(buffer);
+  const header = new TextDecoder('ascii').decode(buffer.slice(0, headerBytes));
+  const parsed = parsePlyHeader(header);
+  if (parsed.format !== 'binary_little_endian') {
+    throw new Error(`Unsupported PLY format: ${parsed.format}`);
+  }
+
+  const view = new DataView(buffer);
+  const positions = [];
+  const indices = [];
+  let offset = headerBytes;
+
+  for (const element of parsed.elements) {
+    for (let row = 0; row < element.count; row += 1) {
+      if (element.name === 'vertex') {
+        let x = 0;
+        let y = 0;
+        let z = 0;
+        for (const property of element.properties) {
+          if (property.kind === 'list') {
+            let count;
+            [count, offset] = readPlyScalar(view, offset, property.countType, true);
+            offset += count * plyScalarSize(property.itemType);
+          } else {
+            let value;
+            [value, offset] = readPlyScalar(view, offset, property.type, true);
+            if (property.name === 'x') {
+              x = value;
+            } else if (property.name === 'y') {
+              y = value;
+            } else if (property.name === 'z') {
+              z = value;
+            }
+          }
+        }
+        positions.push(x, y, z);
+      } else if (element.name === 'face') {
+        let faceIndices = null;
+        for (const property of element.properties) {
+          if (property.kind === 'list') {
+            let count;
+            [count, offset] = readPlyScalar(view, offset, property.countType, true);
+            const values = [];
+            for (let i = 0; i < count; i += 1) {
+              let value;
+              [value, offset] = readPlyScalar(view, offset, property.itemType, true);
+              values.push(value);
+            }
+            if (property.name === 'vertex_indices') {
+              faceIndices = values;
+            }
+          } else {
+            offset += plyScalarSize(property.type);
+          }
+        }
+        if (faceIndices && faceIndices.length >= 3) {
+          for (let i = 1; i < faceIndices.length - 1; i += 1) {
+            indices.push(faceIndices[0], faceIndices[i], faceIndices[i + 1]);
+          }
+        }
+      } else {
+        for (const property of element.properties) {
+          if (property.kind === 'list') {
+            let count;
+            [count, offset] = readPlyScalar(view, offset, property.countType, true);
+            offset += count * plyScalarSize(property.itemType);
+          } else {
+            offset += plyScalarSize(property.type);
+          }
+        }
+      }
+    }
+  }
+
+  if (positions.length === 0 || indices.length === 0) {
+    throw new Error('PLY mesh requires vertices and faces');
+  }
+
+  return { positions, indices, normals: computeNormals(positions, indices) };
+}
+
+async function loadPlyMesh(url) {
+  const response = await fetch(url, { cache: 'no-store' });
+  if (!response.ok) {
+    throw new Error(`Failed to load ${url}`);
+  }
+  const buffer = await response.arrayBuffer();
+  return parseBinaryPly(buffer);
+}
+
+async function installMeshScene(config, app, root, child) {
+  const meshData = await loadPlyMesh(config.assetUrl);
+  const mesh = createMesh(app.graphicsDevice, meshData.positions, {
+    indices: meshData.indices,
+    normals: meshData.normals
+  });
+  const color = tupleFromConfig(config.viewer?.meshColor, [0.72, 0.78, 0.84]);
+  const material = new StandardMaterial();
+  material.diffuse = new Color(color[0], color[1], color[2]);
+  material.update();
+  const meshInstance = new MeshInstance(mesh, material, child);
+  child.addComponent('render', { meshInstances: [meshInstance] });
+}
+
 async function boot() {
   const bootStart = performance.now();
   const manifest = await loadSceneManifest();
@@ -501,20 +760,24 @@ async function boot() {
   app.root.addChild(camera);
   installOrbitControls(canvas, camera, config);
 
-  const previewAssetUrl = config.previewAssetUrl || config.assetUrl;
-  const previewAsset = await loadAsset(new Asset('capture-preview', 'gsplat', {
-    url: previewAssetUrl
-  }), app);
-
   const transform = loadSavedTransform(config) || baseTransform(config);
-  const splatRoot = new Entity('Splat Transform');
-  const splat = new Entity('Gaussian Splat');
-  app.root.addChild(splatRoot);
-  splatRoot.addChild(splat);
-  splat.setPosition(0, 0, 0);
-  applySplatTransform(splatRoot, splat, transform);
-  installTransformTools(config, splatRoot, splat, transform);
-  splat.addComponent('gsplat', { asset: previewAsset });
+  const sceneRoot = new Entity('Scene Transform');
+  const sceneEntity = new Entity(isMeshScene(config) ? 'PLY Mesh' : 'Gaussian Splat');
+  app.root.addChild(sceneRoot);
+  sceneRoot.addChild(sceneEntity);
+  sceneEntity.setPosition(0, 0, 0);
+  applySplatTransform(sceneRoot, sceneEntity, transform);
+  installTransformTools(config, sceneRoot, sceneEntity, transform);
+
+  if (isMeshScene(config)) {
+    await installMeshScene(config, app, sceneRoot, sceneEntity);
+  } else {
+    const previewAssetUrl = config.previewAssetUrl || config.assetUrl;
+    const previewAsset = await loadAsset(new Asset('capture-preview', 'gsplat', {
+      url: previewAssetUrl
+    }), app);
+    sceneEntity.addComponent('gsplat', { asset: previewAsset });
+  }
   setStatus('Ready');
   window.__splatterMetrics = {
     sceneId: activeSceneId,
@@ -522,12 +785,13 @@ async function boot() {
     highQualityReadyMs: null
   };
 
-  if (config.assetUrl && config.assetUrl !== previewAssetUrl) {
+  const previewAssetUrl = config.previewAssetUrl || config.assetUrl;
+  if (!isMeshScene(config) && config.assetUrl && config.assetUrl !== previewAssetUrl) {
     loadAsset(new Asset('capture-high-quality', 'gsplat', {
       url: config.assetUrl
     }), app).then((highQualityAsset) => {
-      splat.removeComponent('gsplat');
-      splat.addComponent('gsplat', { asset: highQualityAsset });
+      sceneEntity.removeComponent('gsplat');
+      sceneEntity.addComponent('gsplat', { asset: highQualityAsset });
       window.__splatterMetrics.highQualityReadyMs = Math.round(performance.now() - bootStart);
       setStatus('Ready · HQ');
     }).catch((error) => {

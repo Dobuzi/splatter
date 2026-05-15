@@ -24,6 +24,7 @@ fi
 "$cli" --help | grep -q "depth-report"
 "$cli" --help | grep -q "mesh-validate"
 "$cli" --help | grep -q "surface-reconstruct"
+"$cli" --help | grep -q "openmvs-batch"
 "$cli" --help | grep -q "mlx-smoke"
 "$cli" --help | grep -q "mlx-diagnose"
 "$cli" --version | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+'
@@ -198,5 +199,8 @@ printf '%s\n' "$surface_output" | grep -q "stereo_fusion"
 openmvs_surface_output=$(SPLAT_SURFACE_DRY_RUN=1 SPLAT_SURFACE_BACKEND=openmvs "$cli" surface-reconstruct missing-capture)
 printf '%s\n' "$openmvs_surface_output" | grep -q "Backend: openmvs"
 printf '%s\n' "$openmvs_surface_output" | grep -q "DensifyPointCloud"
+openmvs_batch_output=$(SPLAT_OPENMVS_BATCH_DRY_RUN=1 "$cli" openmvs-batch input)
+printf '%s\n' "$openmvs_batch_output" | grep -q "OpenMVS batch"
+printf '%s\n' "$openmvs_batch_output" | grep -q "output/openmvs-ranking.json"
 
 echo "CLI contract tests passed"

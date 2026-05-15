@@ -36,6 +36,7 @@ Commands:
   depth-report <capture>                     Report depth prior coverage
   mesh-validate <ply>                        Plan optional surface/mesh validation
   surface-reconstruct <capture> [model]      Run COLMAP dense depth, fusion, and mesh
+  openmvs-batch [input-dir]                  Run OpenMVS for best capture per input and stage mesh results
   mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
   mlx-diagnose [args]                        Diagnose gsplat-mlx NaN sources
   publish <video> <name> [fps] [iters] [downscale] [title] [stage|no-stage]
@@ -155,6 +156,10 @@ case "$1" in
   surface-reconstruct)
     shift
     scripts/colmap_surface.sh "$@"
+    ;;
+  openmvs-batch)
+    shift
+    scripts/openmvs_batch.sh "$@"
     ;;
   mlx-smoke)
     shift
