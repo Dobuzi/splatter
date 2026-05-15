@@ -26,6 +26,12 @@ Commands:
                                              Compute holdout PSNR/SSIM metrics
   quality-stage <ply> <title> [preset]       Convert and stage progressive quality assets
   quality-sweep <video> <base-name> [title]  Plan or run quality experiment matrix
+  segment-sweep <video> <base-name>          Plan or run segment quality candidates
+  colmap-gate <capture>                      Score COLMAP structure before training
+  select-checkpoint <ply-prefix>             Pick the best finite OpenSplat checkpoint
+  mask-frames <capture>                      Generate optional masks for dynamic objects
+  depth-priors <capture>                     Generate optional monocular depth priors
+  mesh-validate <ply>                        Plan optional surface/mesh validation
   mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
   mlx-diagnose [args]                        Diagnose gsplat-mlx NaN sources
   publish <video> <name> [fps] [iters] [downscale] [title] [stage|no-stage]
@@ -105,6 +111,30 @@ case "$1" in
   quality-sweep)
     shift
     scripts/sweep_quality.sh "$@"
+    ;;
+  segment-sweep)
+    shift
+    scripts/sweep_segments.sh "$@"
+    ;;
+  colmap-gate)
+    shift
+    scripts/colmap_gate.sh "$@"
+    ;;
+  select-checkpoint)
+    shift
+    scripts/select_checkpoint.sh "$@"
+    ;;
+  mask-frames)
+    shift
+    scripts/mask_frames.sh "$@"
+    ;;
+  depth-priors)
+    shift
+    scripts/depth_priors.sh "$@"
+    ;;
+  mesh-validate)
+    shift
+    scripts/mesh_validate.sh "$@"
     ;;
   mlx-smoke)
     shift

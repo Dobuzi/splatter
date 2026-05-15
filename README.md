@@ -137,6 +137,17 @@ Use `SPLAT_QUALITY_DRY_RUN=1` to inspect the conversion plan without running SOG
 Quality experiment helpers:
 
 ```sh
+# Find the most coherent temporal segment before spending time on 3DGS training.
+bin/splatter segment-sweep input/capture.mov capture-name
+
+# Execute segment reconstruction candidates. Keep the window list small at first.
+SPLAT_SEGMENT_EXECUTE=1 \
+SPLAT_SEGMENT_FPS=4 \
+  bin/splatter segment-sweep input/capture.mov capture-name 45 15
+
+# Gate COLMAP output before training.
+bin/splatter colmap-gate capture-name-000-045-fps4-pinhole
+
 # Print a matrix of candidate capture/training runs.
 bin/splatter quality-sweep input/capture.mov capture-name "Capture Name"
 
@@ -157,7 +168,7 @@ bin/splatter compare-holdout \
 # Build a sharper, less redundant frame set from an existing capture.
 bin/splatter select-frames capture-name-fps12 selected-capture 180
 COLMAP_CAMERA_MODEL=PINHOLE scripts/run_colmap.sh selected-capture
-bin/splatter analyze selected-capture
+bin/splatter colmap-gate selected-capture
 ```
 
 Long OpenSplat runs should leave checkpoints:
@@ -165,6 +176,8 @@ Long OpenSplat runs should leave checkpoints:
 ```sh
 OPENSPLAT_SAVE_EVERY=1000 OPENSPLAT_DEVICE=cpu \
   bin/splatter train selected-capture 10000 1 output/selected-capture-10000-d1.ply
+
+bin/splatter select-checkpoint output/selected-capture-10000-d1
 ```
 
 Additional OpenSplat flags can be passed with `OPENSPLAT_EXTRA_ARGS`, for example `--ssim-weight 0.1 --sh-degree 2`. Use `bin/splatter mlx-smoke` to check whether the local `gsplat-mlx` install is viable before trying MLX-based experiments. If the smoke run produces `nan`, use `bin/splatter mlx-diagnose --lr 1e-5` to identify whether the first backward pass or optimizer update is the source.
@@ -173,8 +186,9 @@ Additional OpenSplat flags can be passed with `OPENSPLAT_EXTRA_ARGS`, for exampl
 
 Quality gates used before staging:
 
-- COLMAP registers at least 50 images.
+- COLMAP passes `bin/splatter colmap-gate`: registered image count, registration ratio, sparse point count, and reprojection error.
 - Training runs on MPS, not CPU fallback.
+- OpenSplat checkpoint selection rejects NaN/Inf PLY files before conversion.
 - Web asset stays under the 25MB Pages gate.
 - SOG conversion finishes in practical local time.
 - Viewer reaches `Ready` on desktop and mobile viewports with zero console warnings/errors.
@@ -206,6 +220,12 @@ bin/splatter quality-report my-capture output/my-capture.sog
 bin/splatter compare-holdout captures/my-capture/images/frame_00010.jpg output/metrics/my-capture/5000.png
 bin/splatter quality-stage output/my-capture.ply "My Capture" web
 bin/splatter quality-sweep input/capture.mov my-capture "My Capture"
+bin/splatter segment-sweep input/capture.mov my-capture
+bin/splatter colmap-gate my-capture
+bin/splatter select-checkpoint output/my-capture-opensplat-10000-d1
+bin/splatter mask-frames my-capture
+bin/splatter depth-priors my-capture
+bin/splatter mesh-validate output/my-capture.ply
 bin/splatter mlx-smoke
 bin/splatter mlx-diagnose --lr 1e-5
 bin/splatter publish input/capture.mov my-capture 2 2000 4 "My Capture"

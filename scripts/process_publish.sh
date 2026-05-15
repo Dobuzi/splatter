@@ -35,6 +35,10 @@ else
   scripts/process_capture.sh "$input_video" "$capture_name" "$fps"
 fi
 
+if [[ "${SPLAT_REQUIRE_COLMAP_GATE:-0}" == "1" ]]; then
+  scripts/colmap_gate.sh "$capture_name"
+fi
+
 scripts/run_opensplat.sh "$capture_name" "$iters" "$downscale" "$ply_output"
 scripts/convert_scene.sh "$ply_output" "$sog_output"
 

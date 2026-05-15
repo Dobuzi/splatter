@@ -2,6 +2,8 @@
 import json
 import os
 import shutil
+import statistics
+import subprocess
 import sys
 from pathlib import Path
 
@@ -11,6 +13,98 @@ def usage():
         "Usage: scripts/select_frames.py <source-images-dir> <output-images-dir> [max-frames]",
         file=sys.stderr,
     )
+
+def load_gray_thumbnail(path, width=160):
+    proc = subprocess.run(
+        [
+            "ffmpeg",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-i",
+            str(path),
+            "-vf",
+            f"scale={width}:-1,format=gray",
+            "-f",
+            "rawvideo",
+            "-",
+        ],
+        check=True,
+        stdout=subprocess.PIPE,
+    )
+
+    data = proc.stdout
+    if not data:
+        raise ValueError(f"empty thumbnail for {path}")
+    height = max(1, len(data) // width)
+    return list(data[: width * height]), width, height
+
+
+def laplacian_variance(pixels, width, height):
+    if width < 3 or height < 3:
+        return 0.0
+    values = []
+    for y in range(1, height - 1):
+        row = y * width
+        for x in range(1, width - 1):
+            center = pixels[row + x] * 4
+            value = center - pixels[row + x - 1] - pixels[row + x + 1]
+            value -= pixels[row - width + x] + pixels[row + width + x]
+            values.append(value)
+    return statistics.pvariance(values) if values else 0.0
+
+
+def exposure_score(pixels):
+    mean = statistics.fmean(pixels) / 255.0
+    clipped = sum(1 for value in pixels if value < 8 or value > 247) / len(pixels)
+    midtone = 1.0 - min(1.0, abs(mean - 0.5) * 2.0)
+    return max(0.05, midtone * (1.0 - clipped))
+
+
+def motion_score(previous, current):
+    if previous is None:
+        return 0.0
+    prev_pixels, prev_width, prev_height = previous
+    pixels, width, height = current
+    count = min(len(prev_pixels), len(pixels), prev_width * prev_height, width * height)
+    if count == 0:
+        return 0.0
+    diff = sum(abs(prev_pixels[i] - pixels[i]) for i in range(count)) / count
+    return diff / 255.0
+
+
+def score_frames(files):
+    previous = None
+    scored = []
+    for index, path in enumerate(files):
+        jpeg_bytes = path.stat().st_size
+        try:
+            thumb = load_gray_thumbnail(path)
+            sharpness = laplacian_variance(*thumb)
+            exposure = exposure_score(thumb[0])
+            motion = motion_score(previous, thumb)
+            previous = thumb
+            score = (sharpness * exposure) + (motion * 250.0)
+            method = "laplacian_exposure_motion"
+        except Exception as exc:
+            sharpness = 0.0
+            exposure = 0.0
+            motion = 0.0
+            score = float(jpeg_bytes)
+            method = f"jpeg_bytes_fallback:{exc.__class__.__name__}"
+        scored.append(
+            {
+                "index": index,
+                "path": path,
+                "score": score,
+                "jpeg_bytes": jpeg_bytes,
+                "sharpness": sharpness,
+                "exposure": exposure,
+                "motion": motion,
+                "method": method,
+            }
+        )
+    return scored
 
 
 def main():
@@ -33,12 +127,26 @@ def main():
         print(f"No jpg frames found in {source_dir}", file=sys.stderr)
         return 1
 
-    # Keep the selector dependency-free. JPEG byte size is a useful proxy for
-    # detail/sharpness after fixed-q extraction, and min_gap keeps viewpoints diverse.
-    scored = [
-        {"index": index, "path": path, "score": path.stat().st_size}
-        for index, path in enumerate(files)
-    ]
+    score_mode = os.environ.get("SPLAT_SELECT_SCORE", "visual_quality")
+    if score_mode == "jpeg_bytes":
+        scored = [
+            {
+                "index": index,
+                "path": path,
+                "score": path.stat().st_size,
+                "jpeg_bytes": path.stat().st_size,
+                "sharpness": 0.0,
+                "exposure": 0.0,
+                "motion": 0.0,
+                "method": "jpeg_bytes",
+            }
+            for index, path in enumerate(files)
+        ]
+    elif score_mode == "visual_quality":
+        scored = score_frames(files)
+    else:
+        print("SPLAT_SELECT_SCORE must be visual_quality or jpeg_bytes.", file=sys.stderr)
+        return 1
 
     selected = []
     for item in sorted(scored, key=lambda x: x["score"], reverse=True):
@@ -62,7 +170,7 @@ def main():
         "selected_frames": len(selected),
         "max_frames": max_frames,
         "min_gap": min_gap,
-        "score": "jpeg_bytes",
+        "score": score_mode,
         "frames": [],
     }
 
@@ -77,7 +185,12 @@ def main():
                 "source": str(item["path"]),
                 "output": str(target),
                 "source_index": item["index"],
-                "jpeg_bytes": item["score"],
+                "score": item["score"],
+                "jpeg_bytes": item["jpeg_bytes"],
+                "sharpness": item["sharpness"],
+                "exposure": item["exposure"],
+                "motion": item["motion"],
+                "method": item["method"],
             }
         )
 
