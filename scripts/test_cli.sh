@@ -116,6 +116,29 @@ checkpoint_output=$(SPLAT_CHECKPOINT_DRY_RUN=1 "$cli" select-checkpoint output/m
 printf '%s\n' "$checkpoint_output" | grep -q "Checkpoint selector"
 printf '%s\n' "$checkpoint_output" | grep -q "finite PLY"
 
+checkpoint_dir=$(mktemp -d "${TMPDIR:-/tmp}/splatter-checkpoint.XXXXXX")
+trap 'rm -f "$temp_video"; rm -rf "$checkpoint_dir"' EXIT
+python3 - "$checkpoint_dir/sample_1000.ply" <<'PY'
+import struct
+import sys
+
+path = sys.argv[1]
+header = """ply
+format binary_little_endian 1.0
+element vertex 1
+property float x
+property float y
+property float z
+end_header
+"""
+with open(path, "wb") as handle:
+    handle.write(header.encode("ascii"))
+    handle.write(struct.pack("<fff", 1.0, 2.0, 3.0))
+PY
+checkpoint_binary_output=$("$cli" select-checkpoint "$checkpoint_dir/sample")
+printf '%s\n' "$checkpoint_binary_output" | grep -q '"format": "binary_little_endian"'
+printf '%s\n' "$checkpoint_binary_output" | grep -q '"finite": true'
+
 mask_output=$(SPLAT_MASK_DRY_RUN=1 "$cli" mask-frames missing-capture)
 printf '%s\n' "$mask_output" | grep -q "Mask generation"
 printf '%s\n' "$mask_output" | grep -q "rembg"

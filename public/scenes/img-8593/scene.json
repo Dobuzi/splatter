@@ -1,0 +1,55 @@
+{
+  "title": "IMG 8593 Candidate",
+  "assetUrl": "assets/img-8593-seg-000-045-fps4-pinhole-opensplat-3000-d4-13k-h1.sog",
+  "format": "SOG",
+  "fileSize": "267 KB",
+  "previewAssetUrl": "assets/img-8593-seg-000-045-fps4-pinhole-opensplat-3000-d4-10k-h0.sog",
+  "capture": "IMG_8593.MOV, 0-45s segment, 180 frames at 4fps, 23 COLMAP images",
+  "training": "OpenSplat CPU, finite 3000-step checkpoint, downscale 4, PINHOLE COLMAP, 13.4k gaussians",
+  "delivery": "Progressive preview: SH0 140KB, final SH1 267KB",
+  "viewer": {
+    "background": [
+      0.02,
+      0.025,
+      0.03
+    ],
+    "fov": 42
+  },
+  "transform": {
+    "pivot": [
+      -0.34,
+      0.06,
+      2.21
+    ],
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "rotation": [
+      0,
+      0,
+      0
+    ],
+    "scale": [
+      1,
+      -1,
+      1
+    ]
+  },
+  "camera": {
+    "target": [
+      -0.34,
+      0.06,
+      2.21
+    ],
+    "position": [
+      -0.34,
+      0.06,
+      14.21
+    ],
+    "distance": 12,
+    "minDistance": 0.25,
+    "maxDistance": 80
+  }
+}

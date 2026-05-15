@@ -24,6 +24,12 @@
       "input": "IMG_9205.MOV",
       "label": "IMG 9205 Improved",
       "sceneUrl": "scenes/img-9205/scene.json"
+    },
+    {
+      "id": "img-8593",
+      "input": "IMG_8593.MOV",
+      "label": "IMG 8593 Candidate",
+      "sceneUrl": "scenes/img-8593/scene.json"
     }
   ]
 }
