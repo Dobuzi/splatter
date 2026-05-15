@@ -191,6 +191,13 @@ COLMAP_MASK_PATH=captures/selected-capture/masks \
 # Check whether generated depth priors cover every selected frame.
 bin/splatter depth-priors selected-capture
 bin/splatter depth-report selected-capture
+
+# Convert the COLMAP reconstruction toward a 3D surface artifact.
+# On CUDA-enabled COLMAP builds this runs dense stereo, stereo fusion, and meshers.
+# On this Mac's CPU-only COLMAP build it falls back to sparse Delaunay meshing.
+COLMAP_DENSE_MAX_IMAGE_SIZE=640 \
+COLMAP_NUM_THREADS=4 \
+  bin/splatter surface-reconstruct selected-capture
 ```
 
 Long OpenSplat runs should leave checkpoints:
@@ -212,6 +219,7 @@ Quality gates used before staging:
 - Matcher candidates are ranked with `bin/splatter rank-captures` before training; low point distribution proxy means OpenSplat will likely learn a partial shell.
 - Optional masks are passed through `COLMAP_MASK_PATH` so COLMAP feature extraction can ignore dynamic clutter.
 - Optional depth priors must pass `bin/splatter depth-report` coverage before using depth consistency as a ranking or training signal.
+- Surface reconstruction uses `bin/splatter surface-reconstruct` to produce COLMAP dense outputs when CUDA is available, or a sparse Delaunay mesh fallback when dense stereo is unavailable.
 - Training runs on MPS, not CPU fallback.
 - OpenSplat checkpoint selection rejects NaN/Inf PLY files before conversion.
 - Web asset stays under the 25MB Pages gate.
@@ -254,6 +262,7 @@ bin/splatter mask-frames my-capture
 bin/splatter depth-priors my-capture
 bin/splatter depth-report my-capture
 bin/splatter mesh-validate output/my-capture.ply
+bin/splatter surface-reconstruct my-capture
 bin/splatter mlx-smoke
 bin/splatter mlx-diagnose --lr 1e-5
 bin/splatter publish input/capture.mov my-capture 2 2000 4 "My Capture"

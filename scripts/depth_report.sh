@@ -9,10 +9,14 @@ fi
 capture_name="$1"
 images_dir="captures/$capture_name/images"
 depth_dir="${2:-captures/$capture_name/depth}"
+if (( $# == 1 )) && [[ ! -d "$depth_dir" && -d "captures/$capture_name/colmap/dense/stereo/depth_maps" ]]; then
+  depth_dir="captures/$capture_name/colmap/dense/stereo/depth_maps"
+fi
 
 echo "Depth prior report for $capture_name"
 echo "- Reports depth coverage before depth maps are used for ranking or training priors."
 echo "- Coverage target: one depth map per selected input frame."
+echo "- Depth dir: $depth_dir"
 
 if [[ "${SPLAT_DEPTH_REPORT_DRY_RUN:-0}" == "1" ]]; then
   exit 0
@@ -26,7 +30,7 @@ fi
 frame_count=$(find -L "$images_dir" -type f -name '*.jpg' | wc -l | tr -d ' ')
 depth_count=0
 if [[ -d "$depth_dir" ]]; then
-  depth_count=$(find -L "$depth_dir" -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.npy' \) | wc -l | tr -d ' ')
+  depth_count=$(find -L "$depth_dir" -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.npy' -o -name '*.geometric.bin' -o -name '*.photometric.bin' \) | wc -l | tr -d ' ')
 fi
 
 coverage=$(awk -v depths="$depth_count" -v frames="$frame_count" 'BEGIN {

@@ -10,9 +10,12 @@ capture_name="$1"
 output_dir="${2:-captures/$capture_name/depth}"
 images_dir="captures/$capture_name/images"
 depth_command="${SPLAT_DEPTH_COMMAND:-}"
+backend="${SPLAT_DEPTH_BACKEND:-command}"
 
 echo "Depth prior generation for $capture_name"
+echo "- Backend: $backend"
 echo "- Intended backend: Depth Anything V2 or a compatible monocular depth command."
+echo "- COLMAP backend: set SPLAT_DEPTH_BACKEND=colmap to run dense stereo from an existing sparse model."
 echo "- Set SPLAT_DEPTH_COMMAND with {input} and {output} placeholders."
 echo "- Output: $output_dir"
 
@@ -22,6 +25,16 @@ fi
 
 if [[ ! -d "$images_dir" ]]; then
   echo "Images directory not found: $images_dir" >&2
+  exit 1
+fi
+
+if [[ "$backend" == "colmap" ]]; then
+  scripts/colmap_surface.sh "$capture_name" "${SPLAT_DEPTH_MODEL_ID:-best}"
+  exit $?
+fi
+
+if [[ "$backend" != "command" ]]; then
+  echo "SPLAT_DEPTH_BACKEND must be command or colmap." >&2
   exit 1
 fi
 

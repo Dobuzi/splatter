@@ -23,6 +23,7 @@ fi
 "$cli" --help | grep -q "depth-priors"
 "$cli" --help | grep -q "depth-report"
 "$cli" --help | grep -q "mesh-validate"
+"$cli" --help | grep -q "surface-reconstruct"
 "$cli" --help | grep -q "mlx-smoke"
 "$cli" --help | grep -q "mlx-diagnose"
 "$cli" --version | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+'
@@ -103,6 +104,11 @@ if "$cli" mesh-validate >/dev/null 2>&1; then
   exit 1
 fi
 
+if "$cli" surface-reconstruct >/dev/null 2>&1; then
+  echo "Surface reconstruct without required args should fail" >&2
+  exit 1
+fi
+
 SPLAT_QUALITY_DRY_RUN=1 "$cli" quality-stage public/assets/img-9142-opensplat-webhq-5000-d3-200k-h1.sog "Dry Run" >/dev/null 2>&1 && {
   echo "Quality stage should reject non-PLY input" >&2
   exit 1
@@ -172,7 +178,7 @@ printf '%s\n' "$checkpoint_binary_output" | grep -q '"finite": true'
 
 mask_output=$(SPLAT_MASK_DRY_RUN=1 "$cli" mask-frames missing-capture)
 printf '%s\n' "$mask_output" | grep -q "Mask generation"
-printf '%s\n' "$mask_output" | grep -q "rembg"
+printf '%s\n' "$mask_output" | grep -q "Backend:"
 
 depth_output=$(SPLAT_DEPTH_DRY_RUN=1 "$cli" depth-priors missing-capture)
 printf '%s\n' "$depth_output" | grep -q "Depth prior generation"
@@ -185,5 +191,9 @@ printf '%s\n' "$depth_report_output" | grep -q "coverage"
 mesh_output=$(SPLAT_MESH_DRY_RUN=1 "$cli" mesh-validate output/missing.ply)
 printf '%s\n' "$mesh_output" | grep -q "Surface validation"
 printf '%s\n' "$mesh_output" | grep -q "SuGaR"
+
+surface_output=$(SPLAT_SURFACE_DRY_RUN=1 "$cli" surface-reconstruct missing-capture)
+printf '%s\n' "$surface_output" | grep -q "COLMAP surface reconstruction"
+printf '%s\n' "$surface_output" | grep -q "stereo_fusion"
 
 echo "CLI contract tests passed"

@@ -35,6 +35,7 @@ Commands:
   depth-priors <capture>                     Generate optional monocular depth priors
   depth-report <capture>                     Report depth prior coverage
   mesh-validate <ply>                        Plan optional surface/mesh validation
+  surface-reconstruct <capture> [model]      Run COLMAP dense depth, fusion, and mesh
   mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
   mlx-diagnose [args]                        Diagnose gsplat-mlx NaN sources
   publish <video> <name> [fps] [iters] [downscale] [title] [stage|no-stage]
@@ -150,6 +151,10 @@ case "$1" in
   mesh-validate)
     shift
     scripts/mesh_validate.sh "$@"
+    ;;
+  surface-reconstruct)
+    shift
+    scripts/colmap_surface.sh "$@"
     ;;
   mlx-smoke)
     shift
