@@ -14,11 +14,14 @@ fi
 "$cli" --help | grep -q "quality-stage"
 "$cli" --help | grep -q "quality-sweep"
 "$cli" --help | grep -q "segment-sweep"
+"$cli" --help | grep -q "matcher-sweep"
+"$cli" --help | grep -q "rank-captures"
 "$cli" --help | grep -q "select-frames"
 "$cli" --help | grep -q "colmap-gate"
 "$cli" --help | grep -q "select-checkpoint"
 "$cli" --help | grep -q "mask-frames"
 "$cli" --help | grep -q "depth-priors"
+"$cli" --help | grep -q "depth-report"
 "$cli" --help | grep -q "mesh-validate"
 "$cli" --help | grep -q "mlx-smoke"
 "$cli" --help | grep -q "mlx-diagnose"
@@ -60,6 +63,16 @@ if "$cli" segment-sweep >/dev/null 2>&1; then
   exit 1
 fi
 
+if "$cli" matcher-sweep >/dev/null 2>&1; then
+  echo "Matcher sweep without required args should fail" >&2
+  exit 1
+fi
+
+if "$cli" rank-captures >/dev/null 2>&1; then
+  echo "Rank captures without required args should fail" >&2
+  exit 1
+fi
+
 if "$cli" colmap-gate >/dev/null 2>&1; then
   echo "COLMAP gate without required args should fail" >&2
   exit 1
@@ -77,6 +90,11 @@ fi
 
 if "$cli" depth-priors >/dev/null 2>&1; then
   echo "Depth priors without required args should fail" >&2
+  exit 1
+fi
+
+if "$cli" depth-report >/dev/null 2>&1; then
+  echo "Depth report without required args should fail" >&2
   exit 1
 fi
 
@@ -107,6 +125,19 @@ segment_output=$("$cli" segment-sweep "$temp_video" segment-dry-run)
 printf '%s\n' "$segment_output" | grep -q "Segment sweep"
 printf '%s\n' "$segment_output" | grep -q "Execute: 0"
 printf '%s\n' "$segment_output" | grep -q "scripts/run_colmap.sh"
+
+matcher_output=$("$cli" matcher-sweep segment-dry-run)
+printf '%s\n' "$matcher_output" | grep -q "Matcher sweep"
+printf '%s\n' "$matcher_output" | grep -q "sequential"
+printf '%s\n' "$matcher_output" | grep -q "COLMAP_MATCHER"
+
+rank_output=$(SPLAT_RANK_DRY_RUN=1 "$cli" rank-captures segment-dry-run)
+printf '%s\n' "$rank_output" | grep -q "Capture ranking"
+printf '%s\n' "$rank_output" | grep -q "point distribution"
+
+colmap_plan=$(SPLAT_COLMAP_DRY_RUN=1 COLMAP_MATCHER=sequential COLMAP_MASK_PATH=captures/missing/masks scripts/run_colmap.sh missing-capture)
+printf '%s\n' "$colmap_plan" | grep -q "Matcher: sequential"
+printf '%s\n' "$colmap_plan" | grep -q "ImageReader.mask_path"
 
 gate_output=$(SPLAT_COLMAP_GATE_DRY_RUN=1 "$cli" colmap-gate missing-capture)
 printf '%s\n' "$gate_output" | grep -q "COLMAP quality gate"
@@ -146,6 +177,10 @@ printf '%s\n' "$mask_output" | grep -q "rembg"
 depth_output=$(SPLAT_DEPTH_DRY_RUN=1 "$cli" depth-priors missing-capture)
 printf '%s\n' "$depth_output" | grep -q "Depth prior generation"
 printf '%s\n' "$depth_output" | grep -q "Depth Anything"
+
+depth_report_output=$(SPLAT_DEPTH_REPORT_DRY_RUN=1 "$cli" depth-report missing-capture)
+printf '%s\n' "$depth_report_output" | grep -q "Depth prior report"
+printf '%s\n' "$depth_report_output" | grep -q "coverage"
 
 mesh_output=$(SPLAT_MESH_DRY_RUN=1 "$cli" mesh-validate output/missing.ply)
 printf '%s\n' "$mesh_output" | grep -q "Surface validation"

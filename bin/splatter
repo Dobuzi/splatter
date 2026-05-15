@@ -27,10 +27,13 @@ Commands:
   quality-stage <ply> <title> [preset]       Convert and stage progressive quality assets
   quality-sweep <video> <base-name> [title]  Plan or run quality experiment matrix
   segment-sweep <video> <base-name>          Plan or run segment quality candidates
+  matcher-sweep <capture> [base-name]        Plan or run COLMAP matcher candidates
+  rank-captures <capture-prefix>             Rank COLMAP candidates by structure signals
   colmap-gate <capture>                      Score COLMAP structure before training
   select-checkpoint <ply-prefix>             Pick the best finite OpenSplat checkpoint
   mask-frames <capture>                      Generate optional masks for dynamic objects
   depth-priors <capture>                     Generate optional monocular depth priors
+  depth-report <capture>                     Report depth prior coverage
   mesh-validate <ply>                        Plan optional surface/mesh validation
   mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
   mlx-diagnose [args]                        Diagnose gsplat-mlx NaN sources
@@ -116,6 +119,14 @@ case "$1" in
     shift
     scripts/sweep_segments.sh "$@"
     ;;
+  matcher-sweep)
+    shift
+    scripts/sweep_matchers.sh "$@"
+    ;;
+  rank-captures)
+    shift
+    scripts/rank_captures.sh "$@"
+    ;;
   colmap-gate)
     shift
     scripts/colmap_gate.sh "$@"
@@ -131,6 +142,10 @@ case "$1" in
   depth-priors)
     shift
     scripts/depth_priors.sh "$@"
+    ;;
+  depth-report)
+    shift
+    scripts/depth_report.sh "$@"
     ;;
   mesh-validate)
     shift

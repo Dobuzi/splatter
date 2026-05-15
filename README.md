@@ -169,6 +169,28 @@ bin/splatter compare-holdout \
 bin/splatter select-frames capture-name-fps12 selected-capture 180
 COLMAP_CAMERA_MODEL=PINHOLE scripts/run_colmap.sh selected-capture
 bin/splatter colmap-gate selected-capture
+
+# Try matcher variants when registration is the bottleneck.
+SPLAT_MATCHER_EXECUTE=1 \
+SPLAT_MATCHERS="sequential exhaustive" \
+SPLAT_MATCHER_CAMERA_MODELS="PINHOLE" \
+COLMAP_MAX_IMAGE_SIZE=960 \
+COLMAP_NUM_THREADS=4 \
+  bin/splatter matcher-sweep selected-capture selected-capture-match
+
+# Rank existing COLMAP candidates by structural signals.
+bin/splatter rank-captures selected-capture
+
+# Use masks during COLMAP feature extraction when dynamic clutter dominates.
+bin/splatter mask-frames selected-capture
+COLMAP_CAMERA_MODEL=PINHOLE \
+COLMAP_MATCHER=exhaustive \
+COLMAP_MASK_PATH=captures/selected-capture/masks \
+  scripts/run_colmap.sh selected-capture-masked
+
+# Check whether generated depth priors cover every selected frame.
+bin/splatter depth-priors selected-capture
+bin/splatter depth-report selected-capture
 ```
 
 Long OpenSplat runs should leave checkpoints:
@@ -187,6 +209,9 @@ Additional OpenSplat flags can be passed with `OPENSPLAT_EXTRA_ARGS`, for exampl
 Quality gates used before staging:
 
 - COLMAP passes `bin/splatter colmap-gate`: registered image count, registration ratio, sparse point count, and reprojection error.
+- Matcher candidates are ranked with `bin/splatter rank-captures` before training; low point distribution proxy means OpenSplat will likely learn a partial shell.
+- Optional masks are passed through `COLMAP_MASK_PATH` so COLMAP feature extraction can ignore dynamic clutter.
+- Optional depth priors must pass `bin/splatter depth-report` coverage before using depth consistency as a ranking or training signal.
 - Training runs on MPS, not CPU fallback.
 - OpenSplat checkpoint selection rejects NaN/Inf PLY files before conversion.
 - Web asset stays under the 25MB Pages gate.
@@ -221,10 +246,13 @@ bin/splatter compare-holdout captures/my-capture/images/frame_00010.jpg output/m
 bin/splatter quality-stage output/my-capture.ply "My Capture" web
 bin/splatter quality-sweep input/capture.mov my-capture "My Capture"
 bin/splatter segment-sweep input/capture.mov my-capture
+bin/splatter matcher-sweep my-capture my-capture-match
+bin/splatter rank-captures my-capture
 bin/splatter colmap-gate my-capture
 bin/splatter select-checkpoint output/my-capture-opensplat-10000-d1
 bin/splatter mask-frames my-capture
 bin/splatter depth-priors my-capture
+bin/splatter depth-report my-capture
 bin/splatter mesh-validate output/my-capture.ply
 bin/splatter mlx-smoke
 bin/splatter mlx-diagnose --lr 1e-5
