@@ -8,13 +8,52 @@
       "model": "0",
       "frames": 283,
       "registered": 283,
-      "ratio": 1,
+      "ratio": 1.0,
       "points": 17924,
       "score": 29385.69,
       "densePoints": 3753027,
       "meshVertices": 44073,
       "meshFaces": 87316,
-      "assetUrl": "assets/video-20260514-034200-openmvs-scene_refined.ply",
+      "meshMetrics": {
+        "vertices": 44073,
+        "faces": 87316,
+        "bbox": {
+          "min": [
+            -4.484707832336426,
+            -92.05350494384766,
+            23.339122772216797
+          ],
+          "max": [
+            3.201148271560669,
+            88.7679443359375,
+            50.722049713134766
+          ],
+          "size": [
+            7.685856103897095,
+            180.82144927978516,
+            27.38292694091797
+          ],
+          "center": [
+            -0.6417797803878784,
+            -1.6427803039550781,
+            37.03058624267578
+          ],
+          "diagonal": 183.04451259609883,
+          "volume": 38055.905741731774
+        },
+        "surfaceArea": 1346.5128318348745,
+        "faceDensity": 2.2944139233624923,
+        "componentCount": 5,
+        "largestComponentRatio": 0.9994554489143013,
+        "degenerateFaceRatio": 0.0,
+        "hasTexcoords": true,
+        "textureFiles": [
+          "scene_textured0.png"
+        ]
+      },
+      "meshAssetKind": "textured mesh",
+      "assetUrl": "assets/video-20260514-034200-openmvs-scene_textured.ply",
+      "textureAssetUrl": "assets/video-20260514-034200-openmvs-scene_textured0.png",
       "sceneUrl": "scenes/video-20260514-034200-openmvs/scene.json",
       "stage_status": "staged"
     },
@@ -31,7 +70,46 @@
       "densePoints": 710260,
       "meshVertices": 33032,
       "meshFaces": 65581,
-      "assetUrl": "assets/img-9205-openmvs-scene_refined.ply",
+      "meshMetrics": {
+        "vertices": 33032,
+        "faces": 65581,
+        "bbox": {
+          "min": [
+            -17.529067993164062,
+            -11.737056732177734,
+            -8.844660758972168
+          ],
+          "max": [
+            12.831096649169922,
+            1.7829231023788452,
+            22.746191024780273
+          ],
+          "size": [
+            30.360164642333984,
+            13.51997983455658,
+            31.59085178375244
+          ],
+          "center": [
+            -2.3489856719970703,
+            -4.977066814899445,
+            6.950765132904053
+          ],
+          "diagonal": 45.85315003638745,
+          "volume": 12967.059456655315
+        },
+        "surfaceArea": 553.0930219673697,
+        "faceDensity": 5.057507464912617,
+        "componentCount": 6,
+        "largestComponentRatio": 0.9638532332283846,
+        "degenerateFaceRatio": 0.0,
+        "hasTexcoords": true,
+        "textureFiles": [
+          "scene_textured0.png"
+        ]
+      },
+      "meshAssetKind": "textured mesh",
+      "assetUrl": "assets/img-9205-openmvs-scene_textured.ply",
+      "textureAssetUrl": "assets/img-9205-openmvs-scene_textured0.png",
       "sceneUrl": "scenes/img-9205-openmvs/scene.json",
       "stage_status": "staged"
     },
@@ -48,7 +126,46 @@
       "densePoints": 495338,
       "meshVertices": 15878,
       "meshFaces": 31589,
-      "assetUrl": "assets/img-9189-openmvs-scene_refined.ply",
+      "meshMetrics": {
+        "vertices": 15878,
+        "faces": 31589,
+        "bbox": {
+          "min": [
+            -66.15544891357422,
+            -71.4267578125,
+            44.768310546875
+          ],
+          "max": [
+            100.203857421875,
+            64.23995971679688,
+            126.30321502685547
+          ],
+          "size": [
+            166.35930633544922,
+            135.66671752929688,
+            81.53490447998047
+          ],
+          "center": [
+            17.02420425415039,
+            -3.5933990478515625,
+            85.53576278686523
+          ],
+          "diagonal": 229.62756301921902,
+          "volume": 1840195.5871141618
+        },
+        "surfaceArea": 32743.43070420662,
+        "faceDensity": 0.017166110070690157,
+        "componentCount": 2,
+        "largestComponentRatio": 0.9997480791031617,
+        "degenerateFaceRatio": 0.0,
+        "hasTexcoords": true,
+        "textureFiles": [
+          "scene_textured0.png"
+        ]
+      },
+      "meshAssetKind": "textured mesh",
+      "assetUrl": "assets/img-9189-openmvs-scene_textured.ply",
+      "textureAssetUrl": "assets/img-9189-openmvs-scene_textured0.png",
       "sceneUrl": "scenes/img-9189-openmvs/scene.json",
       "stage_status": "staged"
     },
@@ -65,7 +182,46 @@
       "densePoints": 663682,
       "meshVertices": 16979,
       "meshFaces": 33737,
-      "assetUrl": "assets/img-9142-openmvs-scene_refined.ply",
+      "meshMetrics": {
+        "vertices": 16979,
+        "faces": 33737,
+        "bbox": {
+          "min": [
+            -14.445969581604004,
+            -2.955867290496826,
+            -8.874244689941406
+          ],
+          "max": [
+            3.871151924133301,
+            7.807375907897949,
+            11.350045204162598
+          ],
+          "size": [
+            18.317121505737305,
+            10.763243198394775,
+            20.224289894104004
+          ],
+          "center": [
+            -5.287408828735352,
+            2.4257543087005615,
+            1.2379002571105957
+          ],
+          "diagonal": 29.33234129974102,
+          "volume": 3987.251788207308
+        },
+        "surfaceArea": 405.07408269828557,
+        "faceDensity": 8.461216344495854,
+        "componentCount": 1,
+        "largestComponentRatio": 1.0,
+        "degenerateFaceRatio": 0.0,
+        "hasTexcoords": true,
+        "textureFiles": [
+          "scene_textured0.png"
+        ]
+      },
+      "meshAssetKind": "textured mesh",
+      "assetUrl": "assets/img-9142-openmvs-scene_textured.ply",
+      "textureAssetUrl": "assets/img-9142-openmvs-scene_textured0.png",
       "sceneUrl": "scenes/img-9142-openmvs/scene.json",
       "stage_status": "staged"
     },
@@ -80,9 +236,48 @@
       "points": 3119,
       "score": 2559.49,
       "densePoints": 358351,
-      "meshVertices": 6571,
-      "meshFaces": 12923,
-      "assetUrl": "assets/img-8593-000-030-openmvs-scene_refined.ply",
+      "meshVertices": 58088,
+      "meshFaces": 115849,
+      "meshMetrics": {
+        "vertices": 58088,
+        "faces": 115849,
+        "bbox": {
+          "min": [
+            -6.5976104736328125,
+            -12.071496963500977,
+            12.981775283813477
+          ],
+          "max": [
+            12.687398910522461,
+            10.436068534851074,
+            24.34035873413086
+          ],
+          "size": [
+            19.285009384155273,
+            22.50756549835205,
+            11.358583450317383
+          ],
+          "center": [
+            3.044894218444824,
+            -0.8177142143249512,
+            18.661067008972168
+          ],
+          "diagonal": 31.74144781838706,
+          "volume": 4930.290965029518
+        },
+        "surfaceArea": 287.06440615023206,
+        "faceDensity": 23.49739616215661,
+        "componentCount": 1,
+        "largestComponentRatio": 1.0,
+        "degenerateFaceRatio": 0.0,
+        "hasTexcoords": true,
+        "textureFiles": [
+          "scene_textured0.png"
+        ]
+      },
+      "meshAssetKind": "textured mesh",
+      "assetUrl": "assets/img-8593-000-030-openmvs-scene_textured.ply",
+      "textureAssetUrl": "assets/img-8593-000-030-openmvs-scene_textured0.png",
       "sceneUrl": "scenes/img-8593-000-030-openmvs/scene.json",
       "stage_status": "staged"
     },
@@ -99,7 +294,46 @@
       "densePoints": 349985,
       "meshVertices": 5967,
       "meshFaces": 11687,
-      "assetUrl": "assets/img-8593-openmvs-scene_refined.ply",
+      "meshMetrics": {
+        "vertices": 5967,
+        "faces": 11687,
+        "bbox": {
+          "min": [
+            -12.94432544708252,
+            -16.453855514526367,
+            14.480080604553223
+          ],
+          "max": [
+            8.673157691955566,
+            9.767449378967285,
+            20.694252014160156
+          ],
+          "size": [
+            21.617483139038086,
+            26.221304893493652,
+            6.214171409606934
+          ],
+          "center": [
+            -2.1355838775634766,
+            -3.343203067779541,
+            17.58716630935669
+          ],
+          "diagonal": 34.54690049616791,
+          "volume": 3522.432324010087
+        },
+        "surfaceArea": 350.690630757275,
+        "faceDensity": 3.3178777972077604,
+        "componentCount": 1,
+        "largestComponentRatio": 1.0,
+        "degenerateFaceRatio": 0.0,
+        "hasTexcoords": true,
+        "textureFiles": [
+          "scene_textured0.png"
+        ]
+      },
+      "meshAssetKind": "textured mesh",
+      "assetUrl": "assets/img-8593-openmvs-scene_textured.ply",
+      "textureAssetUrl": "assets/img-8593-openmvs-scene_textured0.png",
       "sceneUrl": "scenes/img-8593-openmvs/scene.json",
       "stage_status": "staged"
     },
@@ -116,7 +350,46 @@
       "densePoints": 268069,
       "meshVertices": 6305,
       "meshFaces": 12462,
-      "assetUrl": "assets/img-8593-085-115-openmvs-scene_refined.ply",
+      "meshMetrics": {
+        "vertices": 6305,
+        "faces": 12462,
+        "bbox": {
+          "min": [
+            -6.401717185974121,
+            -19.125537872314453,
+            11.153517723083496
+          ],
+          "max": [
+            5.897924423217773,
+            16.759536743164062,
+            36.65180969238281
+          ],
+          "size": [
+            12.299641609191895,
+            35.885074615478516,
+            25.498291969299316
+          ],
+          "center": [
+            -0.25189638137817383,
+            -1.1830005645751953,
+            23.902663707733154
+          ],
+          "diagonal": 45.70757767837472,
+          "volume": 11254.271821096494
+        },
+        "surfaceArea": 675.9611664870788,
+        "faceDensity": 1.1073128673362571,
+        "componentCount": 1,
+        "largestComponentRatio": 1.0,
+        "degenerateFaceRatio": 0.0,
+        "hasTexcoords": true,
+        "textureFiles": [
+          "scene_textured0.png"
+        ]
+      },
+      "meshAssetKind": "textured mesh",
+      "assetUrl": "assets/img-8593-085-115-openmvs-scene_textured.ply",
+      "textureAssetUrl": "assets/img-8593-085-115-openmvs-scene_textured0.png",
       "sceneUrl": "scenes/img-8593-085-115-openmvs/scene.json",
       "stage_status": "staged"
     }

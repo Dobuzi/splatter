@@ -18,6 +18,12 @@ max_image_size="${COLMAP_DENSE_MAX_IMAGE_SIZE:-960}"
 patch_iterations="${COLMAP_PATCH_MATCH_ITERATIONS:-3}"
 poisson_depth="${COLMAP_POISSON_DEPTH:-9}"
 openmvs_bin_dir="${SPLAT_OPENMVS_BIN_DIR:-}"
+openmvs_resolution_level="${SPLAT_OPENMVS_RESOLUTION_LEVEL:-1}"
+openmvs_number_views="${SPLAT_OPENMVS_NUMBER_VIEWS:-5}"
+openmvs_number_views_fuse="${SPLAT_OPENMVS_NUMBER_VIEWS_FUSE:-3}"
+openmvs_refine_decimate="${SPLAT_OPENMVS_REFINE_DECIMATE:-0}"
+openmvs_texture_size="${SPLAT_OPENMVS_TEXTURE_SIZE:-4096}"
+openmvs_output_suffix="${SPLAT_OPENMVS_OUTPUT_SUFFIX:-}"
 
 echo "COLMAP surface reconstruction for $capture_name"
 echo "- Backend: $backend"
@@ -27,6 +33,7 @@ echo "- Depth backend: COLMAP patch_match_stereo"
 echo "- Surface outputs: stereo_fusion fused.ply, poisson mesh, delaunay mesh"
 if [[ "$backend" == "openmvs" ]]; then
   echo "- OpenMVS stages: InterfaceCOLMAP, DensifyPointCloud, ReconstructMesh, RefineMesh, TextureMesh"
+  echo "- OpenMVS quality: resolution-level=$openmvs_resolution_level, number-views=$openmvs_number_views, fuse=$openmvs_number_views_fuse, texture-size=$openmvs_texture_size"
 fi
 
 if [[ "${SPLAT_SURFACE_DRY_RUN:-0}" == "1" ]]; then
@@ -110,7 +117,7 @@ if [[ "$backend" == "openmvs" ]]; then
   texture=$(openmvs_command TextureMesh) || true
 
   abs_dense_dir="${dense_dir:a}"
-  mvs_dir="$capture_dir/openmvs"
+  mvs_dir="$capture_dir/openmvs${openmvs_output_suffix}"
   mkdir -p "$mvs_dir"
   abs_mvs_dir="${mvs_dir:a}"
   scene_mvs="scene.mvs"
@@ -130,6 +137,10 @@ if [[ "$backend" == "openmvs" ]]; then
     -w "$abs_mvs_dir" \
     -i "$scene_mvs" \
     -o "$dense_mvs" \
+    --resolution-level "$openmvs_resolution_level" \
+    --max-resolution "$max_image_size" \
+    --number-views "$openmvs_number_views" \
+    --number-views-fuse "$openmvs_number_views_fuse" \
     --max-threads "$threads"
 
   "$reconstruct" \
@@ -144,6 +155,7 @@ if [[ "$backend" == "openmvs" ]]; then
       -i "$dense_mvs" \
       -m "$mesh_ply" \
       -o "$refined_ply" \
+      --decimate "$openmvs_refine_decimate" \
       --max-threads "$threads" || true
   fi
 
@@ -157,6 +169,7 @@ if [[ "$backend" == "openmvs" ]]; then
       -i "$dense_mvs" \
       -m "$texture_input" \
       -o "$textured_ply" \
+      --max-texture-size "$openmvs_texture_size" \
       --max-threads "$threads" || true
   fi
 

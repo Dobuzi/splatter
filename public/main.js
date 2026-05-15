@@ -622,7 +622,7 @@ function parseBinaryPly(buffer) {
 
   const view = new DataView(buffer);
   const positions = [];
-  const indices = [];
+  const sourceFaces = [];
   let offset = headerBytes;
 
   for (const element of parsed.elements) {
@@ -651,6 +651,7 @@ function parseBinaryPly(buffer) {
         positions.push(x, y, z);
       } else if (element.name === 'face') {
         let faceIndices = null;
+        let faceTexcoords = null;
         for (const property of element.properties) {
           if (property.kind === 'list') {
             let count;
@@ -663,15 +664,15 @@ function parseBinaryPly(buffer) {
             }
             if (property.name === 'vertex_indices') {
               faceIndices = values;
+            } else if (property.name === 'texcoord') {
+              faceTexcoords = values;
             }
           } else {
             offset += plyScalarSize(property.type);
           }
         }
         if (faceIndices && faceIndices.length >= 3) {
-          for (let i = 1; i < faceIndices.length - 1; i += 1) {
-            indices.push(faceIndices[0], faceIndices[i], faceIndices[i + 1]);
-          }
+          sourceFaces.push({ indices: faceIndices, texcoords: faceTexcoords });
         }
       } else {
         for (const property of element.properties) {
@@ -687,10 +688,41 @@ function parseBinaryPly(buffer) {
     }
   }
 
-  if (positions.length === 0 || indices.length === 0) {
+  if (positions.length === 0 || sourceFaces.length === 0) {
     throw new Error('PLY mesh requires vertices and faces');
   }
 
+  const hasTexcoords = sourceFaces.some((face) => Array.isArray(face.texcoords) && face.texcoords.length >= face.indices.length * 2);
+  if (hasTexcoords) {
+    const expandedPositions = [];
+    const expandedUvs = [];
+    const expandedIndices = [];
+    for (const face of sourceFaces) {
+      const polygon = face.indices.map((sourceIndex, cornerIndex) => {
+        const positionIndex = sourceIndex * 3;
+        const nextIndex = expandedPositions.length / 3;
+        expandedPositions.push(positions[positionIndex], positions[positionIndex + 1], positions[positionIndex + 2]);
+        expandedUvs.push(face.texcoords[cornerIndex * 2], 1 - face.texcoords[cornerIndex * 2 + 1]);
+        return nextIndex;
+      });
+      for (let i = 1; i < polygon.length - 1; i += 1) {
+        expandedIndices.push(polygon[0], polygon[i], polygon[i + 1]);
+      }
+    }
+    return {
+      positions: expandedPositions,
+      indices: expandedIndices,
+      normals: computeNormals(expandedPositions, expandedIndices),
+      uvs: expandedUvs
+    };
+  }
+
+  const indices = [];
+  for (const face of sourceFaces) {
+    for (let i = 1; i < face.indices.length - 1; i += 1) {
+      indices.push(face.indices[0], face.indices[i], face.indices[i + 1]);
+    }
+  }
   return { positions, indices, normals: computeNormals(positions, indices) };
 }
 
@@ -705,13 +737,23 @@ async function loadPlyMesh(url) {
 
 async function installMeshScene(config, app, root, child) {
   const meshData = await loadPlyMesh(config.assetUrl);
-  const mesh = createMesh(app.graphicsDevice, meshData.positions, {
+  const meshOptions = {
     indices: meshData.indices,
     normals: meshData.normals
-  });
+  };
+  if (meshData.uvs) {
+    meshOptions.uvs = meshData.uvs;
+  }
+  const mesh = createMesh(app.graphicsDevice, meshData.positions, meshOptions);
   const color = tupleFromConfig(config.viewer?.meshColor, [0.72, 0.78, 0.84]);
   const material = new StandardMaterial();
   material.diffuse = new Color(color[0], color[1], color[2]);
+  if (config.textureAssetUrl && meshData.uvs) {
+    const textureAsset = await loadAsset(new Asset('mesh-texture', 'texture', {
+      url: config.textureAssetUrl
+    }), app);
+    material.diffuseMap = textureAsset.resource;
+  }
   material.update();
   const meshInstance = new MeshInstance(mesh, material, child);
   child.addComponent('render', { meshInstances: [meshInstance] });

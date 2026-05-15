@@ -25,6 +25,8 @@ fi
 "$cli" --help | grep -q "mesh-validate"
 "$cli" --help | grep -q "surface-reconstruct"
 "$cli" --help | grep -q "openmvs-batch"
+"$cli" --help | grep -q "openmvs-sweep"
+"$cli" --help | grep -q "openmvs-validate"
 "$cli" --help | grep -q "mlx-smoke"
 "$cli" --help | grep -q "mlx-diagnose"
 "$cli" --version | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+'
@@ -202,5 +204,8 @@ printf '%s\n' "$openmvs_surface_output" | grep -q "DensifyPointCloud"
 openmvs_batch_output=$(SPLAT_OPENMVS_BATCH_DRY_RUN=1 "$cli" openmvs-batch input)
 printf '%s\n' "$openmvs_batch_output" | grep -q "OpenMVS batch"
 printf '%s\n' "$openmvs_batch_output" | grep -q "output/openmvs-ranking.json"
+openmvs_sweep_output=$(SPLAT_OPENMVS_SWEEP_DRY_RUN=1 "$cli" openmvs-sweep missing-capture)
+printf '%s\n' "$openmvs_sweep_output" | grep -q "balanced"
+printf '%s\n' "$openmvs_sweep_output" | grep -q "detail"
 
 echo "CLI contract tests passed"

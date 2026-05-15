@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from ply_metrics import camera_for_metrics, mesh_metrics, public_metrics
+
 
 VIDEO_EXTS = {".mov", ".mp4", ".m4v"}
 
@@ -141,10 +143,18 @@ def scene_id_for(input_slug):
 
 
 def stage_scene(row):
-    mesh_path = Path("captures") / row["capture"] / "openmvs" / "scene_refined.ply"
+    openmvs_dir = Path("captures") / row["capture"] / "openmvs"
+    mesh_path = openmvs_dir / "scene_textured.ply"
+    texture_path = openmvs_dir / "scene_textured0.png"
+    asset_kind = "textured mesh"
+    if not mesh_path.is_file() or not texture_path.is_file():
+        mesh_path = openmvs_dir / "scene_refined.ply"
+        texture_path = None
+        asset_kind = "refined mesh"
     if not mesh_path.is_file():
-        mesh_path = Path("captures") / row["capture"] / "openmvs" / "scene_mesh.ply"
-    dense_path = Path("captures") / row["capture"] / "openmvs" / "scene_dense.ply"
+        mesh_path = openmvs_dir / "scene_mesh.ply"
+        asset_kind = "mesh"
+    dense_path = openmvs_dir / "scene_dense.ply"
     if not mesh_path.is_file():
         row["stage_status"] = "missing mesh"
         return
@@ -156,6 +166,16 @@ def stage_scene(row):
     shutil.copyfile(mesh_path, asset_path)
     row["assetUrl"] = f"assets/{asset_name}"
     row["assetBytes"] = file_size(asset_path)
+    row["meshAssetKind"] = asset_kind
+
+    texture_asset_url = None
+    if texture_path and texture_path.is_file():
+        texture_asset_name = f"{row['input_slug']}-openmvs-{texture_path.name}"
+        texture_asset_path = assets_dir / texture_asset_name
+        shutil.copyfile(texture_path, texture_asset_path)
+        texture_asset_url = f"assets/{texture_asset_name}"
+        row["textureAssetUrl"] = texture_asset_url
+        row["textureAssetBytes"] = file_size(texture_asset_path)
 
     stage_dense = os_environ().get("SPLAT_STAGE_DENSE_POINTCLOUD") == "1"
     dense_asset_url = None
@@ -167,9 +187,10 @@ def stage_scene(row):
         row["denseAssetUrl"] = dense_asset_url
         row["denseAssetBytes"] = file_size(dense_asset_path)
 
-    counts = ply_counts(mesh_path)
-    row["meshVertices"] = counts["vertices"]
-    row["meshFaces"] = counts["faces"]
+    metrics = mesh_metrics(mesh_path)
+    row["meshVertices"] = metrics["vertices"]
+    row["meshFaces"] = metrics["faces"]
+    row["meshMetrics"] = public_metrics(metrics)
 
     scene_dir = Path("public/scenes") / scene_id_for(row["input_slug"])
     scene_dir.mkdir(parents=True, exist_ok=True)
@@ -180,7 +201,7 @@ def stage_scene(row):
         "fileSize": human_size(row["assetBytes"]),
         "capture": f"{row['capture']}, {row['frames']} frames, {row['registered']} COLMAP images",
         "training": f"OpenMVS CPU dense, {row.get('densePoints', 0)} dense points, {row['meshVertices']} vertices, {row['meshFaces']} faces",
-        "delivery": f"Mesh {human_size(row['assetBytes'])}; dense point cloud kept in captures for local inspection",
+        "delivery": f"{asset_kind.title()} {human_size(row['assetBytes'])}; dense point cloud kept in captures for local inspection",
         "viewer": {
             "background": [0.02, 0.025, 0.03],
             "fov": 42,
@@ -192,14 +213,11 @@ def stage_scene(row):
             "rotation": [0, 0, 0],
             "scale": [1, -1, 1],
         },
-        "camera": {
-            "target": [0, 0, 0],
-            "position": [0, 0, 10],
-            "distance": 10,
-            "minDistance": 0.25,
-            "maxDistance": 120,
-        },
+        "camera": camera_for_metrics(metrics),
+        "metrics": row["meshMetrics"],
     }
+    if texture_asset_url:
+        scene_config["textureAssetUrl"] = texture_asset_url
     if dense_asset_url:
         scene_config["pointCloudAssetUrl"] = dense_asset_url
     (scene_dir / "scene.json").write_text(json.dumps(scene_config, indent=2) + "\n", encoding="utf-8")
@@ -232,6 +250,12 @@ def update_manifest(rows):
 
 
 def run_openmvs(row):
+    openmvs_dir = Path("captures") / row["capture"] / "openmvs"
+    if os_environ().get("SPLAT_OPENMVS_SKIP_RUN") == "1" and (openmvs_dir / "scene_dense.ply").is_file():
+        row["openmvs_exit_code"] = 0
+        row["openmvs_log_tail"] = "Skipped OpenMVS run; reused existing openmvs outputs."
+        return True
+
     env = dict(**os_environ())
     env["SPLAT_SURFACE_BACKEND"] = "openmvs"
     env.setdefault("COLMAP_DENSE_MAX_IMAGE_SIZE", "640")
@@ -314,7 +338,10 @@ def main():
                 "densePoints",
                 "meshVertices",
                 "meshFaces",
+                "meshMetrics",
+                "meshAssetKind",
                 "assetUrl",
+                "textureAssetUrl",
                 "sceneUrl",
                 "stage_status",
             ]

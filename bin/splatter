@@ -37,6 +37,8 @@ Commands:
   mesh-validate <ply>                        Plan optional surface/mesh validation
   surface-reconstruct <capture> [model]      Run COLMAP dense depth, fusion, and mesh
   openmvs-batch [input-dir]                  Run OpenMVS for best capture per input and stage mesh results
+  openmvs-sweep <capture> [model]            Run OpenMVS quality variants for one capture
+  openmvs-validate                           Validate staged OpenMVS mesh assets and camera framing
   mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
   mlx-diagnose [args]                        Diagnose gsplat-mlx NaN sources
   publish <video> <name> [fps] [iters] [downscale] [title] [stage|no-stage]
@@ -160,6 +162,18 @@ case "$1" in
   openmvs-batch)
     shift
     scripts/openmvs_batch.sh "$@"
+    ;;
+  openmvs-sweep)
+    shift
+    scripts/openmvs_sweep.py "$@"
+    ;;
+  openmvs-validate)
+    shift
+    if (( $# != 0 )); then
+      echo "Usage: splatter openmvs-validate" >&2
+      exit 1
+    fi
+    scripts/openmvs_validate.py
     ;;
   mlx-smoke)
     shift

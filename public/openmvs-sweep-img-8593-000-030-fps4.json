@@ -1,0 +1,72 @@
+{
+  "capture": "img-8593-000-030-fps4",
+  "model": "0",
+  "ranked": [
+    {
+      "variant": "detail",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "960",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "1",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "7",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "1",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "4096"
+      },
+      "exitCode": 0,
+      "logTail": "\t3119 points, 0 vertices, 0 faces\n23:30:44 [App     ] Mesh loaded: 58088 vertices, 115849 faces (5ms)\n\nInitialized views 5 (21.74%, 104ms, ETA 375ms)...\nInitialized views 11 (47.83%, 215ms, ETA 235ms)...\nInitialized views 17 (73.91%, 319ms, ETA 112ms)...\nInitialized views 23 (100.00%, 420ms, ETA 0ms)... \nInitialized views 23 (100%, 420ms)               \n23:30:56 [App     ] Assigning the best view to each face completed: 115849 faces (11s733ms)\n23:30:57 [App     ] Generating texture atlas and image completed: 1357 patches, 2048 image size, 1 textures (972ms)\n23:30:57 [App     ] Mesh texturing completed: 58088 vertices, 115849 faces (12s707ms)\n23:30:57 [App     ] Mesh saved: 58088 vertices, 115849 faces (342ms)\n\nOpenMVS outputs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-detail/scene.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-detail/scene_dense.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-detail/scene_dense.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-detail/scene_mesh.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-detail/scene_refined.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-detail/scene_textured.ply",
+      "mesh": "captures/img-8593-000-030-fps4/openmvs-sweep-detail/scene_textured.ply",
+      "assetBytes": 5099582,
+      "vertices": 58088,
+      "faces": 115849,
+      "componentCount": 1,
+      "largestComponentRatio": 1.0,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": 216.12
+    },
+    {
+      "variant": "balanced",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "640",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "1",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "5",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "0",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "4096"
+      },
+      "exitCode": 0,
+      "logTail": "22:57:47 [App     ] Camera model loaded: platform 0; camera  0; f 0.944x0.947; poses 23\n22:57:47 [App     ] Scene loaded from interface format (1ms):\n\t23 images (23 calibrated) with a total of 5.04 MPixels (0.22 MPixels/image)\n\t3119 points, 0 vertices, 0 faces\n22:57:47 [App     ] Mesh loaded: 6349 vertices, 12472 faces (0ms)\n\nInitialized views 19 (82.61%, 101ms, ETA 21ms)...\nInitialized views 23 (100%, 121ms)               \n22:57:48 [App     ] Assigning the best view to each face completed: 12472 faces (916ms)\n22:57:48 [App     ] Generating texture atlas and image completed: 116 patches, 1024 image size, 1 textures (348ms)\n22:57:48 [App     ] Mesh texturing completed: 6349 vertices, 12472 faces (1s265ms)\n22:57:48 [App     ] Mesh saved: 6349 vertices, 12472 faces (125ms)\n\nOpenMVS outputs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-balanced/scene.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-balanced/scene_dense.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-balanced/scene_dense.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-balanced/scene_mesh.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-balanced/scene_refined.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-balanced/scene_textured.ply",
+      "mesh": "captures/img-8593-000-030-fps4/openmvs-sweep-balanced/scene_textured.ply",
+      "assetBytes": 550386,
+      "vertices": 6349,
+      "faces": 12472,
+      "componentCount": 1,
+      "largestComponentRatio": 1.0,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": 121.42
+    },
+    {
+      "variant": "fast",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "640",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "2",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "5",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "0",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "2048"
+      },
+      "exitCode": 0,
+      "logTail": "22:50:32 [App     ] Camera model loaded: platform 0; camera  0; f 0.944x0.947; poses 23\n22:50:32 [App     ] Scene loaded from interface format (1ms):\n\t23 images (23 calibrated) with a total of 5.04 MPixels (0.22 MPixels/image)\n\t3119 points, 0 vertices, 0 faces\n22:50:32 [App     ] Mesh loaded: 6188 vertices, 12120 faces (0ms)\n\nInitialized views 20 (86.96%, 104ms, ETA 15ms)...\nInitialized views 23 (100%, 120ms)               \n22:50:34 [App     ] Assigning the best view to each face completed: 12120 faces (2s911ms)\n22:50:36 [App     ] Generating texture atlas and image completed: 158 patches, 1024 image size, 1 textures (1s790ms)\n22:50:36 [App     ] Mesh texturing completed: 6188 vertices, 12120 faces (4s704ms)\n22:50:37 [App     ] Mesh saved: 6188 vertices, 12120 faces (577ms)\n\nOpenMVS outputs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-fast/scene.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-fast/scene_dense.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-fast/scene_dense.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-fast/scene_mesh.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-fast/scene_refined.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-000-030-fps4/openmvs-sweep-fast/scene_textured.ply",
+      "mesh": "captures/img-8593-000-030-fps4/openmvs-sweep-fast/scene_textured.ply",
+      "assetBytes": 535078,
+      "vertices": 6188,
+      "faces": 12120,
+      "componentCount": 1,
+      "largestComponentRatio": 1.0,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": 121.1
+    }
+  ]
+}

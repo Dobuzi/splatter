@@ -52,6 +52,9 @@ function validateSceneConfig(config, file) {
   if (config.pointCloudAssetUrl) {
     assertPublicRelative(config.pointCloudAssetUrl, `${file} pointCloudAssetUrl`);
   }
+  if (config.textureAssetUrl) {
+    assertPublicRelative(config.textureAssetUrl, `${file} textureAssetUrl`);
+  }
   if (config.viewer) {
     if (typeof config.viewer !== "object" || Array.isArray(config.viewer)) {
       throw new Error(`${file} viewer must be an object when set`);
@@ -72,7 +75,7 @@ function validateSceneConfig(config, file) {
       }
     }
   }
-  return [config.assetUrl, config.previewAssetUrl, config.pointCloudAssetUrl].filter(Boolean);
+  return [config.assetUrl, config.previewAssetUrl, config.pointCloudAssetUrl, config.textureAssetUrl].filter(Boolean);
 }
 
 const assetUrls = new Set(validateSceneConfig(readJson("public/scene.json"), "scene.json"));
@@ -120,7 +123,7 @@ if [[ ! -f "$asset_path" ]]; then
 fi
 
 case "$asset_path" in
-  *.sog|*.ply|*.compressed.ply) ;;
+  *.sog|*.ply|*.compressed.ply|*.png) ;;
   *)
     echo "Unsupported scene asset format: $asset_path" >&2
     exit 1
