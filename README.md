@@ -198,6 +198,14 @@ bin/splatter depth-report selected-capture
 COLMAP_DENSE_MAX_IMAGE_SIZE=640 \
 COLMAP_NUM_THREADS=4 \
   bin/splatter surface-reconstruct selected-capture
+
+# CPU dense alternative: install OpenMVS and point the pipeline at its tools.
+# This writes scene_dense.ply, scene_mesh.ply, scene_refined.ply, and scene_textured.ply.
+SPLAT_SURFACE_BACKEND=openmvs \
+SPLAT_OPENMVS_BIN_DIR=.local/vcpkg/installed/arm64-osx/tools/openmvs \
+COLMAP_DENSE_MAX_IMAGE_SIZE=640 \
+COLMAP_NUM_THREADS=4 \
+  bin/splatter surface-reconstruct selected-capture
 ```
 
 Long OpenSplat runs should leave checkpoints:
@@ -219,7 +227,7 @@ Quality gates used before staging:
 - Matcher candidates are ranked with `bin/splatter rank-captures` before training; low point distribution proxy means OpenSplat will likely learn a partial shell.
 - Optional masks are passed through `COLMAP_MASK_PATH` so COLMAP feature extraction can ignore dynamic clutter.
 - Optional depth priors must pass `bin/splatter depth-report` coverage before using depth consistency as a ranking or training signal.
-- Surface reconstruction uses `bin/splatter surface-reconstruct` to produce COLMAP dense outputs when CUDA is available, or a sparse Delaunay mesh fallback when dense stereo is unavailable.
+- Surface reconstruction uses `bin/splatter surface-reconstruct` to produce COLMAP dense outputs when CUDA is available, a sparse Delaunay mesh fallback when dense stereo is unavailable, or OpenMVS CPU dense outputs with `SPLAT_SURFACE_BACKEND=openmvs`.
 - Training runs on MPS, not CPU fallback.
 - OpenSplat checkpoint selection rejects NaN/Inf PLY files before conversion.
 - Web asset stays under the 25MB Pages gate.

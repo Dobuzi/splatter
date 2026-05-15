@@ -195,5 +195,8 @@ printf '%s\n' "$mesh_output" | grep -q "SuGaR"
 surface_output=$(SPLAT_SURFACE_DRY_RUN=1 "$cli" surface-reconstruct missing-capture)
 printf '%s\n' "$surface_output" | grep -q "COLMAP surface reconstruction"
 printf '%s\n' "$surface_output" | grep -q "stereo_fusion"
+openmvs_surface_output=$(SPLAT_SURFACE_DRY_RUN=1 SPLAT_SURFACE_BACKEND=openmvs "$cli" surface-reconstruct missing-capture)
+printf '%s\n' "$openmvs_surface_output" | grep -q "Backend: openmvs"
+printf '%s\n' "$openmvs_surface_output" | grep -q "DensifyPointCloud"
 
 echo "CLI contract tests passed"
