@@ -1,0 +1,321 @@
+{
+  "inputDir": "input",
+  "ranked": [
+    {
+      "capture": "video-20260514-034200-fps12-pinhole",
+      "model": "0",
+      "frames": 283,
+      "registered": 283,
+      "ratio": 1.0,
+      "points": 17924,
+      "points_per_registered": 63.34,
+      "reprojection_error": 1.307392,
+      "score": 29385.69,
+      "input": "2026-05-14-03-42-00.mov",
+      "input_slug": "video-20260514-034200",
+      "sweepLogTail": "        \"SPLAT_OPENMVS_RESOLUTION_LEVEL\": \"2\",\n        \"SPLAT_OPENMVS_NUMBER_VIEWS\": \"5\",\n        \"SPLAT_OPENMVS_NUMBER_VIEWS_FUSE\": \"3\",\n        \"SPLAT_OPENMVS_REFINE_DECIMATE\": \"0\",\n        \"SPLAT_OPENMVS_TEXTURE_SIZE\": \"2048\"\n      },\n      \"exitCode\": 0,\n      \"logTail\": \"Reused existing sweep output.\",\n      \"mesh\": \"captures/video-20260514-034200-fps12-pinhole/openmvs-sweep-fast/scene_textured.ply\",\n      \"assetBytes\": 4183354,\n      \"vertices\": 43907,\n      \"faces\": 87051,\n      \"componentCount\": 5,\n      \"largestComponentRatio\": 0.9995900425900198,\n      \"degenerateFaceRatio\": 0.0,\n      \"hasTexcoords\": true,\n      \"score\": -810.97\n    }\n  ]\n}",
+      "sweepExitCode": 0,
+      "sweepReport": "public/openmvs-sweep-video-20260514-034200-fps12-pinhole.json",
+      "sweepRanked": [
+        {
+          "variant": "balanced",
+          "score": -559.73,
+          "vertices": 44344,
+          "faces": 87817,
+          "assetBytes": 3869437,
+          "componentCount": 4,
+          "largestComponentRatio": 0.9982861266462204
+        },
+        {
+          "variant": "fast",
+          "score": -810.97,
+          "vertices": 43907,
+          "faces": 87051,
+          "assetBytes": 4183354,
+          "componentCount": 5,
+          "largestComponentRatio": 0.9995900425900198
+        }
+      ],
+      "sweepWinner": "balanced",
+      "sweepWinnerScore": -559.73,
+      "sweepApplyStatus": "copied scene_textured.ply, scene_textured0.png, scene_refined.ply, scene_mesh.ply, scene_dense.ply, scene_dense.mvs, scene.mvs"
+    },
+    {
+      "capture": "img-8593-seg-000-045-fps4-pinhole",
+      "model": "0",
+      "frames": 180,
+      "registered": 23,
+      "ratio": 0.1278,
+      "points": 3148,
+      "points_per_registered": 136.87,
+      "reprojection_error": 0.842906,
+      "score": 2494.98,
+      "input": "IMG_8593.MOV",
+      "input_slug": "img-8593",
+      "sweepLogTail": "        \"SPLAT_OPENMVS_RESOLUTION_LEVEL\": \"2\",\n        \"SPLAT_OPENMVS_NUMBER_VIEWS\": \"5\",\n        \"SPLAT_OPENMVS_NUMBER_VIEWS_FUSE\": \"3\",\n        \"SPLAT_OPENMVS_REFINE_DECIMATE\": \"0\",\n        \"SPLAT_OPENMVS_TEXTURE_SIZE\": \"2048\"\n      },\n      \"exitCode\": 0,\n      \"logTail\": \"01:16:03 [App     ] Camera model loaded: platform 0; camera  0; f 0.820x0.818; poses 23\\n01:16:03 [App     ] Scene loaded from interface format (1ms):\\n\\t23 images (23 calibrated) with a total of 5.05 MPixels (0.22 MPixels/image)\\n\\t3148 points, 0 vertices, 0 faces\\n01:16:03 [App     ] Mesh loaded: 5895 vertices, 11548 faces (0ms)\\n\\nInitialized views 20 (86.96%, 101ms, ETA 15ms)...\\nInitialized views 23 (100%, 116ms)               \\n01:16:04 [App     ] Assigning the best view to each face completed: 11548 faces (876ms)\\n01:16:04 [App     ] Generating texture atlas and image completed: 136 patches, 1024 image size, 1 textures (332ms)\\n01:16:04 [App     ] Mesh texturing completed: 5895 vertices, 11548 faces (1s209ms)\\n01:16:05 [App     ] Mesh saved: 5895 vertices, 11548 faces (102ms)\\n\\nOpenMVS outputs\\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene.mvs\\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene_dense.mvs\\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene_dense.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene_mesh.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene_refined.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene_textured.ply\",\n      \"mesh\": \"captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene_textured.ply\",\n      \"assetBytes\": 509826,\n      \"vertices\": 5895,\n      \"faces\": 11548,\n      \"componentCount\": 1,\n      \"largestComponentRatio\": 1.0,\n      \"degenerateFaceRatio\": 0.0,\n      \"hasTexcoords\": true,\n      \"score\": 120.58\n    }\n  ]\n}",
+      "sweepExitCode": 0,
+      "sweepReport": "public/openmvs-sweep-img-8593-seg-000-045-fps4-pinhole.json",
+      "sweepRanked": [
+        {
+          "variant": "balanced",
+          "score": 120.98,
+          "vertices": 6115,
+          "faces": 11992,
+          "assetBytes": 529338,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0
+        },
+        {
+          "variant": "fast",
+          "score": 120.58,
+          "vertices": 5895,
+          "faces": 11548,
+          "assetBytes": 509826,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0
+        }
+      ],
+      "sweepWinner": "balanced",
+      "sweepWinnerScore": 120.98,
+      "sweepApplyStatus": "copied scene_textured.ply, scene_textured0.png, scene_refined.ply, scene_mesh.ply, scene_dense.ply, scene_dense.mvs, scene.mvs"
+    },
+    {
+      "capture": "img-8593-000-030-fps4",
+      "model": "0",
+      "frames": 120,
+      "registered": 23,
+      "ratio": 0.1917,
+      "points": 3119,
+      "points_per_registered": 135.61,
+      "reprojection_error": 0.824821,
+      "score": 2559.49,
+      "input": "IMG_8593_000_030.MOV",
+      "input_slug": "img-8593-000-030",
+      "sweepReport": "public/openmvs-sweep-img-8593-000-030-fps4.json",
+      "sweepRanked": [
+        {
+          "variant": "detail",
+          "score": 216.12,
+          "vertices": 58088,
+          "faces": 115849,
+          "assetBytes": 5099582,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0
+        },
+        {
+          "variant": "balanced",
+          "score": 121.42,
+          "vertices": 6349,
+          "faces": 12472,
+          "assetBytes": 550386,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0
+        },
+        {
+          "variant": "fast",
+          "score": 121.1,
+          "vertices": 6188,
+          "faces": 12120,
+          "assetBytes": 535078,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0
+        }
+      ],
+      "sweepWinner": "detail",
+      "sweepWinnerScore": 216.12,
+      "sweepApplyStatus": "copied scene_textured.ply, scene_textured0.png, scene_refined.ply, scene_mesh.ply, scene_dense.ply, scene_dense.mvs, scene.mvs"
+    },
+    {
+      "capture": "img-8593-085-115-fps4",
+      "model": "1",
+      "frames": 120,
+      "registered": 15,
+      "ratio": 0.125,
+      "points": 2228,
+      "points_per_registered": 148.53,
+      "reprojection_error": 0.830819,
+      "score": 1696.12,
+      "input": "IMG_8593_085_115.MOV",
+      "input_slug": "img-8593-085-115",
+      "sweepLogTail": "        \"SPLAT_OPENMVS_RESOLUTION_LEVEL\": \"1\",\n        \"SPLAT_OPENMVS_NUMBER_VIEWS\": \"7\",\n        \"SPLAT_OPENMVS_NUMBER_VIEWS_FUSE\": \"3\",\n        \"SPLAT_OPENMVS_REFINE_DECIMATE\": \"1\",\n        \"SPLAT_OPENMVS_TEXTURE_SIZE\": \"4096\"\n      },\n      \"exitCode\": 0,\n      \"logTail\": \"\\t15 images (15 calibrated) with a total of 7.37 MPixels (0.49 MPixels/image)\\n\\t2228 points, 0 vertices, 0 faces\\n01:28:40 [App     ] Mesh loaded: 78824 vertices, 157507 faces (9ms)\\n\\nInitialized views 4 (26.67%, 103ms, ETA 283ms)...\\nInitialized views 8 (53.33%, 207ms, ETA 181ms)...\\nInitialized views 12 (80.00%, 328ms, ETA 82ms)...\\nInitialized views 15 (100%, 412ms)               \\n01:28:55 [App     ] Assigning the best view to each face completed: 157507 faces (15s365ms)\\n01:28:56 [App     ] Generating texture atlas and image completed: 2078 patches, 2048 image size, 1 textures (1s56ms)\\n01:28:56 [App     ] Mesh texturing completed: 78824 vertices, 157507 faces (16s424ms)\\n01:28:57 [App     ] Mesh saved: 78824 vertices, 157507 faces (311ms)\\n\\nOpenMVS outputs\\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-085-115-fps4/openmvs-sweep-detail/scene.mvs\\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-085-115-fps4/openmvs-sweep-detail/scene_dense.mvs\\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-085-115-fps4/openmvs-sweep-detail/scene_dense.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-085-115-fps4/openmvs-sweep-detail/scene_mesh.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-085-115-fps4/openmvs-sweep-detail/scene_refined.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-085-115-fps4/openmvs-sweep-detail/scene_textured.ply\",\n      \"mesh\": \"captures/img-8593-085-115-fps4/openmvs-sweep-detail/scene_textured.ply\",\n      \"assetBytes\": 6931418,\n      \"vertices\": 78824,\n      \"faces\": 157507,\n      \"componentCount\": 3,\n      \"largestComponentRatio\": 0.9997589566629453,\n      \"degenerateFaceRatio\": 0.0,\n      \"hasTexcoords\": true,\n      \"score\": -245.74\n    }\n  ]\n}",
+      "sweepExitCode": 0,
+      "sweepReport": "public/openmvs-sweep-img-8593-085-115-fps4.json",
+      "sweepRanked": [
+        {
+          "variant": "fast",
+          "score": 121.17,
+          "vertices": 6171,
+          "faces": 12196,
+          "assetBytes": 537762,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0
+        },
+        {
+          "variant": "balanced",
+          "score": 120.91,
+          "vertices": 6025,
+          "faces": 11915,
+          "assetBytes": 525332,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0
+        },
+        {
+          "variant": "detail",
+          "score": -245.74,
+          "vertices": 78824,
+          "faces": 157507,
+          "assetBytes": 6931418,
+          "componentCount": 3,
+          "largestComponentRatio": 0.9997589566629453
+        }
+      ],
+      "sweepWinner": "fast",
+      "sweepWinnerScore": 121.17,
+      "sweepApplyStatus": "copied scene_textured.ply, scene_textured0.png, scene_refined.ply, scene_mesh.ply, scene_dense.ply, scene_dense.mvs, scene.mvs"
+    },
+    {
+      "capture": "img-9142-fps2",
+      "model": "0",
+      "frames": 61,
+      "registered": 59,
+      "ratio": 0.9672,
+      "points": 13733,
+      "points_per_registered": 232.76,
+      "reprojection_error": 1.142648,
+      "score": 7100.19,
+      "input": "IMG_9142.MOV",
+      "input_slug": "img-9142",
+      "sweepLogTail": "        \"SPLAT_OPENMVS_RESOLUTION_LEVEL\": \"2\",\n        \"SPLAT_OPENMVS_NUMBER_VIEWS\": \"5\",\n        \"SPLAT_OPENMVS_NUMBER_VIEWS_FUSE\": \"3\",\n        \"SPLAT_OPENMVS_REFINE_DECIMATE\": \"0\",\n        \"SPLAT_OPENMVS_TEXTURE_SIZE\": \"2048\"\n      },\n      \"exitCode\": 0,\n      \"logTail\": \"\\t59 images (59 calibrated) with a total of 12.96 MPixels (0.22 MPixels/image)\\n\\t13733 points, 0 vertices, 0 faces\\n01:49:56 [App     ] Mesh loaded: 16645 vertices, 33059 faces (1ms)\\n\\nInitialized views 14 (23.73%, 103ms, ETA 333ms)...\\nInitialized views 31 (52.54%, 206ms, ETA 186ms)...\\nInitialized views 50 (84.75%, 308ms, ETA 55ms)... \\nInitialized views 59 (100%, 363ms)               \\n01:49:59 [App     ] Assigning the best view to each face completed: 33059 faces (2s578ms)\\n01:50:00 [App     ] Generating texture atlas and image completed: 499 patches, 2048 image size, 1 textures (856ms)\\n01:50:00 [App     ] Mesh texturing completed: 16645 vertices, 33059 faces (3s436ms)\\n01:50:00 [App     ] Mesh saved: 16645 vertices, 33059 faces (189ms)\\n\\nOpenMVS outputs\\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-fast/scene.mvs\\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-fast/scene_dense.mvs\\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-fast/scene_dense.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-fast/scene_mesh.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-fast/scene_refined.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-fast/scene_textured.ply\",\n      \"mesh\": \"captures/img-9142-fps2/openmvs-sweep-fast/scene_textured.ply\",\n      \"assetBytes\": 1456245,\n      \"vertices\": 16645,\n      \"faces\": 33059,\n      \"componentCount\": 1,\n      \"largestComponentRatio\": 1.0,\n      \"degenerateFaceRatio\": 0.0,\n      \"hasTexcoords\": true,\n      \"score\": 140.28\n    }\n  ]\n}",
+      "sweepExitCode": 0,
+      "sweepReport": "public/openmvs-sweep-img-9142-fps2.json",
+      "sweepRanked": [
+        {
+          "variant": "detail",
+          "score": 432.06,
+          "vertices": 175900,
+          "faces": 351572,
+          "assetBytes": 15470801,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0
+        },
+        {
+          "variant": "balanced",
+          "score": 141.08,
+          "vertices": 17065,
+          "faces": 33931,
+          "assetBytes": 1494421,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0
+        },
+        {
+          "variant": "fast",
+          "score": 140.28,
+          "vertices": 16645,
+          "faces": 33059,
+          "assetBytes": 1456245,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0
+        }
+      ],
+      "sweepWinner": "detail",
+      "sweepWinnerScore": 432.06,
+      "sweepApplyStatus": "copied scene_textured.ply, scene_textured0.png, scene_refined.ply, scene_mesh.ply, scene_dense.ply, scene_dense.mvs, scene.mvs"
+    },
+    {
+      "capture": "img-9189-fps12",
+      "model": "2",
+      "frames": 116,
+      "registered": 70,
+      "ratio": 0.6034,
+      "points": 2882,
+      "points_per_registered": 41.17,
+      "reprojection_error": 1.075248,
+      "score": 7544.41,
+      "input": "IMG_9189.MOV",
+      "input_slug": "img-9189",
+      "sweepLogTail": "        \"SPLAT_OPENMVS_RESOLUTION_LEVEL\": \"1\",\n        \"SPLAT_OPENMVS_NUMBER_VIEWS\": \"7\",\n        \"SPLAT_OPENMVS_NUMBER_VIEWS_FUSE\": \"3\",\n        \"SPLAT_OPENMVS_REFINE_DECIMATE\": \"1\",\n        \"SPLAT_OPENMVS_TEXTURE_SIZE\": \"4096\"\n      },\n      \"exitCode\": 0,\n      \"logTail\": \"Initialized views 34 (48.57%, 1s, ETA 1s)...   \\nInitialized views 38 (54.29%, 1s, ETA 979ms)...\\nInitialized views 43 (61.43%, 1s, ETA 796ms)...\\nInitialized views 49 (70.00%, 1s, ETA 592ms)...\\nInitialized views 55 (78.57%, 1s, ETA 408ms)...\\nInitialized views 61 (87.14%, 1s, ETA 237ms)...\\nInitialized views 69 (98.57%, 1s, ETA 24ms)... \\nInitialized views 70 (100%, 1s721ms)          \\n03:35:04 [App     ] Assigning the best view to each face completed: 217556 faces (3m33s633ms)\\n03:35:09 [App     ] Generating texture atlas and image completed: 12539 patches, 4096 image size, 1 textures (4s950ms)\\n03:35:09 [App     ] Mesh texturing completed: 108825 vertices, 217556 faces (3m38s596ms)\\n03:35:10 [App     ] Mesh saved: 108825 vertices, 217556 faces (889ms)\\n\\nOpenMVS outputs\\n- /Users/jw/Dev/codex/Splatter/captures/img-9189-fps12/openmvs-sweep-detail/scene.mvs\\n- /Users/jw/Dev/codex/Splatter/captures/img-9189-fps12/openmvs-sweep-detail/scene_dense.mvs\\n- /Users/jw/Dev/codex/Splatter/captures/img-9189-fps12/openmvs-sweep-detail/scene_dense.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-9189-fps12/openmvs-sweep-detail/scene_mesh.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-9189-fps12/openmvs-sweep-detail/scene_refined.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-9189-fps12/openmvs-sweep-detail/scene_textured.ply\",\n      \"mesh\": \"captures/img-9189-fps12/openmvs-sweep-detail/scene_textured.ply\",\n      \"assetBytes\": 9573293,\n      \"vertices\": 108825,\n      \"faces\": 217556,\n      \"componentCount\": 2,\n      \"largestComponentRatio\": 0.998263266712612,\n      \"degenerateFaceRatio\": 0.0,\n      \"hasTexcoords\": true,\n      \"score\": 59.12\n    }\n  ]\n}",
+      "sweepExitCode": 0,
+      "sweepReport": "public/openmvs-sweep-img-9189-fps12.json",
+      "sweepRanked": [
+        {
+          "variant": "balanced",
+          "score": 138.3,
+          "vertices": 15508,
+          "faces": 30894,
+          "assetBytes": 1360331,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0
+        },
+        {
+          "variant": "fast",
+          "score": 138.1,
+          "vertices": 15427,
+          "faces": 30681,
+          "assetBytes": 1351265,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0
+        },
+        {
+          "variant": "detail",
+          "score": 59.12,
+          "vertices": 108825,
+          "faces": 217556,
+          "assetBytes": 9573293,
+          "componentCount": 2,
+          "largestComponentRatio": 0.998263266712612
+        }
+      ],
+      "sweepWinner": "balanced",
+      "sweepWinnerScore": 138.3,
+      "sweepApplyStatus": "copied scene_textured.ply, scene_textured0.png, scene_refined.ply, scene_mesh.ply, scene_dense.ply, scene_dense.mvs, scene.mvs"
+    },
+    {
+      "capture": "img-9205-fps1-pinhole",
+      "model": "0",
+      "frames": 158,
+      "registered": 80,
+      "ratio": 0.5063,
+      "points": 7170,
+      "points_per_registered": 89.62,
+      "reprojection_error": 1.193409,
+      "score": 8524.45,
+      "input": "IMG_9205.MOV",
+      "input_slug": "img-9205",
+      "sweepLogTail": "        \"SPLAT_OPENMVS_RESOLUTION_LEVEL\": \"1\",\n        \"SPLAT_OPENMVS_NUMBER_VIEWS\": \"7\",\n        \"SPLAT_OPENMVS_NUMBER_VIEWS_FUSE\": \"3\",\n        \"SPLAT_OPENMVS_REFINE_DECIMATE\": \"1\",\n        \"SPLAT_OPENMVS_TEXTURE_SIZE\": \"4096\"\n      },\n      \"exitCode\": 0,\n      \"logTail\": \"Initialized views 55 (68.75%, 1s, ETA 869ms)...\\nInitialized views 59 (73.75%, 2s, ETA 721ms)...\\nInitialized views 64 (80.00%, 2s, ETA 533ms)...\\nInitialized views 68 (85.00%, 2s, ETA 396ms)...\\nInitialized views 72 (90.00%, 2s, ETA 263ms)...\\nInitialized views 76 (95.00%, 2s, ETA 130ms)...\\nInitialized views 79 (98.75%, 2s, ETA 32ms)... \\nInitialized views 80 (100%, 2s628ms)          \\n04:05:10 [App     ] Assigning the best view to each face completed: 628802 faces (45s543ms)\\n04:05:22 [App     ] Generating texture atlas and image completed: 12884 patches, 4096 image size, 2 textures (12s219ms)\\n04:05:22 [App     ] Mesh texturing completed: 314622 vertices, 628802 faces (57s773ms)\\n04:05:25 [App     ] Mesh saved: 314622 vertices, 628802 faces (2s267ms)\\n\\nOpenMVS outputs\\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene.mvs\\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene_dense.mvs\\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene_dense.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene_mesh.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene_refined.ply\\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene_textured.ply\",\n      \"mesh\": \"captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene_textured.ply\",\n      \"assetBytes\": 30185478,\n      \"vertices\": 314622,\n      \"faces\": 628802,\n      \"componentCount\": 14,\n      \"largestComponentRatio\": 0.9652471855115027,\n      \"degenerateFaceRatio\": 0.0,\n      \"hasTexcoords\": true,\n      \"score\": -2572.25\n    }\n  ]\n}",
+      "sweepExitCode": 0,
+      "sweepReport": "public/openmvs-sweep-img-9205-fps1-pinhole.json",
+      "sweepRanked": [
+        {
+          "variant": "balanced",
+          "score": -841.69,
+          "vertices": 32988,
+          "faces": 65455,
+          "assetBytes": 2883409,
+          "componentCount": 5,
+          "largestComponentRatio": 0.8835940341942524
+        },
+        {
+          "variant": "fast",
+          "score": -1584.34,
+          "vertices": 32852,
+          "faces": 65133,
+          "assetBytes": 3130138,
+          "componentCount": 8,
+          "largestComponentRatio": 0.9649945208815293
+        },
+        {
+          "variant": "detail",
+          "score": -2572.25,
+          "vertices": 314622,
+          "faces": 628802,
+          "assetBytes": 30185478,
+          "componentCount": 14,
+          "largestComponentRatio": 0.9652471855115027
+        }
+      ],
+      "sweepWinner": "balanced",
+      "sweepWinnerScore": -841.69,
+      "sweepApplyStatus": "copied scene_textured.ply, scene_textured0.png, scene_refined.ply, scene_mesh.ply, scene_dense.ply, scene_dense.mvs, scene.mvs"
+    }
+  ]
+}

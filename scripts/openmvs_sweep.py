@@ -67,6 +67,28 @@ def run_variant(capture, model, variant):
         if key != "name":
             env[key] = value
     env["SPLAT_OPENMVS_OUTPUT_SUFFIX"] = f"-sweep-{variant['name']}"
+    openmvs_dir = Path("captures") / capture / f"openmvs-sweep-{variant['name']}"
+    mesh_path = openmvs_dir / "scene_textured.ply"
+    if not mesh_path.is_file():
+        mesh_path = openmvs_dir / "scene_refined.ply"
+
+    if os.environ.get("SPLAT_OPENMVS_SWEEP_REUSE", "1") == "1" and mesh_path.is_file():
+        metrics = mesh_metrics(mesh_path)
+        return {
+            "variant": variant["name"],
+            "settings": {key: value for key, value in variant.items() if key != "name"},
+            "exitCode": 0,
+            "logTail": "Reused existing sweep output.",
+            "mesh": str(mesh_path),
+            "assetBytes": mesh_path.stat().st_size,
+            "vertices": metrics["vertices"],
+            "faces": metrics["faces"],
+            "componentCount": metrics["componentCount"],
+            "largestComponentRatio": metrics["largestComponentRatio"],
+            "degenerateFaceRatio": metrics["degenerateFaceRatio"],
+            "hasTexcoords": metrics["hasTexcoords"],
+            "score": score(metrics, mesh_path.stat().st_size),
+        }
 
     proc = subprocess.run(
         ["bin/splatter", "surface-reconstruct", capture, model],
@@ -76,7 +98,6 @@ def run_variant(capture, model, variant):
         stderr=subprocess.STDOUT,
         check=False,
     )
-    openmvs_dir = Path("captures") / capture / f"openmvs-sweep-{variant['name']}"
     mesh_path = openmvs_dir / "scene_textured.ply"
     if not mesh_path.is_file():
         mesh_path = openmvs_dir / "scene_refined.ply"
@@ -113,11 +134,21 @@ def main():
         return 1
     capture = sys.argv[1]
     model = sys.argv[2] if len(sys.argv) == 3 else "best"
+    selected_names = [
+        name.strip()
+        for name in os.environ.get("SPLAT_OPENMVS_SWEEP_VARIANTS", "").split(",")
+        if name.strip()
+    ]
+    variants = [variant for variant in VARIANTS if not selected_names or variant["name"] in selected_names]
+    if not variants:
+        print(f"No OpenMVS variants selected: {selected_names}", file=sys.stderr)
+        return 1
+
     if os.environ.get("SPLAT_OPENMVS_SWEEP_DRY_RUN") == "1":
-        print(json.dumps({"capture": capture, "model": model, "variants": VARIANTS}, indent=2))
+        print(json.dumps({"capture": capture, "model": model, "variants": variants}, indent=2))
         return 0
 
-    rows = [run_variant(capture, model, variant) for variant in VARIANTS]
+    rows = [run_variant(capture, model, variant) for variant in variants]
     rows.sort(key=lambda row: row["score"], reverse=True)
     report = {"capture": capture, "model": model, "ranked": rows}
     output_path = Path("public") / f"openmvs-sweep-{capture}.json"

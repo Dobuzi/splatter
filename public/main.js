@@ -6,6 +6,7 @@ import {
   Entity,
   FILLMODE_FILL_WINDOW,
   MeshInstance,
+  PRIMITIVE_POINTS,
   RESOLUTION_AUTO,
   StandardMaterial,
   createMesh
@@ -153,6 +154,10 @@ function isMeshScene(config) {
   return config.format === 'PLY Mesh';
 }
 
+function pointCloudStorageKey(config) {
+  return `splatter:render-mode:${config.assetUrl}`;
+}
+
 function transformStorageKey(config) {
   return `splatter:transform:${config.assetUrl}`;
 }
@@ -205,9 +210,16 @@ function applySplatTransform(root, child, transform) {
   child.setLocalPosition(-transform.pivot[0], -transform.pivot[1], -transform.pivot[2]);
 }
 
-function installTransformTools(config, root, child, transform) {
+function installTransformTools(config, root, children, transform) {
   if (!tools) {
     return;
+  }
+  const transformChildren = Array.isArray(children) ? children : [children];
+
+  function applyTransform() {
+    for (const child of transformChildren) {
+      applySplatTransform(root, child, transform);
+    }
   }
 
   function save() {
@@ -231,7 +243,7 @@ function installTransformTools(config, root, child, transform) {
     transform.rotation = next.rotation;
     transform.scale = next.scale;
     localStorage.removeItem(transformStorageKey(config));
-    applySplatTransform(root, child, transform);
+    applyTransform();
     setStatus('Reset');
   }
 
@@ -263,9 +275,11 @@ function installTransformTools(config, root, child, transform) {
     } else if (action === 'reset') {
       reset();
       return;
+    } else if (action.startsWith('render-')) {
+      return;
     }
 
-    applySplatTransform(root, child, transform);
+    applyTransform();
     setStatus('Adjusted');
   });
 
@@ -276,7 +290,7 @@ function installTransformTools(config, root, child, transform) {
       transform.position = tupleFromConfig(nextTransform.position, transform.position);
       transform.rotation = tupleFromConfig(nextTransform.rotation, transform.rotation);
       transform.scale = tupleFromConfig(nextTransform.scale, transform.scale);
-      applySplatTransform(root, child, transform);
+      applyTransform();
     },
     save,
     reset
@@ -622,6 +636,7 @@ function parseBinaryPly(buffer) {
 
   const view = new DataView(buffer);
   const positions = [];
+  const colors = [];
   const sourceFaces = [];
   let offset = headerBytes;
 
@@ -631,6 +646,9 @@ function parseBinaryPly(buffer) {
         let x = 0;
         let y = 0;
         let z = 0;
+        let red = 210;
+        let green = 218;
+        let blue = 230;
         for (const property of element.properties) {
           if (property.kind === 'list') {
             let count;
@@ -645,10 +663,17 @@ function parseBinaryPly(buffer) {
               y = value;
             } else if (property.name === 'z') {
               z = value;
+            } else if (property.name === 'red') {
+              red = value;
+            } else if (property.name === 'green') {
+              green = value;
+            } else if (property.name === 'blue') {
+              blue = value;
             }
           }
         }
         positions.push(x, y, z);
+        colors.push(red / 255, green / 255, blue / 255, 1);
       } else if (element.name === 'face') {
         let faceIndices = null;
         let faceTexcoords = null;
@@ -688,8 +713,11 @@ function parseBinaryPly(buffer) {
     }
   }
 
-  if (positions.length === 0 || sourceFaces.length === 0) {
-    throw new Error('PLY mesh requires vertices and faces');
+  if (positions.length === 0) {
+    throw new Error('PLY requires vertices');
+  }
+  if (sourceFaces.length === 0) {
+    return { positions, colors, indices: [], normals: [], pointCloud: true };
   }
 
   const hasTexcoords = sourceFaces.some((face) => Array.isArray(face.texcoords) && face.texcoords.length >= face.indices.length * 2);
@@ -735,8 +763,28 @@ async function loadPlyMesh(url) {
   return parseBinaryPly(buffer);
 }
 
+function createPointCloud(app, meshData, child) {
+  const mesh = createMesh(app.graphicsDevice, meshData.positions, {
+    colors: meshData.colors
+  });
+  mesh.primitive[0].type = PRIMITIVE_POINTS;
+  mesh.primitive[0].base = 0;
+  mesh.primitive[0].count = meshData.positions.length / 3;
+  mesh.primitive[0].indexed = false;
+  const material = new StandardMaterial();
+  material.diffuse = new Color(0.82, 0.88, 0.96);
+  material.diffuseVertexColor = true;
+  material.update();
+  const meshInstance = new MeshInstance(mesh, material, child);
+  child.addComponent('render', { meshInstances: [meshInstance] });
+}
+
 async function installMeshScene(config, app, root, child) {
   const meshData = await loadPlyMesh(config.assetUrl);
+  if (meshData.pointCloud) {
+    createPointCloud(app, meshData, child);
+    return null;
+  }
   const meshOptions = {
     indices: meshData.indices,
     normals: meshData.normals
@@ -757,6 +805,40 @@ async function installMeshScene(config, app, root, child) {
   material.update();
   const meshInstance = new MeshInstance(mesh, material, child);
   child.addComponent('render', { meshInstances: [meshInstance] });
+  return meshInstance;
+}
+
+async function installPointCloudScene(config, app, child) {
+  if (!config.pointCloudAssetUrl) {
+    return null;
+  }
+  const meshData = await loadPlyMesh(config.pointCloudAssetUrl);
+  createPointCloud(app, meshData, child);
+  return child;
+}
+
+function installRenderModeTools(config, meshEntity, pointEntity) {
+  const meshButton = tools?.querySelector('[data-action="render-mesh"]');
+  const pointButton = tools?.querySelector('[data-action="render-points"]');
+  if (!meshButton || !pointButton || !pointEntity) {
+    return;
+  }
+  meshButton.hidden = false;
+  pointButton.hidden = false;
+
+  function setMode(mode) {
+    const showPoints = mode === 'points';
+    meshEntity.enabled = !showPoints;
+    pointEntity.enabled = showPoints;
+    meshButton.setAttribute('aria-pressed', String(!showPoints));
+    pointButton.setAttribute('aria-pressed', String(showPoints));
+    localStorage.setItem(pointCloudStorageKey(config), mode);
+    setStatus(showPoints ? 'Ready · Points' : 'Ready · Mesh');
+  }
+
+  meshButton.addEventListener('click', () => setMode('mesh'));
+  pointButton.addEventListener('click', () => setMode('points'));
+  setMode(localStorage.getItem(pointCloudStorageKey(config)) === 'points' ? 'points' : 'mesh');
 }
 
 async function boot() {
@@ -805,14 +887,21 @@ async function boot() {
   const transform = loadSavedTransform(config) || baseTransform(config);
   const sceneRoot = new Entity('Scene Transform');
   const sceneEntity = new Entity(isMeshScene(config) ? 'PLY Mesh' : 'Gaussian Splat');
+  const pointEntity = new Entity('Dense Point Cloud');
   app.root.addChild(sceneRoot);
   sceneRoot.addChild(sceneEntity);
+  sceneRoot.addChild(pointEntity);
   sceneEntity.setPosition(0, 0, 0);
+  pointEntity.setPosition(0, 0, 0);
   applySplatTransform(sceneRoot, sceneEntity, transform);
-  installTransformTools(config, sceneRoot, sceneEntity, transform);
+  applySplatTransform(sceneRoot, pointEntity, transform);
+  installTransformTools(config, sceneRoot, [sceneEntity, pointEntity], transform);
 
   if (isMeshScene(config)) {
     await installMeshScene(config, app, sceneRoot, sceneEntity);
+    await installPointCloudScene(config, app, pointEntity);
+    pointEntity.enabled = false;
+    installRenderModeTools(config, sceneEntity, pointEntity);
   } else {
     const previewAssetUrl = config.previewAssetUrl || config.assetUrl;
     const previewAsset = await loadAsset(new Asset('capture-preview', 'gsplat', {

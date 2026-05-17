@@ -4,8 +4,8 @@
   "format": "PLY Mesh",
   "fileSize": "2.75 MB",
   "capture": "img-9205-fps1-pinhole, 158 frames, 80 COLMAP images",
-  "training": "OpenMVS CPU dense, 710260 dense points, 33032 vertices, 65581 faces",
-  "delivery": "Textured Mesh 2.75 MB; dense point cloud kept in captures for local inspection",
+  "training": "OpenMVS CPU dense, 709193 dense points, 32988 vertices, 65455 faces",
+  "delivery": "Textured Mesh 2.75 MB; dense point cloud 2.54 MB",
   "viewer": {
     "background": [
       0.02,
@@ -43,55 +43,61 @@
   },
   "camera": {
     "target": [
-      -2.349,
-      -4.9771,
-      6.9508
+      -2.426,
+      -5.1552,
+      7.1269
     ],
     "position": [
-      -2.349,
-      -4.9771,
-      68.8525
+      -2.426,
+      -5.1552,
+      69.5174
     ],
-    "distance": 61.9018,
-    "minDistance": 0.9171,
-    "maxDistance": 366.8252
+    "distance": 62.3905,
+    "minDistance": 0.9243,
+    "maxDistance": 369.7212
   },
   "metrics": {
-    "vertices": 33032,
-    "faces": 65581,
+    "vertices": 32988,
+    "faces": 65455,
     "bbox": {
       "min": [
-        -17.529067993164062,
-        -11.737056732177734,
-        -8.844660758972168
+        -17.715837478637695,
+        -12.07961654663086,
+        -8.754920959472656
       ],
       "max": [
-        12.831096649169922,
-        1.7829231023788452,
-        22.746191024780273
+        12.863896369934082,
+        1.7691634893417358,
+        23.008764266967773
       ],
       "size": [
-        30.360164642333984,
-        13.51997983455658,
-        31.59085178375244
+        30.579733848571777,
+        13.848780035972595,
+        31.76368522644043
       ],
       "center": [
-        -2.3489856719970703,
-        -4.977066814899445,
-        6.950765132904053
+        -2.4259705543518066,
+        -5.155226528644562,
+        7.126921653747559
       ],
-      "diagonal": 45.85315003638745,
-      "volume": 12967.059456655315
+      "diagonal": 46.21515476441282,
+      "volume": 13451.66682619183
     },
-    "surfaceArea": 553.0930219673697,
-    "faceDensity": 5.057507464912617,
-    "componentCount": 6,
-    "largestComponentRatio": 0.9638532332283846,
+    "surfaceArea": 522.55295721335,
+    "faceDensity": 4.865939726707484,
+    "componentCount": 5,
+    "largestComponentRatio": 0.8835940341942524,
     "degenerateFaceRatio": 0.0,
     "hasTexcoords": true,
     "textureFiles": [
       "scene_textured0.png"
-    ]
+    ],
+    "pointCloud": {
+      "points": 177299,
+      "maxPoints": 200000,
+      "source": "scene_dense.ply"
+    }
   },
-  "textureAssetUrl": "assets/img-9205-openmvs-scene_textured0.png"
+  "textureAssetUrl": "assets/img-9205-openmvs-scene_textured0.png",
+  "pointCloudAssetUrl": "assets/img-9205-openmvs-scene_dense_points.ply"
 }

@@ -4,8 +4,8 @@
   "format": "PLY Mesh",
   "fileSize": "4.86 MB",
   "capture": "img-8593-000-030-fps4, 120 frames, 23 COLMAP images",
-  "training": "OpenMVS CPU dense, detail sweep winner, 58088 vertices, 115849 faces",
-  "delivery": "Textured Mesh 4.86 MB; dense point cloud kept in captures for local inspection",
+  "training": "OpenMVS CPU dense, 723492 dense points, 58088 vertices, 115849 faces",
+  "delivery": "Textured Mesh 4.86 MB; dense point cloud 2.59 MB",
   "viewer": {
     "background": [
       0.02,
@@ -50,7 +50,7 @@
     "position": [
       3.0449,
       -0.8177,
-      61.5121
+      61.512
     ],
     "distance": 42.851,
     "minDistance": 0.6348,
@@ -91,7 +91,13 @@
     "hasTexcoords": true,
     "textureFiles": [
       "scene_textured0.png"
-    ]
+    ],
+    "pointCloud": {
+      "points": 180873,
+      "maxPoints": 200000,
+      "source": "scene_dense.ply"
+    }
   },
-  "textureAssetUrl": "assets/img-8593-000-030-openmvs-scene_textured0.png"
+  "textureAssetUrl": "assets/img-8593-000-030-openmvs-scene_textured0.png",
+  "pointCloudAssetUrl": "assets/img-8593-000-030-openmvs-scene_dense_points.ply"
 }

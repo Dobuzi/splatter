@@ -1,0 +1,72 @@
+{
+  "capture": "img-9205-fps1-pinhole",
+  "model": "0",
+  "ranked": [
+    {
+      "variant": "balanced",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "640",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "1",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "5",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "0",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "4096"
+      },
+      "exitCode": 0,
+      "logTail": "Initialized views 56 (70.00%, 948ms, ETA 406ms)...\nInitialized views 59 (73.75%, 1s, ETA 380ms)...   \nInitialized views 63 (78.75%, 1s, ETA 321ms)...\nInitialized views 67 (83.75%, 1s, ETA 256ms)...\nInitialized views 70 (87.50%, 1s, ETA 204ms)...\nInitialized views 74 (92.50%, 1s, ETA 125ms)...\nInitialized views 78 (97.50%, 1s, ETA 43ms)... \nInitialized views 80 (100%, 1s769ms)          \n03:51:00 [App     ] Assigning the best view to each face completed: 65455 faces (1m38s514ms)\n03:51:02 [App     ] Generating texture atlas and image completed: 1241 patches, 4096 image size, 1 textures (2s353ms)\n03:51:02 [App     ] Mesh texturing completed: 32988 vertices, 65455 faces (1m40s870ms)\n03:51:03 [App     ] Mesh saved: 32988 vertices, 65455 faces (748ms)\n\nOpenMVS outputs\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-balanced/scene.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-balanced/scene_dense.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-balanced/scene_dense.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-balanced/scene_mesh.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-balanced/scene_refined.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-balanced/scene_textured.ply",
+      "mesh": "captures/img-9205-fps1-pinhole/openmvs-sweep-balanced/scene_textured.ply",
+      "assetBytes": 2883409,
+      "vertices": 32988,
+      "faces": 65455,
+      "componentCount": 5,
+      "largestComponentRatio": 0.8835940341942524,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": -841.69
+    },
+    {
+      "variant": "fast",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "640",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "2",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "5",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "0",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "2048"
+      },
+      "exitCode": 0,
+      "logTail": "03:42:41 [App     ] Mesh loaded: 32852 vertices, 65133 faces (3ms)\n\nInitialized views 12 (15.00%, 103ms, ETA 585ms)...\nInitialized views 26 (32.50%, 206ms, ETA 428ms)...\nInitialized views 41 (51.25%, 308ms, ETA 293ms)...\nInitialized views 54 (67.50%, 415ms, ETA 199ms)...\nInitialized views 70 (87.50%, 521ms, ETA 74ms)... \nInitialized views 80 (100%, 590ms)               \n03:45:18 [App     ] Assigning the best view to each face completed: 65133 faces (2m37s875ms)\n03:45:21 [App     ] Generating texture atlas and image completed: 1251 patches, 2048 image size, 2 textures (2s205ms)\n03:45:21 [App     ] Mesh texturing completed: 32852 vertices, 65133 faces (2m40s82ms)\n03:45:21 [App     ] Mesh saved: 32852 vertices, 65133 faces (611ms)\n\nOpenMVS outputs\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-fast/scene.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-fast/scene_dense.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-fast/scene_dense.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-fast/scene_mesh.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-fast/scene_refined.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-fast/scene_textured.ply",
+      "mesh": "captures/img-9205-fps1-pinhole/openmvs-sweep-fast/scene_textured.ply",
+      "assetBytes": 3130138,
+      "vertices": 32852,
+      "faces": 65133,
+      "componentCount": 8,
+      "largestComponentRatio": 0.9649945208815293,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": -1584.34
+    },
+    {
+      "variant": "detail",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "960",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "1",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "7",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "1",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "4096"
+      },
+      "exitCode": 0,
+      "logTail": "Initialized views 55 (68.75%, 1s, ETA 869ms)...\nInitialized views 59 (73.75%, 2s, ETA 721ms)...\nInitialized views 64 (80.00%, 2s, ETA 533ms)...\nInitialized views 68 (85.00%, 2s, ETA 396ms)...\nInitialized views 72 (90.00%, 2s, ETA 263ms)...\nInitialized views 76 (95.00%, 2s, ETA 130ms)...\nInitialized views 79 (98.75%, 2s, ETA 32ms)... \nInitialized views 80 (100%, 2s628ms)          \n04:05:10 [App     ] Assigning the best view to each face completed: 628802 faces (45s543ms)\n04:05:22 [App     ] Generating texture atlas and image completed: 12884 patches, 4096 image size, 2 textures (12s219ms)\n04:05:22 [App     ] Mesh texturing completed: 314622 vertices, 628802 faces (57s773ms)\n04:05:25 [App     ] Mesh saved: 314622 vertices, 628802 faces (2s267ms)\n\nOpenMVS outputs\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene_dense.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene_dense.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene_mesh.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene_refined.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene_textured.ply",
+      "mesh": "captures/img-9205-fps1-pinhole/openmvs-sweep-detail/scene_textured.ply",
+      "assetBytes": 30185478,
+      "vertices": 314622,
+      "faces": 628802,
+      "componentCount": 14,
+      "largestComponentRatio": 0.9652471855115027,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": -2572.25
+    }
+  ]
+}

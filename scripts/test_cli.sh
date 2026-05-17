@@ -17,18 +17,23 @@ fi
 "$cli" --help | grep -q "matcher-sweep"
 "$cli" --help | grep -q "rank-captures"
 "$cli" --help | grep -q "select-frames"
+"$cli" --help | grep -q "frame-quality"
 "$cli" --help | grep -q "colmap-gate"
 "$cli" --help | grep -q "select-checkpoint"
 "$cli" --help | grep -q "mask-frames"
 "$cli" --help | grep -q "depth-priors"
 "$cli" --help | grep -q "depth-report"
 "$cli" --help | grep -q "mesh-validate"
+"$cli" --help | grep -q "mesh-simplify"
 "$cli" --help | grep -q "surface-reconstruct"
 "$cli" --help | grep -q "openmvs-batch"
 "$cli" --help | grep -q "openmvs-sweep"
+"$cli" --help | grep -q "openmvs-sweep-all"
 "$cli" --help | grep -q "openmvs-validate"
+"$cli" --help | grep -q "viewer-qa"
 "$cli" --help | grep -q "mlx-smoke"
 "$cli" --help | grep -q "mlx-diagnose"
+"$cli" --help | grep -q "mlx-frame-quality"
 "$cli" --version | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+'
 "$cli" validate >/dev/null
 
@@ -59,6 +64,11 @@ fi
 
 if "$cli" select-frames >/dev/null 2>&1; then
   echo "Select frames without required args should fail" >&2
+  exit 1
+fi
+
+if "$cli" frame-quality >/dev/null 2>&1; then
+  echo "Frame quality without required args should fail" >&2
   exit 1
 fi
 
@@ -104,6 +114,11 @@ fi
 
 if "$cli" mesh-validate >/dev/null 2>&1; then
   echo "Mesh validate without required args should fail" >&2
+  exit 1
+fi
+
+if "$cli" mesh-simplify >/dev/null 2>&1; then
+  echo "Mesh simplify without required args should fail" >&2
   exit 1
 fi
 
@@ -207,5 +222,10 @@ printf '%s\n' "$openmvs_batch_output" | grep -q "output/openmvs-ranking.json"
 openmvs_sweep_output=$(SPLAT_OPENMVS_SWEEP_DRY_RUN=1 "$cli" openmvs-sweep missing-capture)
 printf '%s\n' "$openmvs_sweep_output" | grep -q "balanced"
 printf '%s\n' "$openmvs_sweep_output" | grep -q "detail"
+openmvs_sweep_all_output=$(SPLAT_OPENMVS_SWEEP_ALL_DRY_RUN=1 "$cli" openmvs-sweep-all input)
+printf '%s\n' "$openmvs_sweep_all_output" | grep -q "candidates"
+"$cli" viewer-qa >/dev/null
+mlx_frame_output=$("$cli" mlx-frame-quality --dry-run)
+printf '%s\n' "$mlx_frame_output" | grep -q "frame quality scoring"
 
 echo "CLI contract tests passed"

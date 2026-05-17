@@ -1,0 +1,50 @@
+{
+  "capture": "video-20260514-034200-fps12-pinhole",
+  "model": "0",
+  "ranked": [
+    {
+      "variant": "balanced",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "640",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "1",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "5",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "0",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "4096"
+      },
+      "exitCode": 0,
+      "logTail": "Reused existing sweep output.",
+      "mesh": "captures/video-20260514-034200-fps12-pinhole/openmvs-sweep-balanced/scene_textured.ply",
+      "assetBytes": 3869437,
+      "vertices": 44344,
+      "faces": 87817,
+      "componentCount": 4,
+      "largestComponentRatio": 0.9982861266462204,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": -559.73
+    },
+    {
+      "variant": "fast",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "640",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "2",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "5",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "0",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "2048"
+      },
+      "exitCode": 0,
+      "logTail": "Reused existing sweep output.",
+      "mesh": "captures/video-20260514-034200-fps12-pinhole/openmvs-sweep-fast/scene_textured.ply",
+      "assetBytes": 4183354,
+      "vertices": 43907,
+      "faces": 87051,
+      "componentCount": 5,
+      "largestComponentRatio": 0.9995900425900198,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": -810.97
+    }
+  ]
+}

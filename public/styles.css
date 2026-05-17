@@ -60,6 +60,7 @@ code {
 
 #hud {
   position: fixed;
+  z-index: 2;
   left: 16px;
   right: 16px;
   bottom: 16px;
@@ -120,6 +121,7 @@ code {
 
 #tools {
   position: fixed;
+  z-index: 2;
   top: 16px;
   left: 16px;
   right: 16px;
@@ -144,6 +146,12 @@ code {
 
 #tools button:active {
   background: rgba(143, 211, 255, 0.22);
+}
+
+#tools button[aria-pressed="true"] {
+  border-color: rgba(143, 211, 255, 0.55);
+  background: rgba(143, 211, 255, 0.18);
+  color: #ffffff;
 }
 
 @media (max-width: 620px) {

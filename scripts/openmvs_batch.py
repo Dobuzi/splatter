@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 from ply_metrics import camera_for_metrics, mesh_metrics, public_metrics
+from sample_ply_points import sample_point_cloud
 
 
 VIDEO_EXTS = {".mov", ".mp4", ".m4v"}
@@ -138,6 +139,23 @@ def ply_counts(path):
     return counts
 
 
+def stage_dense_point_cloud(row, dense_path, assets_dir):
+    if not dense_path.is_file():
+        return None
+    max_points = int(os_environ().get("SPLAT_DENSE_POINTCLOUD_MAX_POINTS", "200000"))
+    dense_asset_name = f"{row['input_slug']}-openmvs-scene_dense_points.ply"
+    dense_asset_path = assets_dir / dense_asset_name
+    report = sample_point_cloud(dense_path, dense_asset_path, max_points)
+    row["denseAssetUrl"] = f"assets/{dense_asset_name}"
+    row["denseAssetBytes"] = file_size(dense_asset_path)
+    row["densePointCloud"] = {
+        "points": report["points"],
+        "maxPoints": report["maxPoints"],
+        "source": dense_path.name,
+    }
+    return row["denseAssetUrl"]
+
+
 def scene_id_for(input_slug):
     return f"{input_slug}-openmvs"
 
@@ -177,15 +195,10 @@ def stage_scene(row):
         row["textureAssetUrl"] = texture_asset_url
         row["textureAssetBytes"] = file_size(texture_asset_path)
 
-    stage_dense = os_environ().get("SPLAT_STAGE_DENSE_POINTCLOUD") == "1"
+    stage_dense = os_environ().get("SPLAT_STAGE_DENSE_POINTCLOUD", "1") == "1"
     dense_asset_url = None
-    if stage_dense and dense_path.is_file():
-        dense_asset_name = f"{row['input_slug']}-openmvs-{dense_path.name}"
-        dense_asset_path = assets_dir / dense_asset_name
-        shutil.copyfile(dense_path, dense_asset_path)
-        dense_asset_url = f"assets/{dense_asset_name}"
-        row["denseAssetUrl"] = dense_asset_url
-        row["denseAssetBytes"] = file_size(dense_asset_path)
+    if stage_dense:
+        dense_asset_url = stage_dense_point_cloud(row, dense_path, assets_dir)
 
     metrics = mesh_metrics(mesh_path)
     row["meshVertices"] = metrics["vertices"]
@@ -201,7 +214,7 @@ def stage_scene(row):
         "fileSize": human_size(row["assetBytes"]),
         "capture": f"{row['capture']}, {row['frames']} frames, {row['registered']} COLMAP images",
         "training": f"OpenMVS CPU dense, {row.get('densePoints', 0)} dense points, {row['meshVertices']} vertices, {row['meshFaces']} faces",
-        "delivery": f"{asset_kind.title()} {human_size(row['assetBytes'])}; dense point cloud kept in captures for local inspection",
+        "delivery": f"{asset_kind.title()} {human_size(row['assetBytes'])}; dense point cloud {human_size(row.get('denseAssetBytes', 0)) if dense_asset_url else 'kept in captures'}",
         "viewer": {
             "background": [0.02, 0.025, 0.03],
             "fov": 42,
@@ -220,6 +233,7 @@ def stage_scene(row):
         scene_config["textureAssetUrl"] = texture_asset_url
     if dense_asset_url:
         scene_config["pointCloudAssetUrl"] = dense_asset_url
+        scene_config["metrics"]["pointCloud"] = row["densePointCloud"]
     (scene_dir / "scene.json").write_text(json.dumps(scene_config, indent=2) + "\n", encoding="utf-8")
     row["sceneUrl"] = f"scenes/{scene_id_for(row['input_slug'])}/scene.json"
     row["stage_status"] = "staged"
@@ -342,6 +356,8 @@ def main():
                 "meshAssetKind",
                 "assetUrl",
                 "textureAssetUrl",
+                "denseAssetUrl",
+                "densePointCloud",
                 "sceneUrl",
                 "stage_status",
             ]

@@ -1,0 +1,72 @@
+{
+  "capture": "img-9142-fps2",
+  "model": "0",
+  "ranked": [
+    {
+      "variant": "detail",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "960",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "1",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "7",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "1",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "4096"
+      },
+      "exitCode": 0,
+      "logTail": "Initialized views 28 (47.46%, 914ms, ETA 1s)...\nInitialized views 33 (55.93%, 1s, ETA 808ms)...\nInitialized views 37 (62.71%, 1s, ETA 672ms)...\nInitialized views 41 (69.49%, 1s, ETA 545ms)...\nInitialized views 46 (77.97%, 1s, ETA 381ms)...\nInitialized views 51 (86.44%, 1s, ETA 229ms)...\nInitialized views 56 (94.92%, 1s, ETA 85ms)... \nInitialized views 59 (100%, 1s661ms)          \n02:28:46 [App     ] Assigning the best view to each face completed: 351572 faces (46s30ms)\n02:28:50 [App     ] Generating texture atlas and image completed: 6472 patches, 4096 image size, 1 textures (3s884ms)\n02:28:50 [App     ] Mesh texturing completed: 175900 vertices, 351572 faces (49s919ms)\n02:28:51 [App     ] Mesh saved: 175900 vertices, 351572 faces (695ms)\n\nOpenMVS outputs\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-detail/scene.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-detail/scene_dense.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-detail/scene_dense.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-detail/scene_mesh.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-detail/scene_refined.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-detail/scene_textured.ply",
+      "mesh": "captures/img-9142-fps2/openmvs-sweep-detail/scene_textured.ply",
+      "assetBytes": 15470801,
+      "vertices": 175900,
+      "faces": 351572,
+      "componentCount": 1,
+      "largestComponentRatio": 1.0,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": 432.06
+    },
+    {
+      "variant": "balanced",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "640",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "1",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "5",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "0",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "4096"
+      },
+      "exitCode": 0,
+      "logTail": "\t59 images (59 calibrated) with a total of 12.96 MPixels (0.22 MPixels/image)\n\t13733 points, 0 vertices, 0 faces\n01:57:03 [App     ] Mesh loaded: 17065 vertices, 33931 faces (1ms)\n\nInitialized views 14 (23.73%, 103ms, ETA 333ms)...\nInitialized views 30 (50.85%, 205ms, ETA 198ms)...\nInitialized views 48 (81.36%, 305ms, ETA 69ms)... \nInitialized views 59 (100%, 369ms)               \n01:57:05 [App     ] Assigning the best view to each face completed: 33931 faces (2s868ms)\n01:57:07 [App     ] Generating texture atlas and image completed: 566 patches, 2048 image size, 1 textures (1s255ms)\n01:57:07 [App     ] Mesh texturing completed: 17065 vertices, 33931 faces (4s125ms)\n01:57:07 [App     ] Mesh saved: 17065 vertices, 33931 faces (192ms)\n\nOpenMVS outputs\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-balanced/scene.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-balanced/scene_dense.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-balanced/scene_dense.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-balanced/scene_mesh.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-balanced/scene_refined.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-balanced/scene_textured.ply",
+      "mesh": "captures/img-9142-fps2/openmvs-sweep-balanced/scene_textured.ply",
+      "assetBytes": 1494421,
+      "vertices": 17065,
+      "faces": 33931,
+      "componentCount": 1,
+      "largestComponentRatio": 1.0,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": 141.08
+    },
+    {
+      "variant": "fast",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "640",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "2",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "5",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "0",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "2048"
+      },
+      "exitCode": 0,
+      "logTail": "\t59 images (59 calibrated) with a total of 12.96 MPixels (0.22 MPixels/image)\n\t13733 points, 0 vertices, 0 faces\n01:49:56 [App     ] Mesh loaded: 16645 vertices, 33059 faces (1ms)\n\nInitialized views 14 (23.73%, 103ms, ETA 333ms)...\nInitialized views 31 (52.54%, 206ms, ETA 186ms)...\nInitialized views 50 (84.75%, 308ms, ETA 55ms)... \nInitialized views 59 (100%, 363ms)               \n01:49:59 [App     ] Assigning the best view to each face completed: 33059 faces (2s578ms)\n01:50:00 [App     ] Generating texture atlas and image completed: 499 patches, 2048 image size, 1 textures (856ms)\n01:50:00 [App     ] Mesh texturing completed: 16645 vertices, 33059 faces (3s436ms)\n01:50:00 [App     ] Mesh saved: 16645 vertices, 33059 faces (189ms)\n\nOpenMVS outputs\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-fast/scene.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-fast/scene_dense.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-fast/scene_dense.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-fast/scene_mesh.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-fast/scene_refined.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-9142-fps2/openmvs-sweep-fast/scene_textured.ply",
+      "mesh": "captures/img-9142-fps2/openmvs-sweep-fast/scene_textured.ply",
+      "assetBytes": 1456245,
+      "vertices": 16645,
+      "faces": 33059,
+      "componentCount": 1,
+      "largestComponentRatio": 1.0,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": 140.28
+    }
+  ]
+}

@@ -19,6 +19,7 @@ Commands:
   analyze <name>                             Analyze COLMAP sparse models
   train <name> [iters] [downscale] [ply]     Run OpenSplat
   select-frames <src> <dst> [max-frames]     Select sharp, diverse capture frames
+  frame-quality <capture> [max-sample]        Score frame sharpness, exposure, and motion
   convert <input> [output]                   Convert scene formats, defaults to SOG
   stage <scene> [title]                      Stage scene into public/assets
   quality-report <name> [scene]              Report capture, COLMAP, and scene quality signals
@@ -35,12 +36,16 @@ Commands:
   depth-priors <capture>                     Generate optional monocular depth priors
   depth-report <capture>                     Report depth prior coverage
   mesh-validate <ply>                        Plan optional surface/mesh validation
+  mesh-simplify <input> <output> [max-faces]  Write a lightweight cleaned mesh PLY
   surface-reconstruct <capture> [model]      Run COLMAP dense depth, fusion, and mesh
   openmvs-batch [input-dir]                  Run OpenMVS for best capture per input and stage mesh results
   openmvs-sweep <capture> [model]            Run OpenMVS quality variants for one capture
+  openmvs-sweep-all [input-dir]              Sweep all input captures, apply winners, and restage
   openmvs-validate                           Validate staged OpenMVS mesh assets and camera framing
+  viewer-qa                                  Validate viewer scene assets and point-cloud wiring
   mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
   mlx-diagnose [args]                        Diagnose gsplat-mlx NaN sources
+  mlx-frame-quality <capture> [max-sample]   Use MLX for capture quality aggregation when available
   publish <video> <name> [fps] [iters] [downscale] [title] [stage|no-stage]
                                              Run capture/train/convert/stage pipeline
   serve                                      Serve public viewer on localhost:8080
@@ -94,6 +99,10 @@ case "$1" in
   select-frames)
     shift
     scripts/select_frames.sh "$@"
+    ;;
+  frame-quality)
+    shift
+    scripts/frame_quality.py "$@"
     ;;
   convert)
     shift
@@ -155,6 +164,10 @@ case "$1" in
     shift
     scripts/mesh_validate.sh "$@"
     ;;
+  mesh-simplify)
+    shift
+    scripts/mesh_simplify.py "$@"
+    ;;
   surface-reconstruct)
     shift
     scripts/colmap_surface.sh "$@"
@@ -167,6 +180,15 @@ case "$1" in
     shift
     scripts/openmvs_sweep.py "$@"
     ;;
+  openmvs-sweep-all)
+    shift
+    input_dir="${1:-input}"
+    if (( $# > 1 )); then
+      echo "Usage: splatter openmvs-sweep-all [input-dir]" >&2
+      exit 1
+    fi
+    scripts/openmvs_sweep_all.py "$input_dir"
+    ;;
   openmvs-validate)
     shift
     if (( $# != 0 )); then
@@ -175,6 +197,14 @@ case "$1" in
     fi
     scripts/openmvs_validate.py
     ;;
+  viewer-qa)
+    shift
+    if (( $# != 0 )); then
+      echo "Usage: splatter viewer-qa" >&2
+      exit 1
+    fi
+    node scripts/viewer_qa.mjs
+    ;;
   mlx-smoke)
     shift
     scripts/check_mlx_gsplat.sh "$@"
@@ -182,6 +212,10 @@ case "$1" in
   mlx-diagnose)
     shift
     scripts/diagnose_mlx_gsplat.sh "$@"
+    ;;
+  mlx-frame-quality)
+    shift
+    scripts/mlx_frame_quality.py "$@"
     ;;
   publish)
     shift

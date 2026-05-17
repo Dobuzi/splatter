@@ -7,7 +7,7 @@
     "splatter": "bin/splatter"
   },
   "scripts": {
-    "check": "zsh -n scripts/*.sh bin/splatter && node --check public/main.js && scripts/validate_public.sh && bin/splatter openmvs-validate && scripts/test_cli.sh",
+    "check": "zsh -n scripts/*.sh bin/splatter && node --check public/main.js && node --check scripts/viewer_qa.mjs && scripts/validate_public.sh && bin/splatter openmvs-validate && bin/splatter viewer-qa && scripts/test_cli.sh",
     "serve": "python3 -m http.server 8080 --directory public"
   },
   "devDependencies": {

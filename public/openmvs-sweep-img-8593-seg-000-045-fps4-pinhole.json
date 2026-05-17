@@ -1,0 +1,50 @@
+{
+  "capture": "img-8593-seg-000-045-fps4-pinhole",
+  "model": "0",
+  "ranked": [
+    {
+      "variant": "balanced",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "640",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "1",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "5",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "0",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "4096"
+      },
+      "exitCode": 0,
+      "logTail": "01:19:00 [App     ] Camera model loaded: platform 0; camera  0; f 0.820x0.818; poses 23\n01:19:00 [App     ] Scene loaded from interface format (1ms):\n\t23 images (23 calibrated) with a total of 5.05 MPixels (0.22 MPixels/image)\n\t3148 points, 0 vertices, 0 faces\n01:19:00 [App     ] Mesh loaded: 6115 vertices, 11992 faces (0ms)\n\nInitialized views 21 (91.30%, 100ms, ETA 9ms)...\nInitialized views 23 (100%, 109ms)              \n01:19:01 [App     ] Assigning the best view to each face completed: 11992 faces (798ms)\n01:19:02 [App     ] Generating texture atlas and image completed: 155 patches, 1024 image size, 1 textures (339ms)\n01:19:02 [App     ] Mesh texturing completed: 6115 vertices, 11992 faces (1s138ms)\n01:19:02 [App     ] Mesh saved: 6115 vertices, 11992 faces (111ms)\n\nOpenMVS outputs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-balanced/scene.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-balanced/scene_dense.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-balanced/scene_dense.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-balanced/scene_mesh.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-balanced/scene_refined.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-balanced/scene_textured.ply",
+      "mesh": "captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-balanced/scene_textured.ply",
+      "assetBytes": 529338,
+      "vertices": 6115,
+      "faces": 11992,
+      "componentCount": 1,
+      "largestComponentRatio": 1.0,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": 120.98
+    },
+    {
+      "variant": "fast",
+      "settings": {
+        "COLMAP_DENSE_MAX_IMAGE_SIZE": "640",
+        "SPLAT_OPENMVS_RESOLUTION_LEVEL": "2",
+        "SPLAT_OPENMVS_NUMBER_VIEWS": "5",
+        "SPLAT_OPENMVS_NUMBER_VIEWS_FUSE": "3",
+        "SPLAT_OPENMVS_REFINE_DECIMATE": "0",
+        "SPLAT_OPENMVS_TEXTURE_SIZE": "2048"
+      },
+      "exitCode": 0,
+      "logTail": "01:16:03 [App     ] Camera model loaded: platform 0; camera  0; f 0.820x0.818; poses 23\n01:16:03 [App     ] Scene loaded from interface format (1ms):\n\t23 images (23 calibrated) with a total of 5.05 MPixels (0.22 MPixels/image)\n\t3148 points, 0 vertices, 0 faces\n01:16:03 [App     ] Mesh loaded: 5895 vertices, 11548 faces (0ms)\n\nInitialized views 20 (86.96%, 101ms, ETA 15ms)...\nInitialized views 23 (100%, 116ms)               \n01:16:04 [App     ] Assigning the best view to each face completed: 11548 faces (876ms)\n01:16:04 [App     ] Generating texture atlas and image completed: 136 patches, 1024 image size, 1 textures (332ms)\n01:16:04 [App     ] Mesh texturing completed: 5895 vertices, 11548 faces (1s209ms)\n01:16:05 [App     ] Mesh saved: 5895 vertices, 11548 faces (102ms)\n\nOpenMVS outputs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene_dense.mvs\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene_dense.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene_mesh.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene_refined.ply\n- /Users/jw/Dev/codex/Splatter/captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene_textured.ply",
+      "mesh": "captures/img-8593-seg-000-045-fps4-pinhole/openmvs-sweep-fast/scene_textured.ply",
+      "assetBytes": 509826,
+      "vertices": 5895,
+      "faces": 11548,
+      "componentCount": 1,
+      "largestComponentRatio": 1.0,
+      "degenerateFaceRatio": 0.0,
+      "hasTexcoords": true,
+      "score": 120.58
+    }
+  ]
+}
