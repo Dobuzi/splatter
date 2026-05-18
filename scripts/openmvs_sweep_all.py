@@ -87,12 +87,13 @@ def main():
         usage()
         return 1
     input_dir = Path(sys.argv[1])
+    if os.environ.get("SPLAT_OPENMVS_SWEEP_ALL_DRY_RUN") == "1":
+        candidates = best_rows(input_dir) if input_dir.is_dir() else []
+        print(json.dumps({"inputDir": str(input_dir), "candidates": candidates}, indent=2))
+        return 0
     if not input_dir.is_dir():
         print(f"Input directory not found: {input_dir}", file=sys.stderr)
         return 1
-    if os.environ.get("SPLAT_OPENMVS_SWEEP_ALL_DRY_RUN") == "1":
-        print(json.dumps({"inputDir": str(input_dir), "candidates": best_rows(input_dir)}, indent=2))
-        return 0
 
     rows = best_rows(input_dir)
     for row in rows:

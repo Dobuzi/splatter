@@ -222,7 +222,7 @@ printf '%s\n' "$openmvs_batch_output" | grep -q "output/openmvs-ranking.json"
 openmvs_sweep_output=$(SPLAT_OPENMVS_SWEEP_DRY_RUN=1 "$cli" openmvs-sweep missing-capture)
 printf '%s\n' "$openmvs_sweep_output" | grep -q "balanced"
 printf '%s\n' "$openmvs_sweep_output" | grep -q "detail"
-openmvs_sweep_all_output=$(SPLAT_OPENMVS_SWEEP_ALL_DRY_RUN=1 "$cli" openmvs-sweep-all input)
+openmvs_sweep_all_output=$(SPLAT_OPENMVS_SWEEP_ALL_DRY_RUN=1 "$cli" openmvs-sweep-all missing-input)
 printf '%s\n' "$openmvs_sweep_all_output" | grep -q "candidates"
 "$cli" viewer-qa >/dev/null
 mlx_frame_output=$("$cli" mlx-frame-quality --dry-run)
