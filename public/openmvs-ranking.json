@@ -11,6 +11,7 @@
       "ratio": 1.0,
       "points": 17924,
       "score": 29411.55,
+      "primaryTarget": false,
       "frameQuality": {
         "sharpness": {
           "p10": 463.53706510214215,
@@ -70,7 +71,7 @@
           "scene_textured0.png"
         ],
         "pointCloud": {
-          "points": 197584,
+          "points": 200000,
           "maxPoints": 200000,
           "source": "scene_dense.ply"
         }
@@ -86,7 +87,7 @@
       "textureAssetUrl": "assets/video-20260514-034200-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/video-20260514-034200-openmvs-scene_dense_points.ply",
       "densePointCloud": {
-        "points": 197584,
+        "points": 200000,
         "maxPoints": 200000,
         "source": "scene_dense.ply"
       },
@@ -103,6 +104,7 @@
       "ratio": 0.5063,
       "points": 7170,
       "score": 8558.04,
+      "primaryTarget": true,
       "frameQuality": {
         "sharpness": {
           "p10": 540.1572406947271,
@@ -162,8 +164,8 @@
           "scene_textured0.png"
         ],
         "pointCloud": {
-          "points": 177299,
-          "maxPoints": 200000,
+          "points": 350000,
+          "maxPoints": 350000,
           "source": "scene_dense.ply"
         }
       },
@@ -178,8 +180,8 @@
       "textureAssetUrl": "assets/img-9205-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-9205-openmvs-scene_dense_points.ply",
       "densePointCloud": {
-        "points": 177299,
-        "maxPoints": 200000,
+        "points": 350000,
+        "maxPoints": 350000,
         "source": "scene_dense.ply"
       },
       "sceneUrl": "scenes/img-9205-openmvs/scene.json",
@@ -195,6 +197,7 @@
       "ratio": 0.6034,
       "points": 2882,
       "score": 7585.67,
+      "primaryTarget": false,
       "frameQuality": {
         "sharpness": {
           "p10": 539.3660733099584,
@@ -254,7 +257,7 @@
           "scene_textured0.png"
         ],
         "pointCloud": {
-          "points": 165192,
+          "points": 200000,
           "maxPoints": 200000,
           "source": "scene_dense.ply"
         }
@@ -270,7 +273,7 @@
       "textureAssetUrl": "assets/img-9189-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-9189-openmvs-scene_dense_points.ply",
       "densePointCloud": {
-        "points": 165192,
+        "points": 200000,
         "maxPoints": 200000,
         "source": "scene_dense.ply"
       },
@@ -287,6 +290,7 @@
       "ratio": 0.9672,
       "points": 13733,
       "score": 7186.37,
+      "primaryTarget": true,
       "frameQuality": {
         "sharpness": {
           "p10": 1049.9196334497076,
@@ -346,8 +350,8 @@
           "scene_textured0.png"
         ],
         "pointCloud": {
-          "points": 184150,
-          "maxPoints": 200000,
+          "points": 350000,
+          "maxPoints": 350000,
           "source": "scene_dense.ply"
         }
       },
@@ -362,8 +366,8 @@
       "textureAssetUrl": "assets/img-9142-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-9142-openmvs-scene_dense_points.ply",
       "densePointCloud": {
-        "points": 184150,
-        "maxPoints": 200000,
+        "points": 350000,
+        "maxPoints": 350000,
         "source": "scene_dense.ply"
       },
       "sceneUrl": "scenes/img-9142-openmvs/scene.json",
@@ -379,6 +383,7 @@
       "ratio": 0.2444,
       "points": 3149,
       "score": 2499.53,
+      "primaryTarget": false,
       "frameQuality": {
         "sharpness": {
           "p10": 73.0563068772059,
@@ -438,7 +443,7 @@
           "scene_textured0.png"
         ],
         "pointCloud": {
-          "points": 148132,
+          "points": 200000,
           "maxPoints": 200000,
           "source": "scene_dense.ply"
         }
@@ -454,7 +459,7 @@
       "textureAssetUrl": "assets/img-8593-000-030-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-8593-000-030-openmvs-scene_dense_points.ply",
       "densePointCloud": {
-        "points": 148132,
+        "points": 200000,
         "maxPoints": 200000,
         "source": "scene_dense.ply"
       },
@@ -471,6 +476,7 @@
       "ratio": 0.1278,
       "points": 3148,
       "score": 2428.67,
+      "primaryTarget": false,
       "frameQuality": {
         "sharpness": {
           "p10": 33.5505649300196,
@@ -530,7 +536,7 @@
           "scene_textured0.png"
         ],
         "pointCloud": {
-          "points": 174699,
+          "points": 200000,
           "maxPoints": 200000,
           "source": "scene_dense.ply"
         }
@@ -546,7 +552,7 @@
       "textureAssetUrl": "assets/img-8593-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-8593-openmvs-scene_dense_points.ply",
       "densePointCloud": {
-        "points": 174699,
+        "points": 200000,
         "maxPoints": 200000,
         "source": "scene_dense.ply"
       },
@@ -563,6 +569,7 @@
       "ratio": 0.1667,
       "points": 2934,
       "score": 1700.27,
+      "primaryTarget": false,
       "frameQuality": {
         "sharpness": {
           "p10": 15.412084547848867,
@@ -622,7 +629,7 @@
           "scene_textured0.png"
         ],
         "pointCloud": {
-          "points": 199395,
+          "points": 200000,
           "maxPoints": 200000,
           "source": "scene_dense.ply"
         }
@@ -638,7 +645,7 @@
       "textureAssetUrl": "assets/img-8593-085-115-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-8593-085-115-openmvs-scene_dense_points.ply",
       "densePointCloud": {
-        "points": 199395,
+        "points": 200000,
         "maxPoints": 200000,
         "source": "scene_dense.ply"
       },

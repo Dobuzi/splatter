@@ -11,6 +11,7 @@ input_dir="${1:-input}"
 if [[ "${SPLAT_OPENMVS_BATCH_DRY_RUN:-0}" == "1" ]]; then
   echo "OpenMVS batch for $input_dir"
   echo "- Selects the best existing capture per input video"
+  echo "- Prioritizes primary targets from SPLAT_PRIMARY_INPUT_SLUGS (default: img-9142,img-9205)"
   echo "- Integrates frame-quality/MLX quality reports into ranking"
   echo "- Runs SPLAT_SURFACE_BACKEND=openmvs"
   echo "- Stages largest-component cleaned mesh PLY and dense point-cloud PLY into public/assets"

@@ -1,11 +1,12 @@
 {
   "title": "IMG_9205.MOV OpenMVS Mesh",
+  "primaryTarget": true,
   "assetUrl": "assets/img-9205-openmvs-scene_textured.ply",
   "format": "PLY Mesh",
   "fileSize": "2.48 MB",
   "capture": "img-9205-fps1-pinhole, 158 frames, 80 COLMAP images",
   "training": "OpenMVS CPU dense, 709193 dense points, 32988 vertices, 58090 faces",
-  "delivery": "Largest-Component Textured Mesh 2.48 MB; dense point cloud 2.54 MB",
+  "delivery": "Largest-Component Textured Mesh 2.48 MB; dense point cloud 5.01 MB",
   "viewer": {
     "background": [
       0.02,
@@ -93,12 +94,13 @@
       "scene_textured0.png"
     ],
     "pointCloud": {
-      "points": 177299,
-      "maxPoints": 200000,
+      "points": 350000,
+      "maxPoints": 350000,
       "source": "scene_dense.ply"
     }
   },
   "quality": {
+    "primaryTarget": true,
     "registeredImages": 80,
     "frames": 158,
     "registrationRatio": 0.5063,

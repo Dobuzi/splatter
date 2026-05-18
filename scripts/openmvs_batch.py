@@ -13,6 +13,7 @@ from sample_ply_points import sample_point_cloud
 
 
 VIDEO_EXTS = {".mov", ".mp4", ".m4v"}
+DEFAULT_PRIMARY_INPUT_SLUGS = "img-9142,img-9205"
 
 
 def slug_for_input(path):
@@ -28,6 +29,22 @@ def slug_for_input(path):
 
 def usage():
     print("Usage: scripts/openmvs_batch.py <input-dir>", file=sys.stderr)
+
+
+def primary_input_slugs():
+    value = os_environ().get("SPLAT_PRIMARY_INPUT_SLUGS", DEFAULT_PRIMARY_INPUT_SLUGS)
+    return [slug.strip() for slug in value.split(",") if slug.strip()]
+
+
+def primary_rank(input_slug):
+    try:
+        return primary_input_slugs().index(input_slug)
+    except ValueError:
+        return 999
+
+
+def is_primary_input(input_slug):
+    return primary_rank(input_slug) < 999
 
 
 def analyze_model(model_dir):
@@ -188,7 +205,12 @@ def ply_counts(path):
 def stage_dense_point_cloud(row, dense_path, assets_dir):
     if not dense_path.is_file():
         return None
-    max_points = int(os_environ().get("SPLAT_DENSE_POINTCLOUD_MAX_POINTS", "200000"))
+    max_points = int(
+        os_environ().get(
+            "SPLAT_DENSE_POINTCLOUD_PRIMARY_MAX_POINTS" if row.get("primaryTarget") else "SPLAT_DENSE_POINTCLOUD_MAX_POINTS",
+            "350000" if row.get("primaryTarget") else "200000",
+        )
+    )
     dense_asset_name = f"{row['input_slug']}-openmvs-scene_dense_points.ply"
     dense_asset_path = assets_dir / dense_asset_name
     report = sample_point_cloud(dense_path, dense_asset_path, max_points)
@@ -274,6 +296,7 @@ def stage_scene(row):
     scene_dir.mkdir(parents=True, exist_ok=True)
     scene_config = {
         "title": f"{row['input']} OpenMVS Mesh",
+        "primaryTarget": bool(row.get("primaryTarget")),
         "assetUrl": row["assetUrl"],
         "format": "PLY Mesh",
         "fileSize": human_size(row["assetBytes"]),
@@ -294,6 +317,7 @@ def stage_scene(row):
         "camera": camera_for_metrics(metrics),
         "metrics": row["meshMetrics"],
         "quality": {
+            "primaryTarget": bool(row.get("primaryTarget")),
             "registeredImages": row["registered"],
             "frames": row["frames"],
             "registrationRatio": row["ratio"],
@@ -324,18 +348,21 @@ def update_manifest(rows):
     else:
         manifest = {"scenes": []}
     scenes = [scene for scene in manifest.get("scenes", []) if not scene.get("id", "").endswith("-openmvs")]
-    for row in rows:
+    scenes.sort(key=lambda scene: (primary_rank(scene.get("id", "")), scene.get("input", ""), scene.get("id", "")))
+    for row in sorted(rows, key=lambda item: (primary_rank(item.get("input_slug", "")), -item.get("score", -1))):
         if row.get("stage_status") != "staged":
             continue
         scenes.append(
             {
                 "id": scene_id_for(row["input_slug"]),
                 "input": row["input"],
-                "label": f"{row['input']} OpenMVS Mesh",
+                "label": f"{'[Primary] ' if row.get('primaryTarget') else ''}{row['input']} OpenMVS Mesh",
                 "sceneUrl": row["sceneUrl"],
+                "primaryTarget": bool(row.get("primaryTarget")),
             }
         )
     manifest["scenes"] = scenes
+    manifest["primaryTargets"] = primary_input_slugs()
     if not manifest.get("defaultScene") and scenes:
         manifest["defaultScene"] = scenes[0]["id"]
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
@@ -399,6 +426,7 @@ def main():
         row = ranked[0]
         row["input"] = input_path.name
         row["input_slug"] = input_slug
+        row["primaryTarget"] = is_primary_input(input_slug)
         row["alternates"] = ranked[1:5]
         if run_openmvs(row):
             dense_counts = ply_counts(Path("captures") / row["capture"] / "openmvs" / "scene_dense.ply")
@@ -427,6 +455,7 @@ def main():
                 "ratio",
                 "points",
                 "score",
+                "primaryTarget",
                 "frameQuality",
                 "densePoints",
                 "meshVertices",

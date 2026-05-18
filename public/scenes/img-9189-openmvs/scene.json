@@ -1,11 +1,12 @@
 {
   "title": "IMG_9189.MOV OpenMVS Mesh",
+  "primaryTarget": false,
   "assetUrl": "assets/img-9189-openmvs-scene_textured.ply",
   "format": "PLY Mesh",
   "fileSize": "1.30 MB",
   "capture": "img-9189-fps12, 116 frames, 70 COLMAP images",
   "training": "OpenMVS CPU dense, 495576 dense points, 15508 vertices, 30894 faces",
-  "delivery": "Largest-Component Textured Mesh 1.30 MB; dense point cloud 2.36 MB",
+  "delivery": "Largest-Component Textured Mesh 1.30 MB; dense point cloud 2.86 MB",
   "viewer": {
     "background": [
       0.02,
@@ -93,12 +94,13 @@
       "scene_textured0.png"
     ],
     "pointCloud": {
-      "points": 165192,
+      "points": 200000,
       "maxPoints": 200000,
       "source": "scene_dense.ply"
     }
   },
   "quality": {
+    "primaryTarget": false,
     "registeredImages": 70,
     "frames": 116,
     "registrationRatio": 0.6034,

@@ -1,11 +1,12 @@
 {
   "title": "2026-05-14-03-42-00.mov OpenMVS Mesh",
+  "primaryTarget": false,
   "assetUrl": "assets/video-20260514-034200-openmvs-scene_textured.ply",
   "format": "PLY Mesh",
   "fileSize": "3.69 MB",
   "capture": "video-20260514-034200-fps12-pinhole, 283 frames, 283 COLMAP images",
   "training": "OpenMVS CPU dense, 3754093 dense points, 44344 vertices, 87678 faces",
-  "delivery": "Largest-Component Textured Mesh 3.69 MB; dense point cloud 2.83 MB",
+  "delivery": "Largest-Component Textured Mesh 3.69 MB; dense point cloud 2.86 MB",
   "viewer": {
     "background": [
       0.02,
@@ -93,12 +94,13 @@
       "scene_textured0.png"
     ],
     "pointCloud": {
-      "points": 197584,
+      "points": 200000,
       "maxPoints": 200000,
       "source": "scene_dense.ply"
     }
   },
   "quality": {
+    "primaryTarget": false,
     "registeredImages": 283,
     "frames": 283,
     "registrationRatio": 1.0,

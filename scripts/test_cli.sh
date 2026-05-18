@@ -260,6 +260,7 @@ printf '%s\n' "$openmvs_surface_output" | grep -q "Backend: openmvs"
 printf '%s\n' "$openmvs_surface_output" | grep -q "DensifyPointCloud"
 openmvs_batch_output=$(SPLAT_OPENMVS_BATCH_DRY_RUN=1 "$cli" openmvs-batch input)
 printf '%s\n' "$openmvs_batch_output" | grep -q "OpenMVS batch"
+printf '%s\n' "$openmvs_batch_output" | grep -q "primary"
 printf '%s\n' "$openmvs_batch_output" | grep -q "output/openmvs-ranking.json"
 openmvs_sweep_output=$(SPLAT_OPENMVS_SWEEP_DRY_RUN=1 "$cli" openmvs-sweep missing-capture)
 printf '%s\n' "$openmvs_sweep_output" | grep -q "balanced"

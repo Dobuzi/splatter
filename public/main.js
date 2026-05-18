@@ -49,6 +49,9 @@ function setQualityBadges(config) {
   const quality = config.quality || {};
   const metrics = config.metrics || {};
   const badges = [];
+  if (config.primaryTarget || quality.primaryTarget) {
+    badges.push('Primary');
+  }
   if (Number.isFinite(quality.registrationRatio)) {
     badges.push(`Reg ${formatRatio(quality.registrationRatio)}`);
   }

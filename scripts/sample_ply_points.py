@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 import json
-import math
 import struct
 import sys
 from pathlib import Path
@@ -23,13 +22,19 @@ def read_vertices(path, max_points):
     if not vertex_element:
         return []
 
-    stride = max(1, math.ceil(vertex_element["count"] / max_points))
+    target_count = min(max_points, vertex_element["count"])
+    if target_count <= 0:
+        return []
+    keep_indices = {
+        round(index * (vertex_element["count"] - 1) / max(1, target_count - 1))
+        for index in range(target_count)
+    }
     vertices = []
     vertex_index = 0
 
     for element in parsed["elements"]:
         for _ in range(element["count"]):
-            keep_vertex = element["name"] == "vertex" and vertex_index % stride == 0 and len(vertices) < max_points
+            keep_vertex = element["name"] == "vertex" and vertex_index in keep_indices
             vertex = {"x": 0.0, "y": 0.0, "z": 0.0, "red": 210, "green": 218, "blue": 230}
 
             for prop in element["properties"]:

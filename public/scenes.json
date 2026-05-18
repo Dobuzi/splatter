@@ -8,10 +8,10 @@
       "sceneUrl": "scene.json"
     },
     {
-      "id": "img-9189",
-      "input": "IMG_9189.MOV",
-      "label": "IMG 9189 Preview",
-      "sceneUrl": "scenes/img-9189/scene.json"
+      "id": "img-9205",
+      "input": "IMG_9205.MOV",
+      "label": "IMG 9205 Improved",
+      "sceneUrl": "scenes/img-9205/scene.json"
     },
     {
       "id": "video-20260514-034200",
@@ -20,58 +20,69 @@
       "sceneUrl": "scenes/video-20260514-034200/scene.json"
     },
     {
-      "id": "img-9205",
-      "input": "IMG_9205.MOV",
-      "label": "IMG 9205 Improved",
-      "sceneUrl": "scenes/img-9205/scene.json"
-    },
-    {
       "id": "img-8593",
       "input": "IMG_8593.MOV",
       "label": "IMG 8593 Candidate",
       "sceneUrl": "scenes/img-8593/scene.json"
     },
     {
-      "id": "video-20260514-034200-openmvs",
-      "input": "2026-05-14-03-42-00.mov",
-      "label": "2026-05-14-03-42-00.mov OpenMVS Mesh",
-      "sceneUrl": "scenes/video-20260514-034200-openmvs/scene.json"
+      "id": "img-9189",
+      "input": "IMG_9189.MOV",
+      "label": "IMG 9189 Preview",
+      "sceneUrl": "scenes/img-9189/scene.json"
+    },
+    {
+      "id": "img-9142-openmvs",
+      "input": "IMG_9142.MOV",
+      "label": "[Primary] IMG_9142.MOV OpenMVS Mesh",
+      "sceneUrl": "scenes/img-9142-openmvs/scene.json",
+      "primaryTarget": true
     },
     {
       "id": "img-9205-openmvs",
       "input": "IMG_9205.MOV",
-      "label": "IMG_9205.MOV OpenMVS Mesh",
-      "sceneUrl": "scenes/img-9205-openmvs/scene.json"
+      "label": "[Primary] IMG_9205.MOV OpenMVS Mesh",
+      "sceneUrl": "scenes/img-9205-openmvs/scene.json",
+      "primaryTarget": true
+    },
+    {
+      "id": "video-20260514-034200-openmvs",
+      "input": "2026-05-14-03-42-00.mov",
+      "label": "2026-05-14-03-42-00.mov OpenMVS Mesh",
+      "sceneUrl": "scenes/video-20260514-034200-openmvs/scene.json",
+      "primaryTarget": false
     },
     {
       "id": "img-9189-openmvs",
       "input": "IMG_9189.MOV",
       "label": "IMG_9189.MOV OpenMVS Mesh",
-      "sceneUrl": "scenes/img-9189-openmvs/scene.json"
-    },
-    {
-      "id": "img-9142-openmvs",
-      "input": "IMG_9142.MOV",
-      "label": "IMG_9142.MOV OpenMVS Mesh",
-      "sceneUrl": "scenes/img-9142-openmvs/scene.json"
+      "sceneUrl": "scenes/img-9189-openmvs/scene.json",
+      "primaryTarget": false
     },
     {
       "id": "img-8593-000-030-openmvs",
       "input": "IMG_8593_000_030.MOV",
       "label": "IMG_8593_000_030.MOV OpenMVS Mesh",
-      "sceneUrl": "scenes/img-8593-000-030-openmvs/scene.json"
+      "sceneUrl": "scenes/img-8593-000-030-openmvs/scene.json",
+      "primaryTarget": false
     },
     {
       "id": "img-8593-openmvs",
       "input": "IMG_8593.MOV",
       "label": "IMG_8593.MOV OpenMVS Mesh",
-      "sceneUrl": "scenes/img-8593-openmvs/scene.json"
+      "sceneUrl": "scenes/img-8593-openmvs/scene.json",
+      "primaryTarget": false
     },
     {
       "id": "img-8593-085-115-openmvs",
       "input": "IMG_8593_085_115.MOV",
       "label": "IMG_8593_085_115.MOV OpenMVS Mesh",
-      "sceneUrl": "scenes/img-8593-085-115-openmvs/scene.json"
+      "sceneUrl": "scenes/img-8593-085-115-openmvs/scene.json",
+      "primaryTarget": false
     }
+  ],
+  "primaryTargets": [
+    "img-9142",
+    "img-9205"
   ]
 }
