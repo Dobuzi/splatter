@@ -10,13 +10,32 @@
       "registered": 283,
       "ratio": 1.0,
       "points": 17924,
-      "score": 29385.69,
+      "score": 29411.55,
+      "frameQuality": {
+        "sharpness": {
+          "p10": 463.53706510214215,
+          "median": 517.295458546727,
+          "p90": 600.8929304371134
+        },
+        "exposure": {
+          "p10": 0.9176065643648764,
+          "median": 0.9379140025575448,
+          "p90": 0.9631729539641944
+        },
+        "motion": {
+          "median": 0.011626838235294118,
+          "p90": 0.018087169650468884
+        },
+        "blurRejectRatio": 0.0,
+        "exposureRejectRatio": 0.0,
+        "mlx": null
+      },
       "densePoints": 3754093,
       "meshVertices": 44344,
-      "meshFaces": 87817,
+      "meshFaces": 87678,
       "meshMetrics": {
         "vertices": 44344,
-        "faces": 87817,
+        "faces": 87678,
         "bbox": {
           "min": [
             -4.511908054351807,
@@ -41,10 +60,10 @@
           "diagonal": 183.10514678931264,
           "volume": 37837.62369998527
         },
-        "surfaceArea": 1327.1243673294382,
-        "faceDensity": 2.3208909918947733,
-        "componentCount": 4,
-        "largestComponentRatio": 0.9982861266462204,
+        "surfaceArea": 1326.6898902358796,
+        "faceDensity": 2.3172173996760304,
+        "componentCount": 1,
+        "largestComponentRatio": 1.0,
         "degenerateFaceRatio": 0.0,
         "hasTexcoords": true,
         "textureFiles": [
@@ -56,7 +75,13 @@
           "source": "scene_dense.ply"
         }
       },
-      "meshAssetKind": "textured mesh",
+      "meshCleanup": {
+        "inputFaces": 87817,
+        "outputFaces": 87678,
+        "componentCount": 4,
+        "largestComponentRatio": 0.9983
+      },
+      "meshAssetKind": "largest-component textured mesh",
       "assetUrl": "assets/video-20260514-034200-openmvs-scene_textured.ply",
       "textureAssetUrl": "assets/video-20260514-034200-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/video-20260514-034200-openmvs-scene_dense_points.ply",
@@ -77,13 +102,32 @@
       "registered": 80,
       "ratio": 0.5063,
       "points": 7170,
-      "score": 8524.45,
+      "score": 8558.04,
+      "frameQuality": {
+        "sharpness": {
+          "p10": 540.1572406947271,
+          "median": 1255.2709215458226,
+          "p90": 1891.8282410017703
+        },
+        "exposure": {
+          "p10": 0.8217431152496393,
+          "median": 0.9151764100605615,
+          "p90": 0.9763169368553823
+        },
+        "motion": {
+          "median": 0.1710224888200894,
+          "p90": 0.23003087375300998
+        },
+        "blurRejectRatio": 0.11666666666666667,
+        "exposureRejectRatio": 0.0,
+        "mlx": null
+      },
       "densePoints": 709193,
       "meshVertices": 32988,
-      "meshFaces": 65455,
+      "meshFaces": 58090,
       "meshMetrics": {
         "vertices": 32988,
-        "faces": 65455,
+        "faces": 58090,
         "bbox": {
           "min": [
             -17.715837478637695,
@@ -108,10 +152,10 @@
           "diagonal": 46.21515476441282,
           "volume": 13451.66682619183
         },
-        "surfaceArea": 522.55295721335,
-        "faceDensity": 4.865939726707484,
-        "componentCount": 5,
-        "largestComponentRatio": 0.8835940341942524,
+        "surfaceArea": 384.02627875567254,
+        "faceDensity": 4.318423935901578,
+        "componentCount": 1,
+        "largestComponentRatio": 1.0,
         "degenerateFaceRatio": 0.0,
         "hasTexcoords": true,
         "textureFiles": [
@@ -123,7 +167,13 @@
           "source": "scene_dense.ply"
         }
       },
-      "meshAssetKind": "textured mesh",
+      "meshCleanup": {
+        "inputFaces": 65455,
+        "outputFaces": 58090,
+        "componentCount": 5,
+        "largestComponentRatio": 0.8836
+      },
+      "meshAssetKind": "largest-component textured mesh",
       "assetUrl": "assets/img-9205-openmvs-scene_textured.ply",
       "textureAssetUrl": "assets/img-9205-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-9205-openmvs-scene_dense_points.ply",
@@ -144,7 +194,26 @@
       "registered": 70,
       "ratio": 0.6034,
       "points": 2882,
-      "score": 7544.41,
+      "score": 7585.67,
+      "frameQuality": {
+        "sharpness": {
+          "p10": 539.3660733099584,
+          "median": 825.1753707263567,
+          "p90": 1019.5253352908949
+        },
+        "exposure": {
+          "p10": 0.8163927090801695,
+          "median": 0.8982362748190997,
+          "p90": 0.9538420003364535
+        },
+        "motion": {
+          "median": 0.061903637770897836,
+          "p90": 0.09119865841073271
+        },
+        "blurRejectRatio": 0.0,
+        "exposureRejectRatio": 0.0,
+        "mlx": null
+      },
       "densePoints": 495576,
       "meshVertices": 15508,
       "meshFaces": 30894,
@@ -190,7 +259,13 @@
           "source": "scene_dense.ply"
         }
       },
-      "meshAssetKind": "textured mesh",
+      "meshCleanup": {
+        "inputFaces": 30894,
+        "outputFaces": 30894,
+        "componentCount": 1,
+        "largestComponentRatio": 1.0
+      },
+      "meshAssetKind": "largest-component textured mesh",
       "assetUrl": "assets/img-9189-openmvs-scene_textured.ply",
       "textureAssetUrl": "assets/img-9189-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-9189-openmvs-scene_dense_points.ply",
@@ -211,7 +286,26 @@
       "registered": 59,
       "ratio": 0.9672,
       "points": 13733,
-      "score": 7100.19,
+      "score": 7186.37,
+      "frameQuality": {
+        "sharpness": {
+          "p10": 1049.9196334497076,
+          "median": 1969.6179500285903,
+          "p90": 2645.154976034923
+        },
+        "exposure": {
+          "p10": 0.8047179144035269,
+          "median": 0.8545270553269785,
+          "p90": 0.912074893217521
+        },
+        "motion": {
+          "median": 0.17811790505675953,
+          "p90": 0.2039125386996904
+        },
+        "blurRejectRatio": 0.04918032786885246,
+        "exposureRejectRatio": 0.0,
+        "mlx": null
+      },
       "densePoints": 1473200,
       "meshVertices": 175900,
       "meshFaces": 351572,
@@ -257,7 +351,13 @@
           "source": "scene_dense.ply"
         }
       },
-      "meshAssetKind": "textured mesh",
+      "meshCleanup": {
+        "inputFaces": 351572,
+        "outputFaces": 351572,
+        "componentCount": 1,
+        "largestComponentRatio": 1.0
+      },
+      "meshAssetKind": "largest-component textured mesh",
       "assetUrl": "assets/img-9142-openmvs-scene_textured.ply",
       "textureAssetUrl": "assets/img-9142-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-9142-openmvs-scene_dense_points.ply",
@@ -272,45 +372,64 @@
     {
       "input": "IMG_8593_000_030.MOV",
       "input_slug": "img-8593-000-030",
-      "capture": "img-8593-000-030-fps4",
+      "capture": "img-8593-000-030-selected90",
       "model": "0",
-      "frames": 120,
-      "registered": 23,
-      "ratio": 0.1917,
-      "points": 3119,
-      "score": 2559.49,
-      "densePoints": 723492,
-      "meshVertices": 58088,
-      "meshFaces": 115849,
+      "frames": 90,
+      "registered": 22,
+      "ratio": 0.2444,
+      "points": 3149,
+      "score": 2499.53,
+      "frameQuality": {
+        "sharpness": {
+          "p10": 73.0563068772059,
+          "median": 176.21692081832515,
+          "p90": 422.8784211541587
+        },
+        "exposure": {
+          "p10": 0.7597582034743723,
+          "median": 0.8890100720338536,
+          "p90": 0.9586407777770233
+        },
+        "motion": {
+          "median": 0.1217640608875129,
+          "p90": 0.24769470244238045
+        },
+        "blurRejectRatio": 0.1111111111111111,
+        "exposureRejectRatio": 0.0,
+        "mlx": null
+      },
+      "densePoints": 296264,
+      "meshVertices": 8339,
+      "meshFaces": 16409,
       "meshMetrics": {
-        "vertices": 58088,
-        "faces": 115849,
+        "vertices": 8339,
+        "faces": 16409,
         "bbox": {
           "min": [
-            -6.5976104736328125,
-            -12.071496963500977,
-            12.981775283813477
+            -10.655755043029785,
+            -17.460966110229492,
+            13.953149795532227
           ],
           "max": [
-            12.687398910522461,
-            10.436068534851074,
-            24.34035873413086
+            11.304801940917969,
+            10.407966613769531,
+            20.75142478942871
           ],
           "size": [
-            19.285009384155273,
-            22.50756549835205,
-            11.358583450317383
+            21.960556983947754,
+            27.868932723999023,
+            6.798274993896484
           ],
           "center": [
-            3.044894218444824,
-            -0.8177142143249512,
-            18.661067008972168
+            0.3245234489440918,
+            -3.5264997482299805,
+            17.35228729248047
           ],
-          "diagonal": 31.74144781838706,
-          "volume": 4930.290965029518
+          "diagonal": 36.1269984514717,
+          "volume": 4160.6618055845
         },
-        "surfaceArea": 287.06440615023206,
-        "faceDensity": 23.49739616215661,
+        "surfaceArea": 391.94175860735385,
+        "faceDensity": 3.943843736103618,
         "componentCount": 1,
         "largestComponentRatio": 1.0,
         "degenerateFaceRatio": 0.0,
@@ -319,17 +438,23 @@
           "scene_textured0.png"
         ],
         "pointCloud": {
-          "points": 180873,
+          "points": 148132,
           "maxPoints": 200000,
           "source": "scene_dense.ply"
         }
       },
-      "meshAssetKind": "textured mesh",
+      "meshCleanup": {
+        "inputFaces": 16409,
+        "outputFaces": 16409,
+        "componentCount": 1,
+        "largestComponentRatio": 1.0
+      },
+      "meshAssetKind": "largest-component textured mesh",
       "assetUrl": "assets/img-8593-000-030-openmvs-scene_textured.ply",
       "textureAssetUrl": "assets/img-8593-000-030-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-8593-000-030-openmvs-scene_dense_points.ply",
       "densePointCloud": {
-        "points": 180873,
+        "points": 148132,
         "maxPoints": 200000,
         "source": "scene_dense.ply"
       },
@@ -345,7 +470,26 @@
       "registered": 23,
       "ratio": 0.1278,
       "points": 3148,
-      "score": 2494.98,
+      "score": 2428.67,
+      "frameQuality": {
+        "sharpness": {
+          "p10": 33.5505649300196,
+          "median": 148.9253926388182,
+          "p90": 340.71218814704355
+        },
+        "exposure": {
+          "p10": 0.6705084279325766,
+          "median": 0.8852867927028074,
+          "p90": 0.9581594811563438
+        },
+        "motion": {
+          "median": 0.11381604747162022,
+          "p90": 0.23192242862057103
+        },
+        "blurRejectRatio": 0.275,
+        "exposureRejectRatio": 0.025,
+        "mlx": null
+      },
       "densePoints": 349398,
       "meshVertices": 6115,
       "meshFaces": 11992,
@@ -391,7 +535,13 @@
           "source": "scene_dense.ply"
         }
       },
-      "meshAssetKind": "textured mesh",
+      "meshCleanup": {
+        "inputFaces": 11992,
+        "outputFaces": 11992,
+        "componentCount": 1,
+        "largestComponentRatio": 1.0
+      },
+      "meshAssetKind": "largest-component textured mesh",
       "assetUrl": "assets/img-8593-openmvs-scene_textured.ply",
       "textureAssetUrl": "assets/img-8593-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-8593-openmvs-scene_dense_points.ply",
@@ -412,7 +562,26 @@
       "registered": 15,
       "ratio": 0.1667,
       "points": 2934,
-      "score": 1778.99,
+      "score": 1700.27,
+      "frameQuality": {
+        "sharpness": {
+          "p10": 15.412084547848867,
+          "median": 136.75658056967865,
+          "p90": 476.4799545785117
+        },
+        "exposure": {
+          "p10": 0.72687650498796,
+          "median": 0.8520529755761954,
+          "p90": 0.9689196952682274
+        },
+        "motion": {
+          "median": 0.05060246818025456,
+          "p90": 0.1732453560371517
+        },
+        "blurRejectRatio": 0.3333333333333333,
+        "exposureRejectRatio": 0.011111111111111112,
+        "mlx": null
+      },
       "densePoints": 598184,
       "meshVertices": 27613,
       "meshFaces": 54850,
@@ -458,7 +627,13 @@
           "source": "scene_dense.ply"
         }
       },
-      "meshAssetKind": "textured mesh",
+      "meshCleanup": {
+        "inputFaces": 54850,
+        "outputFaces": 54850,
+        "componentCount": 1,
+        "largestComponentRatio": 1.0
+      },
+      "meshAssetKind": "largest-component textured mesh",
       "assetUrl": "assets/img-8593-085-115-openmvs-scene_textured.ply",
       "textureAssetUrl": "assets/img-8593-085-115-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-8593-085-115-openmvs-scene_dense_points.ply",

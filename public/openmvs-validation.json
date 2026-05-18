@@ -11,7 +11,7 @@
       "asset": "assets/video-20260514-034200-openmvs-scene_textured.ply",
       "textureAsset": "assets/video-20260514-034200-openmvs-scene_textured0.png",
       "vertices": 44344,
-      "faces": 87817,
+      "faces": 87678,
       "bbox": {
         "min": [
           -4.511908054351807,
@@ -36,8 +36,8 @@
         "diagonal": 183.10514678931264,
         "volume": 37837.62369998527
       },
-      "componentCount": 4,
-      "largestComponentRatio": 0.9983,
+      "componentCount": 1,
+      "largestComponentRatio": 1.0,
       "degenerateFaceRatio": 0.0,
       "cameraDistance": 247.1919,
       "status": "pass",
@@ -49,7 +49,7 @@
       "asset": "assets/img-9205-openmvs-scene_textured.ply",
       "textureAsset": "assets/img-9205-openmvs-scene_textured0.png",
       "vertices": 32988,
-      "faces": 65455,
+      "faces": 58090,
       "bbox": {
         "min": [
           -17.715837478637695,
@@ -74,8 +74,8 @@
         "diagonal": 46.21515476441282,
         "volume": 13451.66682619183
       },
-      "componentCount": 5,
-      "largestComponentRatio": 0.8836,
+      "componentCount": 1,
+      "largestComponentRatio": 1.0,
       "degenerateFaceRatio": 0.0,
       "cameraDistance": 62.3905,
       "status": "pass",
@@ -162,36 +162,36 @@
       "scene": "public/scenes/img-8593-000-030-openmvs/scene.json",
       "asset": "assets/img-8593-000-030-openmvs-scene_textured.ply",
       "textureAsset": "assets/img-8593-000-030-openmvs-scene_textured0.png",
-      "vertices": 58088,
-      "faces": 115849,
+      "vertices": 8339,
+      "faces": 16409,
       "bbox": {
         "min": [
-          -6.5976104736328125,
-          -12.071496963500977,
-          12.981775283813477
+          -10.655755043029785,
+          -17.460966110229492,
+          13.953149795532227
         ],
         "max": [
-          12.687398910522461,
-          10.436068534851074,
-          24.34035873413086
+          11.304801940917969,
+          10.407966613769531,
+          20.75142478942871
         ],
         "size": [
-          19.285009384155273,
-          22.50756549835205,
-          11.358583450317383
+          21.960556983947754,
+          27.868932723999023,
+          6.798274993896484
         ],
         "center": [
-          3.044894218444824,
-          -0.8177142143249512,
-          18.661067008972168
+          0.3245234489440918,
+          -3.5264997482299805,
+          17.35228729248047
         ],
-        "diagonal": 31.74144781838706,
-        "volume": 4930.290965029518
+        "diagonal": 36.1269984514717,
+        "volume": 4160.6618055845
       },
       "componentCount": 1,
       "largestComponentRatio": 1.0,
       "degenerateFaceRatio": 0.0,
-      "cameraDistance": 42.8509,
+      "cameraDistance": 48.7714,
       "status": "pass",
       "issues": []
     },

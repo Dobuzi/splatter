@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import sys
+from pathlib import Path
 
 from frame_quality import quality_report
 
@@ -37,6 +38,8 @@ def main():
         "sharpnessMean": float(mx.mean(sharp).item()),
         "use": "fast aggregate scoring for capture triage; COLMAP/OpenMVS remain CPU tools",
     }
+    output = Path("captures") / sys.argv[1] / "frame-quality.json"
+    output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))
     return 0
 

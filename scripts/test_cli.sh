@@ -14,6 +14,7 @@ fi
 "$cli" --help | grep -q "quality-stage"
 "$cli" --help | grep -q "quality-sweep"
 "$cli" --help | grep -q "segment-sweep"
+"$cli" --help | grep -q "segment-sweep-fine"
 "$cli" --help | grep -q "matcher-sweep"
 "$cli" --help | grep -q "rank-captures"
 "$cli" --help | grep -q "select-frames"
@@ -25,6 +26,7 @@ fi
 "$cli" --help | grep -q "depth-report"
 "$cli" --help | grep -q "mesh-validate"
 "$cli" --help | grep -q "mesh-simplify"
+"$cli" --help | grep -q "mesh-largest-component"
 "$cli" --help | grep -q "surface-reconstruct"
 "$cli" --help | grep -q "openmvs-batch"
 "$cli" --help | grep -q "openmvs-sweep"
@@ -122,6 +124,11 @@ if "$cli" mesh-simplify >/dev/null 2>&1; then
   exit 1
 fi
 
+if "$cli" mesh-largest-component >/dev/null 2>&1; then
+  echo "Mesh largest component without required args should fail" >&2
+  exit 1
+fi
+
 if "$cli" surface-reconstruct >/dev/null 2>&1; then
   echo "Surface reconstruct without required args should fail" >&2
   exit 1
@@ -149,6 +156,9 @@ segment_output=$("$cli" segment-sweep "$temp_video" segment-dry-run)
 printf '%s\n' "$segment_output" | grep -q "Segment sweep"
 printf '%s\n' "$segment_output" | grep -q "Execute: 0"
 printf '%s\n' "$segment_output" | grep -q "scripts/run_colmap.sh"
+fine_segment_output=$("$cli" segment-sweep-fine "$temp_video" segment-dry-run)
+printf '%s\n' "$fine_segment_output" | grep -q "Window: 20s"
+printf '%s\n' "$fine_segment_output" | grep -q "Stride: 5s"
 
 matcher_output=$("$cli" matcher-sweep segment-dry-run)
 printf '%s\n' "$matcher_output" | grep -q "Matcher sweep"
@@ -193,6 +203,38 @@ PY
 checkpoint_binary_output=$("$cli" select-checkpoint "$checkpoint_dir/sample")
 printf '%s\n' "$checkpoint_binary_output" | grep -q '"format": "binary_little_endian"'
 printf '%s\n' "$checkpoint_binary_output" | grep -q '"finite": true'
+python3 - "$checkpoint_dir/two-components.ply" <<'PY'
+import struct
+import sys
+
+path = sys.argv[1]
+header = """ply
+format binary_little_endian 1.0
+element vertex 6
+property float x
+property float y
+property float z
+element face 2
+property list uchar int vertex_indices
+end_header
+"""
+vertices = [
+    (0.0, 0.0, 0.0),
+    (1.0, 0.0, 0.0),
+    (0.0, 1.0, 0.0),
+    (10.0, 0.0, 0.0),
+    (11.0, 0.0, 0.0),
+    (10.0, 1.0, 0.0),
+]
+with open(path, "wb") as handle:
+    handle.write(header.encode("ascii"))
+    for vertex in vertices:
+        handle.write(struct.pack("<fff", *vertex))
+    handle.write(struct.pack("<Biii", 3, 0, 1, 2))
+    handle.write(struct.pack("<Biii", 3, 3, 4, 5))
+PY
+largest_output=$("$cli" mesh-largest-component "$checkpoint_dir/two-components.ply" "$checkpoint_dir/largest.ply")
+printf '%s\n' "$largest_output" | grep -q '"outputFaces": 1'
 
 mask_output=$(SPLAT_MASK_DRY_RUN=1 "$cli" mask-frames missing-capture)
 printf '%s\n' "$mask_output" | grep -q "Mask generation"

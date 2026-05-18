@@ -16,6 +16,7 @@ const empty = document.querySelector('#empty');
 const title = document.querySelector('#title');
 const status = document.querySelector('#status');
 const metadata = document.querySelector('#metadata');
+const qualityBadges = document.querySelector('#qualityBadges');
 const tools = document.querySelector('#tools');
 const sceneSelect = document.querySelector('#sceneSelect');
 
@@ -34,6 +35,46 @@ function setMetadata(config) {
 
   metadata.textContent = parts.join(' · ');
   metadata.hidden = parts.length === 0;
+  setQualityBadges(config);
+}
+
+function formatRatio(value) {
+  return Number.isFinite(value) ? `${Math.round(value * 100)}%` : null;
+}
+
+function setQualityBadges(config) {
+  if (!qualityBadges) {
+    return;
+  }
+  const quality = config.quality || {};
+  const metrics = config.metrics || {};
+  const badges = [];
+  if (Number.isFinite(quality.registrationRatio)) {
+    badges.push(`Reg ${formatRatio(quality.registrationRatio)}`);
+  }
+  if (Number.isFinite(quality.blurRejectRatio)) {
+    badges.push(`Blur reject ${formatRatio(quality.blurRejectRatio)}`);
+  }
+  const largestRatio = Number.isFinite(quality.largestComponentRatio)
+    ? quality.largestComponentRatio
+    : metrics.largestComponentRatio;
+  if (Number.isFinite(largestRatio)) {
+    badges.push(`Largest ${formatRatio(largestRatio)}`);
+  }
+  const componentCount = quality.componentCount ?? metrics.componentCount;
+  if (Number.isFinite(componentCount)) {
+    badges.push(`${componentCount} comp`);
+  }
+  if (Number.isFinite(quality.score)) {
+    badges.push(`Score ${Math.round(quality.score)}`);
+  }
+
+  qualityBadges.replaceChildren(...badges.map((label) => {
+    const badge = document.createElement('span');
+    badge.textContent = label;
+    return badge;
+  }));
+  qualityBadges.hidden = badges.length === 0;
 }
 
 async function loadSceneConfig(sceneUrl = 'scene.json') {
@@ -113,6 +154,9 @@ function showEmpty(message = 'No scene staged') {
   title.textContent = 'Gaussian Splat Viewer';
   setStatus('Waiting for scene');
   metadata.hidden = true;
+  if (qualityBadges) {
+    qualityBadges.hidden = true;
+  }
 }
 
 function createAssetLoader(assets, app) {

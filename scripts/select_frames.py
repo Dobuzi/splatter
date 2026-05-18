@@ -107,6 +107,49 @@ def score_frames(files):
     return scored
 
 
+def globally_select(scored, max_frames, min_gap):
+    selected = []
+    for item in sorted(scored, key=lambda x: x["score"], reverse=True):
+        if any(abs(item["index"] - other["index"]) < min_gap for other in selected):
+            continue
+        selected.append(item)
+        if len(selected) >= max_frames:
+            break
+    return selected
+
+
+def bucket_select(scored, max_frames, min_gap):
+    if max_frames >= len(scored):
+        return list(scored)
+
+    selected = []
+    selected_indices = set()
+    bucket_count = min(max_frames, len(scored))
+    for bucket_index in range(bucket_count):
+        start = round(bucket_index * len(scored) / bucket_count)
+        end = round((bucket_index + 1) * len(scored) / bucket_count)
+        bucket = scored[start:max(end, start + 1)]
+        for item in sorted(bucket, key=lambda x: x["score"], reverse=True):
+            if any(abs(item["index"] - other["index"]) < min_gap for other in selected):
+                continue
+            selected.append(item)
+            selected_indices.add(item["index"])
+            break
+
+    if len(selected) < max_frames:
+        for item in sorted(scored, key=lambda x: x["score"], reverse=True):
+            if item["index"] in selected_indices:
+                continue
+            if any(abs(item["index"] - other["index"]) < min_gap for other in selected):
+                continue
+            selected.append(item)
+            selected_indices.add(item["index"])
+            if len(selected) >= max_frames:
+                break
+
+    return selected
+
+
 def main():
     if len(sys.argv) < 3 or len(sys.argv) > 4:
         usage()
@@ -128,6 +171,10 @@ def main():
         return 1
 
     score_mode = os.environ.get("SPLAT_SELECT_SCORE", "visual_quality")
+    strategy = os.environ.get("SPLAT_SELECT_STRATEGY", "time_bucket")
+    if strategy not in {"top", "time_bucket"}:
+        print("SPLAT_SELECT_STRATEGY must be top or time_bucket.", file=sys.stderr)
+        return 1
     if score_mode == "jpeg_bytes":
         scored = [
             {
@@ -148,13 +195,10 @@ def main():
         print("SPLAT_SELECT_SCORE must be visual_quality or jpeg_bytes.", file=sys.stderr)
         return 1
 
-    selected = []
-    for item in sorted(scored, key=lambda x: x["score"], reverse=True):
-        if any(abs(item["index"] - other["index"]) < min_gap for other in selected):
-            continue
-        selected.append(item)
-        if len(selected) >= max_frames:
-            break
+    if strategy == "time_bucket":
+        selected = bucket_select(scored, max_frames, min_gap)
+    else:
+        selected = globally_select(scored, max_frames, min_gap)
 
     selected.sort(key=lambda x: x["index"])
 
@@ -171,6 +215,7 @@ def main():
         "max_frames": max_frames,
         "min_gap": min_gap,
         "score": score_mode,
+        "strategy": strategy,
         "frames": [],
     }
 

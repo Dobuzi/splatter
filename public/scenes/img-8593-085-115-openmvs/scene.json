@@ -5,7 +5,7 @@
   "fileSize": "2.30 MB",
   "capture": "img-8593-085-115-selected90, 90 frames, 15 COLMAP images",
   "training": "OpenMVS CPU dense, 598184 dense points, 27613 vertices, 54850 faces",
-  "delivery": "Textured Mesh 2.30 MB; dense point cloud 2.85 MB",
+  "delivery": "Largest-Component Textured Mesh 2.30 MB; dense point cloud 2.85 MB",
   "viewer": {
     "background": [
       0.02,
@@ -97,6 +97,19 @@
       "maxPoints": 200000,
       "source": "scene_dense.ply"
     }
+  },
+  "quality": {
+    "registeredImages": 15,
+    "frames": 90,
+    "registrationRatio": 0.1667,
+    "sparsePoints": 2934,
+    "densePoints": 598184,
+    "meshFaces": 54850,
+    "componentCount": 1,
+    "largestComponentRatio": 1.0,
+    "blurRejectRatio": 0.3333333333333333,
+    "exposureRejectRatio": 0.011111111111111112,
+    "score": 1700.27
   },
   "textureAssetUrl": "assets/img-8593-085-115-openmvs-scene_textured0.png",
   "pointCloudAssetUrl": "assets/img-8593-085-115-openmvs-scene_dense_points.ply"

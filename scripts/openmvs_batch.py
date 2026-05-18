@@ -6,6 +6,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from frame_quality import quality_report
+from mesh_largest_component import extract_largest_component
 from ply_metrics import camera_for_metrics, mesh_metrics, public_metrics
 from sample_ply_points import sample_point_cloud
 
@@ -85,6 +87,7 @@ def capture_candidates(slug):
         if (
             name == slug
             or name.startswith(f"{slug}-fps")
+            or name.startswith(f"{slug}-fine")
             or name.startswith(f"{slug}-seg")
             or name.startswith(f"{slug}-selected")
         ):
@@ -96,14 +99,21 @@ def score_candidate(capture_dir, model):
     frame_count = len(list((capture_dir / "images").glob("*.jpg")))
     ratio = model["registered"] / frame_count if frame_count else 0.0
     points_per_registered = model["points"] / model["registered"] if model["registered"] else 0.0
+    frame_quality = load_frame_quality(capture_dir)
+    sharpness_median = frame_quality.get("sharpness", {}).get("median", 0.0) if frame_quality else 0.0
+    blur_ratio = frame_quality.get("blurRejectRatio", 0.0) if frame_quality else 0.0
+    exposure_ratio = frame_quality.get("exposureRejectRatio", 0.0) if frame_quality else 0.0
     score = (
         model["registered"] * 100.0
         + ratio * 1000.0
         + model["points"] / 100.0
         + points_per_registered
         - model["error"] * 120.0
+        + min(sharpness_median / 1000.0, 2.0) * 50.0
+        - blur_ratio * 250.0
+        - exposure_ratio * 200.0
     )
-    return {
+    row = {
         "capture": capture_dir.name,
         "model": model["model"],
         "frames": frame_count,
@@ -113,6 +123,37 @@ def score_candidate(capture_dir, model):
         "points_per_registered": round(points_per_registered, 2),
         "reprojection_error": model["error"],
         "score": round(score, 2),
+    }
+    if frame_quality:
+        row["frameQuality"] = public_frame_quality(frame_quality)
+    return row
+
+
+def load_frame_quality(capture_dir):
+    report_path = capture_dir / "frame-quality.json"
+    if report_path.is_file():
+        try:
+            return json.loads(report_path.read_text(encoding="utf-8"))
+        except Exception:
+            return None
+    if os_environ().get("SPLAT_OPENMVS_FRAME_QUALITY", "1") != "1":
+        return None
+    try:
+        report = quality_report(capture_dir.name, int(os_environ().get("SPLAT_OPENMVS_FRAME_QUALITY_SAMPLE", "120")))
+        report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+        return report
+    except Exception:
+        return None
+
+
+def public_frame_quality(report):
+    return {
+        "sharpness": report.get("sharpness", {}),
+        "exposure": report.get("exposure", {}),
+        "motion": report.get("motion", {}),
+        "blurRejectRatio": report.get("blurRejectRatio", 0.0),
+        "exposureRejectRatio": report.get("exposureRejectRatio", 0.0),
+        "mlx": report.get("mlx"),
     }
 
 
@@ -182,14 +223,33 @@ def stage_scene(row):
         row["stage_status"] = "missing mesh"
         return
 
+    public_mesh_name = mesh_path.name
+    cleanup_report = None
+    if os_environ().get("SPLAT_OPENMVS_CLEAN_LARGEST_COMPONENT", "1") == "1":
+        cleanup_path = openmvs_dir / f"{mesh_path.stem}_largest.ply"
+        try:
+            cleanup_report = extract_largest_component(mesh_path, cleanup_path)
+            if cleanup_path.is_file():
+                mesh_path = cleanup_path
+                asset_kind = f"largest-component {asset_kind}"
+        except Exception as exc:
+            row["meshCleanupError"] = str(exc)
+
     assets_dir = Path("public/assets")
     assets_dir.mkdir(parents=True, exist_ok=True)
-    asset_name = f"{row['input_slug']}-openmvs-{mesh_path.name}"
+    asset_name = f"{row['input_slug']}-openmvs-{public_mesh_name}"
     asset_path = assets_dir / asset_name
     shutil.copyfile(mesh_path, asset_path)
     row["assetUrl"] = f"assets/{asset_name}"
     row["assetBytes"] = file_size(asset_path)
     row["meshAssetKind"] = asset_kind
+    if cleanup_report:
+        row["meshCleanup"] = {
+            "inputFaces": cleanup_report["inputFaces"],
+            "outputFaces": cleanup_report["outputFaces"],
+            "componentCount": cleanup_report["componentCount"],
+            "largestComponentRatio": round(cleanup_report["largestComponentRatio"], 4),
+        }
 
     texture_asset_url = None
     if texture_path and texture_path.is_file():
@@ -233,6 +293,19 @@ def stage_scene(row):
         },
         "camera": camera_for_metrics(metrics),
         "metrics": row["meshMetrics"],
+        "quality": {
+            "registeredImages": row["registered"],
+            "frames": row["frames"],
+            "registrationRatio": row["ratio"],
+            "sparsePoints": row["points"],
+            "densePoints": row.get("densePoints", 0),
+            "meshFaces": row["meshFaces"],
+            "componentCount": metrics["componentCount"],
+            "largestComponentRatio": metrics["largestComponentRatio"],
+            "blurRejectRatio": row.get("frameQuality", {}).get("blurRejectRatio"),
+            "exposureRejectRatio": row.get("frameQuality", {}).get("exposureRejectRatio"),
+            "score": row["score"],
+        },
     }
     if texture_asset_url:
         scene_config["textureAssetUrl"] = texture_asset_url
@@ -354,10 +427,13 @@ def main():
                 "ratio",
                 "points",
                 "score",
+                "frameQuality",
                 "densePoints",
                 "meshVertices",
                 "meshFaces",
                 "meshMetrics",
+                "meshCleanup",
+                "meshCleanupError",
                 "meshAssetKind",
                 "assetUrl",
                 "textureAssetUrl",

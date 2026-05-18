@@ -28,6 +28,7 @@ Commands:
   quality-stage <ply> <title> [preset]       Convert and stage progressive quality assets
   quality-sweep <video> <base-name> [title]  Plan or run quality experiment matrix
   segment-sweep <video> <base-name>          Plan or run segment quality candidates
+  segment-sweep-fine <video> <base-name>     Plan or run 20s/5s fine segment candidates
   matcher-sweep <capture> [base-name]        Plan or run COLMAP matcher candidates
   rank-captures <capture-prefix>             Rank COLMAP candidates by structure signals
   colmap-gate <capture>                      Score COLMAP structure before training
@@ -37,6 +38,7 @@ Commands:
   depth-report <capture>                     Report depth prior coverage
   mesh-validate <ply>                        Plan optional surface/mesh validation
   mesh-simplify <input> <output> [max-faces]  Write a lightweight cleaned mesh PLY
+  mesh-largest-component <input> <output>    Keep only the largest connected mesh component
   surface-reconstruct <capture> [model]      Run COLMAP dense depth, fusion, and mesh
   openmvs-batch [input-dir]                  Run OpenMVS for best capture per input and stage mesh results
   openmvs-sweep <capture> [model]            Run OpenMVS quality variants for one capture
@@ -132,6 +134,10 @@ case "$1" in
     shift
     scripts/sweep_segments.sh "$@"
     ;;
+  segment-sweep-fine)
+    shift
+    SPLAT_SEGMENT_WINDOW="${SPLAT_SEGMENT_WINDOW:-20}" SPLAT_SEGMENT_STRIDE="${SPLAT_SEGMENT_STRIDE:-5}" scripts/sweep_segments.sh "$@"
+    ;;
   matcher-sweep)
     shift
     scripts/sweep_matchers.sh "$@"
@@ -167,6 +173,10 @@ case "$1" in
   mesh-simplify)
     shift
     scripts/mesh_simplify.py "$@"
+    ;;
+  mesh-largest-component)
+    shift
+    scripts/mesh_largest_component.py "$@"
     ;;
   surface-reconstruct)
     shift

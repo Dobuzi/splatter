@@ -101,6 +101,26 @@ code {
   white-space: nowrap;
 }
 
+.quality-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.quality-badges span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 0 7px;
+  border: 1px solid rgba(143, 211, 255, 0.24);
+  border-radius: 5px;
+  background: rgba(143, 211, 255, 0.1);
+  color: #dce7f6;
+  font-size: 11px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 #sceneSelect {
   flex: 0 0 auto;
   min-height: 32px;
@@ -172,6 +192,10 @@ code {
 
   #metadata {
     white-space: normal;
+  }
+
+  .quality-badges {
+    max-width: 100%;
   }
 
   #tools {

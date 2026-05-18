@@ -8,8 +8,8 @@ fi
 
 input_video="$1"
 base_name="$2"
-window_sec="${3:-45}"
-stride_sec="${4:-15}"
+window_sec="${3:-${SPLAT_SEGMENT_WINDOW:-45}}"
+stride_sec="${4:-${SPLAT_SEGMENT_STRIDE:-15}}"
 
 if [[ ! -f "$input_video" ]]; then
   echo "Input video not found: $input_video" >&2
@@ -21,6 +21,7 @@ fps="${SPLAT_SEGMENT_FPS:-4}"
 camera_model="${SPLAT_SEGMENT_CAMERA_MODEL:-PINHOLE}"
 scale="${SPLAT_SEGMENT_SCALE:-1920}"
 duration="${SPLAT_SEGMENT_DURATION:-}"
+max_segments="${SPLAT_SEGMENT_MAX_SEGMENTS:-0}"
 
 if [[ -z "$duration" ]]; then
   duration=$(ffprobe -v error -show_entries format=duration -of default=nk=1:nw=1 "$input_video" 2>/dev/null || printf '60')
@@ -34,12 +35,20 @@ echo "- Window: ${window_sec}s"
 echo "- Stride: ${stride_sec}s"
 echo "- FPS: $fps"
 echo "- Camera model: $camera_model"
+if (( max_segments > 0 )); then
+  echo "- Max segments: $max_segments"
+fi
 
+segment_count=0
 for start in $(seq 0 "$stride_sec" "$duration_int"); do
   end=$(( start + window_sec ))
   if (( end > duration_int + stride_sec )); then
     break
   fi
+  if (( max_segments > 0 && segment_count >= max_segments )); then
+    break
+  fi
+  segment_count=$(( segment_count + 1 ))
   capture_name=$(printf '%s-%03d-%03d-fps%s-pinhole' "$base_name" "$start" "$end" "$fps")
   echo
   echo "Segment: ${start}-${end}s"

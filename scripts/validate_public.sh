@@ -5,6 +5,7 @@ scene_file="public/scene.json"
 index_file="public/index.html"
 main_file="public/main.js"
 max_asset_bytes=$((25 * 1024 * 1024))
+max_public_bytes="${SPLAT_MAX_PUBLIC_BYTES:-$((650 * 1024 * 1024))}"
 
 if [[ ! -f "$index_file" ]]; then
   echo "Missing $index_file" >&2
@@ -145,3 +146,31 @@ echo "Validated public viewer"
 echo "Scene asset: $asset_path"
 echo "Asset bytes: $asset_bytes"
 done
+
+public_bytes=$(node <<'NODE'
+const fs = require("fs");
+const path = require("path");
+
+function totalBytes(dir) {
+  let total = 0;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      total += totalBytes(fullPath);
+    } else if (entry.isFile()) {
+      total += fs.statSync(fullPath).size;
+    }
+  }
+  return total;
+}
+
+console.log(totalBytes("public"));
+NODE
+)
+
+if (( public_bytes > max_public_bytes )); then
+  echo "public/ exceeds Pages asset budget: $public_bytes bytes > $max_public_bytes bytes" >&2
+  exit 1
+fi
+
+echo "Public asset budget: $public_bytes / $max_public_bytes bytes"

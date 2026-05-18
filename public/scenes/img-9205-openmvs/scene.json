@@ -2,10 +2,10 @@
   "title": "IMG_9205.MOV OpenMVS Mesh",
   "assetUrl": "assets/img-9205-openmvs-scene_textured.ply",
   "format": "PLY Mesh",
-  "fileSize": "2.75 MB",
+  "fileSize": "2.48 MB",
   "capture": "img-9205-fps1-pinhole, 158 frames, 80 COLMAP images",
-  "training": "OpenMVS CPU dense, 709193 dense points, 32988 vertices, 65455 faces",
-  "delivery": "Textured Mesh 2.75 MB; dense point cloud 2.54 MB",
+  "training": "OpenMVS CPU dense, 709193 dense points, 32988 vertices, 58090 faces",
+  "delivery": "Largest-Component Textured Mesh 2.48 MB; dense point cloud 2.54 MB",
   "viewer": {
     "background": [
       0.02,
@@ -58,7 +58,7 @@
   },
   "metrics": {
     "vertices": 32988,
-    "faces": 65455,
+    "faces": 58090,
     "bbox": {
       "min": [
         -17.715837478637695,
@@ -83,10 +83,10 @@
       "diagonal": 46.21515476441282,
       "volume": 13451.66682619183
     },
-    "surfaceArea": 522.55295721335,
-    "faceDensity": 4.865939726707484,
-    "componentCount": 5,
-    "largestComponentRatio": 0.8835940341942524,
+    "surfaceArea": 384.02627875567254,
+    "faceDensity": 4.318423935901578,
+    "componentCount": 1,
+    "largestComponentRatio": 1.0,
     "degenerateFaceRatio": 0.0,
     "hasTexcoords": true,
     "textureFiles": [
@@ -97,6 +97,19 @@
       "maxPoints": 200000,
       "source": "scene_dense.ply"
     }
+  },
+  "quality": {
+    "registeredImages": 80,
+    "frames": 158,
+    "registrationRatio": 0.5063,
+    "sparsePoints": 7170,
+    "densePoints": 709193,
+    "meshFaces": 58090,
+    "componentCount": 1,
+    "largestComponentRatio": 1.0,
+    "blurRejectRatio": 0.11666666666666667,
+    "exposureRejectRatio": 0.0,
+    "score": 8558.04
   },
   "textureAssetUrl": "assets/img-9205-openmvs-scene_textured0.png",
   "pointCloudAssetUrl": "assets/img-9205-openmvs-scene_dense_points.ply"
