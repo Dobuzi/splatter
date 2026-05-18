@@ -406,45 +406,45 @@
     {
       "input": "IMG_8593_085_115.MOV",
       "input_slug": "img-8593-085-115",
-      "capture": "img-8593-085-115-fps4",
+      "capture": "img-8593-085-115-selected90",
       "model": "1",
-      "frames": 120,
+      "frames": 90,
       "registered": 15,
-      "ratio": 0.125,
-      "points": 2228,
-      "score": 1696.12,
-      "densePoints": 266809,
-      "meshVertices": 6171,
-      "meshFaces": 12196,
+      "ratio": 0.1667,
+      "points": 2934,
+      "score": 1778.99,
+      "densePoints": 598184,
+      "meshVertices": 27613,
+      "meshFaces": 54850,
       "meshMetrics": {
-        "vertices": 6171,
-        "faces": 12196,
+        "vertices": 27613,
+        "faces": 54850,
         "bbox": {
           "min": [
-            -6.391822814941406,
-            -19.13939666748047,
-            11.140695571899414
+            -8.441254615783691,
+            -7.237032890319824,
+            11.460047721862793
           ],
           "max": [
-            5.603679656982422,
-            15.994168281555176,
-            36.667484283447266
+            2.585195541381836,
+            2.913408041000366,
+            53.09525680541992
           ],
           "size": [
-            11.995502471923828,
-            35.133564949035645,
-            25.52678871154785
+            11.026450157165527,
+            10.15044093132019,
+            41.63520908355713
           ],
           "center": [
-            -0.3940715789794922,
-            -1.5726141929626465,
-            23.90408992767334
+            -2.9280295372009277,
+            -2.161812424659729,
+            32.27765226364136
           ],
-          "diagonal": 45.05414972570278,
-          "volume": 10758.131474686288
+          "diagonal": 44.25047671607837,
+          "volume": 4659.951287615382
         },
-        "surfaceArea": 647.4985670467461,
-        "faceDensity": 1.1336541135137634,
+        "surfaceArea": 297.8862095742175,
+        "faceDensity": 11.770509306776074,
         "componentCount": 1,
         "largestComponentRatio": 1.0,
         "degenerateFaceRatio": 0.0,
@@ -453,7 +453,7 @@
           "scene_textured0.png"
         ],
         "pointCloud": {
-          "points": 133405,
+          "points": 199395,
           "maxPoints": 200000,
           "source": "scene_dense.ply"
         }
@@ -463,7 +463,7 @@
       "textureAssetUrl": "assets/img-8593-085-115-openmvs-scene_textured0.png",
       "denseAssetUrl": "assets/img-8593-085-115-openmvs-scene_dense_points.ply",
       "densePointCloud": {
-        "points": 133405,
+        "points": 199395,
         "maxPoints": 200000,
         "source": "scene_dense.ply"
       },

@@ -82,7 +82,12 @@ def capture_candidates(slug):
     candidates = []
     for capture_dir in sorted(path for path in captures_root.iterdir() if path.is_dir()):
         name = capture_dir.name
-        if name == slug or name.startswith(f"{slug}-fps") or name.startswith(f"{slug}-seg"):
+        if (
+            name == slug
+            or name.startswith(f"{slug}-fps")
+            or name.startswith(f"{slug}-seg")
+            or name.startswith(f"{slug}-selected")
+        ):
             candidates.append(capture_dir)
     return candidates
 
