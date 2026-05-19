@@ -41,6 +41,41 @@ def stage_status(row, input_slug):
     }
 
 
+def input_records(input_dir, ranking):
+    if input_dir.is_dir():
+        return [
+            {
+                "input": path.name,
+                "inputSlug": slug_for_input(path),
+                "captures": None,
+            }
+            for path in sorted(path for path in input_dir.iterdir() if path.suffix.lower() in VIDEO_EXTS)
+        ]
+
+    committed = read_json("public/pipeline-manifest.json", {}).get("inputs", [])
+    if committed:
+        return [
+            {
+                "input": item.get("input"),
+                "inputSlug": item.get("inputSlug"),
+                "captures": item.get("captures", []),
+            }
+            for item in committed
+            if item.get("input") and item.get("inputSlug")
+        ]
+
+    records = []
+    seen = set()
+    for row in ranking:
+        input_slug = row.get("input_slug")
+        if not input_slug or input_slug in seen:
+            continue
+        seen.add(input_slug)
+        captures = [row["capture"]] if row.get("capture") else []
+        records.append({"input": row.get("input") or input_slug, "inputSlug": input_slug, "captures": captures})
+    return records
+
+
 def build_manifest(input_dir):
     input_dir = Path(input_dir)
     ranking = read_json("public/openmvs-ranking.json", {"ranked": []}).get("ranked", [])
@@ -48,14 +83,18 @@ def build_manifest(input_dir):
     primary_slugs = primary_input_slugs()
     inputs = []
 
-    for input_path in sorted(path for path in input_dir.iterdir() if path.suffix.lower() in VIDEO_EXTS):
-        input_slug = slug_for_input(input_path)
+    for record in input_records(input_dir, ranking):
+        input_slug = record["inputSlug"]
         row = ranked_by_slug.get(input_slug)
-        captures = [path.name for path in capture_candidates(input_slug)]
+        captures = record["captures"]
+        if captures is None:
+            captures = [path.name for path in capture_candidates(input_slug)]
+        if not captures and row and row.get("capture"):
+            captures = [row["capture"]]
         staged = stage_status(row, input_slug)
         inputs.append(
             {
-                "input": input_path.name,
+                "input": record["input"],
                 "inputSlug": input_slug,
                 "primaryTarget": input_slug in primary_slugs,
                 "captures": captures,

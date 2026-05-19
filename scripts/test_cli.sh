@@ -278,6 +278,9 @@ printf '%s\n' "$openmvs_sweep_all_output" | grep -q "candidates"
 pipeline_manifest_output=$("$cli" pipeline-manifest input)
 printf '%s\n' "$pipeline_manifest_output" | grep -q '"primaryTargets"'
 printf '%s\n' "$pipeline_manifest_output" | grep -q '"optional TRELLIS.2 branch"'
+missing_input_manifest_output=$("$cli" pipeline-manifest missing-input-dir)
+printf '%s\n' "$missing_input_manifest_output" | grep -q '"inputSlug": "img-9142"'
+printf '%s\n' "$missing_input_manifest_output" | grep -q '"inputSlug": "img-9205"'
 pipeline_output=$("$cli" pipeline-run input)
 printf '%s\n' "$pipeline_output" | grep -q '"execute": false'
 printf '%s\n' "$pipeline_output" | grep -q 'public/pipeline-manifest.json'
