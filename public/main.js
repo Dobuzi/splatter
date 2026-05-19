@@ -17,6 +17,7 @@ const title = document.querySelector('#title');
 const status = document.querySelector('#status');
 const metadata = document.querySelector('#metadata');
 const qualityBadges = document.querySelector('#qualityBadges');
+const pipelineStatus = document.querySelector('#pipelineStatus');
 const tools = document.querySelector('#tools');
 const sceneSelect = document.querySelector('#sceneSelect');
 
@@ -80,6 +81,41 @@ function setQualityBadges(config) {
   qualityBadges.hidden = badges.length === 0;
 }
 
+function setPipelineStatus(pipelineManifest, activeScene, config) {
+  if (!pipelineStatus) {
+    return;
+  }
+
+  const item = pipelineInputForScene(pipelineManifest, activeScene, config);
+  if (!item) {
+    pipelineStatus.hidden = true;
+    return;
+  }
+
+  const state = item.stageStatus === 'staged' && item.nextActions?.includes('ready')
+    ? 'ready'
+    : item.stageStatus || 'pending';
+  const prefix = item.primaryTarget ? 'Primary pipeline' : 'Pipeline';
+  const suffix = item.selectedCapture ? ` · ${item.selectedCapture}` : '';
+  pipelineStatus.textContent = `${prefix} ${state}${suffix}`;
+  pipelineStatus.title = item.nextActions?.length ? `Next: ${item.nextActions.join(', ')}` : '';
+  pipelineStatus.hidden = false;
+}
+
+function pipelineInputForScene(pipelineManifest, activeScene, config) {
+  const inputs = pipelineManifest?.inputs;
+  if (!Array.isArray(inputs)) {
+    return null;
+  }
+
+  const activeId = activeScene?.id || '';
+  return inputs.find((item) => item.input === activeScene?.input)
+    || inputs.find((item) => item.staged?.sceneUrl === activeScene?.sceneUrl)
+    || inputs.find((item) => item.inputSlug === activeId || activeId.startsWith(`${item.inputSlug}-`))
+    || inputs.find((item) => item.staged?.sceneUrl && config?.assetUrl === item.staged.assetUrl)
+    || null;
+}
+
 async function loadSceneConfig(sceneUrl = 'scene.json') {
   try {
     const response = await fetch(sceneUrl, { cache: 'no-store' });
@@ -93,6 +129,24 @@ async function loadSceneConfig(sceneUrl = 'scene.json') {
     }
 
     return config;
+  } catch {
+    return null;
+  }
+}
+
+async function loadPipelineManifest() {
+  try {
+    const response = await fetch('pipeline-manifest.json', { cache: 'no-store' });
+    if (!response.ok) {
+      return null;
+    }
+
+    const manifest = await response.json();
+    if (!Array.isArray(manifest.inputs)) {
+      return null;
+    }
+
+    return manifest;
   } catch {
     return null;
   }
@@ -159,6 +213,9 @@ function showEmpty(message = 'No scene staged') {
   metadata.hidden = true;
   if (qualityBadges) {
     qualityBadges.hidden = true;
+  }
+  if (pipelineStatus) {
+    pipelineStatus.hidden = true;
   }
 }
 
@@ -890,7 +947,10 @@ function installRenderModeTools(config, meshEntity, pointEntity) {
 
 async function boot() {
   const bootStart = performance.now();
-  const manifest = await loadSceneManifest();
+  const [manifest, pipelineManifest] = await Promise.all([
+    loadSceneManifest(),
+    loadPipelineManifest()
+  ]);
   const activeSceneId = manifest ? selectedSceneId(manifest) : null;
   const activeScene = manifest?.scenes.find((scene) => scene.id === activeSceneId);
   installSceneSelector(manifest, activeSceneId);
@@ -904,6 +964,7 @@ async function boot() {
   title.textContent = config.title || 'Gaussian Splat Viewer';
   setStatus('Loading scene');
   setMetadata(config);
+  setPipelineStatus(pipelineManifest, activeScene, config);
 
   const canvas = document.createElement('canvas');
   document.body.appendChild(canvas);
@@ -959,6 +1020,7 @@ async function boot() {
   setStatus('Ready');
   window.__splatterMetrics = {
     sceneId: activeSceneId,
+    pipelineInput: pipelineInputForScene(pipelineManifest, activeScene, config)?.inputSlug || null,
     previewReadyMs: Math.round(performance.now() - bootStart),
     highQualityReadyMs: null
   };

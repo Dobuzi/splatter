@@ -107,6 +107,49 @@ if (fs.existsSync("public/scenes.json")) {
   if (manifest.defaultScene && !ids.has(manifest.defaultScene)) {
     throw new Error("scenes.json defaultScene must match a scene id");
   }
+
+  const pipelinePath = "public/pipeline-manifest.json";
+  if (!fs.existsSync(pipelinePath)) {
+    throw new Error("Missing public/pipeline-manifest.json");
+  }
+  const pipeline = readJson(pipelinePath);
+  if (!Array.isArray(manifest.primaryTargets) || manifest.primaryTargets.length === 0) {
+    throw new Error("scenes.json requires primaryTargets");
+  }
+  if (!Array.isArray(pipeline.primaryTargets)) {
+    throw new Error("pipeline-manifest.json requires primaryTargets");
+  }
+  const scenePrimaryTargets = [...manifest.primaryTargets].sort();
+  const pipelinePrimaryTargets = [...pipeline.primaryTargets].sort();
+  if (JSON.stringify(scenePrimaryTargets) !== JSON.stringify(pipelinePrimaryTargets)) {
+    throw new Error("pipeline-manifest.json primaryTargets must match scenes.json primaryTargets");
+  }
+  if (!Array.isArray(pipeline.inputs)) {
+    throw new Error("pipeline-manifest.json requires inputs");
+  }
+  for (const primaryTarget of manifest.primaryTargets) {
+    const input = pipeline.inputs.find((item) => item.inputSlug === primaryTarget);
+    if (!input) {
+      throw new Error(`pipeline-manifest.json missing primary input ${primaryTarget}`);
+    }
+    if (input.primaryTarget !== true) {
+      throw new Error(`pipeline-manifest.json ${primaryTarget} must be marked primaryTarget`);
+    }
+    if (input.stageStatus !== "staged") {
+      throw new Error(`pipeline-manifest.json ${primaryTarget} must be staged`);
+    }
+    if (!Array.isArray(input.nextActions) || input.nextActions.join(",") !== "ready") {
+      throw new Error(`pipeline-manifest.json ${primaryTarget} must be ready`);
+    }
+    const sceneUrl = input.staged && input.staged.sceneUrl;
+    if (!sceneUrl) {
+      throw new Error(`pipeline-manifest.json ${primaryTarget} missing staged.sceneUrl`);
+    }
+    const scene = manifest.scenes.find((entry) => entry.primaryTarget === true && entry.sceneUrl === sceneUrl);
+    if (!scene) {
+      throw new Error(`scenes.json missing primary scene for ${primaryTarget}: ${sceneUrl}`);
+    }
+  }
 }
 
 for (const assetUrl of assetUrls) {

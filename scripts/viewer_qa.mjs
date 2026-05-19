@@ -2,7 +2,10 @@
 import fs from 'node:fs';
 
 const manifest = JSON.parse(fs.readFileSync('public/scenes.json', 'utf8'));
+const pipelineManifest = JSON.parse(fs.readFileSync('public/pipeline-manifest.json', 'utf8'));
 const failures = [];
+const scenePrimaryTargets = new Set(manifest.primaryTargets || []);
+const pipelinePrimaryTargets = new Set(pipelineManifest.primaryTargets || []);
 
 for (const scene of manifest.scenes || []) {
   const config = JSON.parse(fs.readFileSync(`public/${scene.sceneUrl}`, 'utf8'));
@@ -21,9 +24,26 @@ for (const scene of manifest.scenes || []) {
   }
 }
 
+for (const primaryTarget of scenePrimaryTargets) {
+  if (!pipelinePrimaryTargets.has(primaryTarget)) {
+    failures.push(`pipeline manifest missing primary target ${primaryTarget}`);
+  }
+  const input = pipelineManifest.inputs?.find((item) => item.inputSlug === primaryTarget);
+  if (!input) {
+    failures.push(`pipeline manifest missing input ${primaryTarget}`);
+    continue;
+  }
+  if (input.stageStatus !== 'staged' || input.nextActions?.join(',') !== 'ready') {
+    failures.push(`${primaryTarget}: pipeline input is not ready`);
+  }
+  if (!manifest.scenes.some((scene) => scene.primaryTarget === true && scene.sceneUrl === input.staged?.sceneUrl)) {
+    failures.push(`${primaryTarget}: staged scene is not exposed as primary in scenes.json`);
+  }
+}
+
 if (failures.length) {
   console.error(failures.join('\n'));
   process.exit(1);
 }
 
-console.log(`Viewer QA manifest checks passed for ${manifest.scenes.length} scenes`);
+console.log(`Viewer QA manifest checks passed for ${manifest.scenes.length} scenes and ${scenePrimaryTargets.size} primary pipeline targets`);

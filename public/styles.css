@@ -121,6 +121,15 @@ code {
   white-space: nowrap;
 }
 
+.pipeline-status {
+  overflow: hidden;
+  color: #b9c6d8;
+  font-size: 11px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 #sceneSelect {
   flex: 0 0 auto;
   min-height: 32px;
@@ -196,6 +205,11 @@ code {
 
   .quality-badges {
     max-width: 100%;
+  }
+
+  .pipeline-status {
+    max-width: 100%;
+    white-space: normal;
   }
 
   #tools {
