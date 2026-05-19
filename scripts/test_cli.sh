@@ -32,6 +32,9 @@ fi
 "$cli" --help | grep -q "openmvs-sweep"
 "$cli" --help | grep -q "openmvs-sweep-all"
 "$cli" --help | grep -q "openmvs-validate"
+"$cli" --help | grep -q "pipeline-manifest"
+"$cli" --help | grep -q "pipeline-run"
+"$cli" --help | grep -q "trellis2-generate"
 "$cli" --help | grep -q "viewer-qa"
 "$cli" --help | grep -q "mlx-smoke"
 "$cli" --help | grep -q "mlx-diagnose"
@@ -131,6 +134,11 @@ fi
 
 if "$cli" surface-reconstruct >/dev/null 2>&1; then
   echo "Surface reconstruct without required args should fail" >&2
+  exit 1
+fi
+
+if "$cli" trellis2-generate >/dev/null 2>&1; then
+  echo "TRELLIS.2 generate without required args should fail" >&2
   exit 1
 fi
 
@@ -267,6 +275,15 @@ printf '%s\n' "$openmvs_sweep_output" | grep -q "balanced"
 printf '%s\n' "$openmvs_sweep_output" | grep -q "detail"
 openmvs_sweep_all_output=$(SPLAT_OPENMVS_SWEEP_ALL_DRY_RUN=1 "$cli" openmvs-sweep-all missing-input)
 printf '%s\n' "$openmvs_sweep_all_output" | grep -q "candidates"
+pipeline_manifest_output=$("$cli" pipeline-manifest input)
+printf '%s\n' "$pipeline_manifest_output" | grep -q '"primaryTargets"'
+printf '%s\n' "$pipeline_manifest_output" | grep -q '"optional TRELLIS.2 branch"'
+pipeline_output=$("$cli" pipeline-run input)
+printf '%s\n' "$pipeline_output" | grep -q '"execute": false'
+printf '%s\n' "$pipeline_output" | grep -q 'public/pipeline-manifest.json'
+trellis_plan=$("$cli" trellis2-generate "$checkpoint_dir/sample_1000.ply")
+printf '%s\n' "$trellis_plan" | grep -q '"backend": "trellis2-remote"'
+printf '%s\n' "$trellis_plan" | grep -q 'remote command not configured'
 "$cli" viewer-qa >/dev/null
 mlx_frame_output=$("$cli" mlx-frame-quality --dry-run)
 printf '%s\n' "$mlx_frame_output" | grep -q "frame quality scoring"

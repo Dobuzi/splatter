@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "inputDir": "input",
+  "primaryTargets": [
+    "img-9142",
+    "img-9205"
+  ],
+  "stages": [
+    "capture variants",
+    "COLMAP ranking",
+    "OpenMVS dense/mesh",
+    "largest-component cleanup",
+    "viewer staging",
+    "QA/deploy gates",
+    "optional TRELLIS.2 branch"
+  ],
+  "inputs": [
+    {
+      "input": "IMG_9142.MOV",
+      "inputSlug": "img-9142",
+      "primaryTarget": true,
+      "captures": [
+        "img-9142-fps2"
+      ],
+      "selectedCapture": "img-9142-fps2",
+      "selectedModel": "0",
+      "stageStatus": "staged",
+      "score": 7186.37,
+      "registrationRatio": 0.9672,
+      "densePoints": 1473200,
+      "meshFaces": 351572,
+      "staged": {
+        "sceneUrl": "scenes/img-9142-openmvs/scene.json",
+        "assetUrl": "assets/img-9142-openmvs-scene_textured.ply",
+        "pointCloudAssetUrl": "assets/img-9142-openmvs-scene_dense_points.ply",
+        "textureAssetUrl": "assets/img-9142-openmvs-scene_textured0.png",
+        "assetBytes": 15470801,
+        "pointCloudBytes": 5250180,
+        "quality": {
+          "primaryTarget": true,
+          "registeredImages": 59,
+          "frames": 61,
+          "registrationRatio": 0.9672,
+          "sparsePoints": 13733,
+          "densePoints": 1473200,
+          "meshFaces": 351572,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0,
+          "blurRejectRatio": 0.04918032786885246,
+          "exposureRejectRatio": 0.0,
+          "score": 7186.37
+        }
+      },
+      "nextActions": [
+        "ready"
+      ]
+    },
+    {
+      "input": "IMG_9205.MOV",
+      "inputSlug": "img-9205",
+      "primaryTarget": true,
+      "captures": [
+        "img-9205-fps1-pinhole"
+      ],
+      "selectedCapture": "img-9205-fps1-pinhole",
+      "selectedModel": "0",
+      "stageStatus": "staged",
+      "score": 8558.04,
+      "registrationRatio": 0.5063,
+      "densePoints": 709193,
+      "meshFaces": 58090,
+      "staged": {
+        "sceneUrl": "scenes/img-9205-openmvs/scene.json",
+        "assetUrl": "assets/img-9205-openmvs-scene_textured.ply",
+        "pointCloudAssetUrl": "assets/img-9205-openmvs-scene_dense_points.ply",
+        "textureAssetUrl": "assets/img-9205-openmvs-scene_textured0.png",
+        "assetBytes": 2603539,
+        "pointCloudBytes": 5250180,
+        "quality": {
+          "primaryTarget": true,
+          "registeredImages": 80,
+          "frames": 158,
+          "registrationRatio": 0.5063,
+          "sparsePoints": 7170,
+          "densePoints": 709193,
+          "meshFaces": 58090,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0,
+          "blurRejectRatio": 0.11666666666666667,
+          "exposureRejectRatio": 0.0,
+          "score": 8558.04
+        }
+      },
+      "nextActions": [
+        "ready"
+      ]
+    },
+    {
+      "input": "IMG_8593.MOV",
+      "inputSlug": "img-8593",
+      "primaryTarget": false,
+      "captures": [
+        "img-8593-fps1",
+        "img-8593-fps2",
+        "img-8593-fps4",
+        "img-8593-seg-000-045-fps4-pinhole",
+        "img-8593-seg-000-045-selected",
+        "img-8593-seg-015-060-fps4-pinhole",
+        "img-8593-seg-030-075-fps4-pinhole",
+        "img-8593-seg-045-090-fps4-pinhole",
+        "img-8593-seg-060-105-fps4-pinhole",
+        "img-8593-seg-075-120-fps4-pinhole",
+        "img-8593-seg-090-135-fps4-pinhole",
+        "img-8593-seg-090-135-selected",
+        "img-8593-seg-105-150-fps4-pinhole"
+      ],
+      "selectedCapture": "img-8593-seg-000-045-fps4-pinhole",
+      "selectedModel": "0",
+      "stageStatus": "staged",
+      "score": 2428.67,
+      "registrationRatio": 0.1278,
+      "densePoints": 349398,
+      "meshFaces": 11992,
+      "staged": {
+        "sceneUrl": "scenes/img-8593-openmvs/scene.json",
+        "assetUrl": "assets/img-8593-openmvs-scene_textured.ply",
+        "pointCloudAssetUrl": "assets/img-8593-openmvs-scene_dense_points.ply",
+        "textureAssetUrl": "assets/img-8593-openmvs-scene_textured0.png",
+        "assetBytes": 529338,
+        "pointCloudBytes": 3000180,
+        "quality": {
+          "primaryTarget": false,
+          "registeredImages": 23,
+          "frames": 180,
+          "registrationRatio": 0.1278,
+          "sparsePoints": 3148,
+          "densePoints": 349398,
+          "meshFaces": 11992,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0,
+          "blurRejectRatio": 0.275,
+          "exposureRejectRatio": 0.025,
+          "score": 2428.67
+        }
+      },
+      "nextActions": [
+        "ready"
+      ]
+    },
+    {
+      "input": "IMG_8593_000_030.MOV",
+      "inputSlug": "img-8593-000-030",
+      "primaryTarget": false,
+      "captures": [
+        "img-8593-000-030-fps4",
+        "img-8593-000-030-selected",
+        "img-8593-000-030-selected90"
+      ],
+      "selectedCapture": "img-8593-000-030-selected90",
+      "selectedModel": "0",
+      "stageStatus": "staged",
+      "score": 2499.53,
+      "registrationRatio": 0.2444,
+      "densePoints": 296264,
+      "meshFaces": 16409,
+      "staged": {
+        "sceneUrl": "scenes/img-8593-000-030-openmvs/scene.json",
+        "assetUrl": "assets/img-8593-000-030-openmvs-scene_textured.ply",
+        "pointCloudAssetUrl": "assets/img-8593-000-030-openmvs-scene_dense_points.ply",
+        "textureAssetUrl": "assets/img-8593-000-030-openmvs-scene_textured0.png",
+        "assetBytes": 723872,
+        "pointCloudBytes": 3000180,
+        "quality": {
+          "primaryTarget": false,
+          "registeredImages": 22,
+          "frames": 90,
+          "registrationRatio": 0.2444,
+          "sparsePoints": 3149,
+          "densePoints": 296264,
+          "meshFaces": 16409,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0,
+          "blurRejectRatio": 0.1111111111111111,
+          "exposureRejectRatio": 0.0,
+          "score": 2499.53
+        }
+      },
+      "nextActions": [
+        "ready"
+      ]
+    },
+    {
+      "input": "IMG_8593_085_115.MOV",
+      "inputSlug": "img-8593-085-115",
+      "primaryTarget": false,
+      "captures": [
+        "img-8593-085-115-fps4",
+        "img-8593-085-115-selected",
+        "img-8593-085-115-selected90"
+      ],
+      "selectedCapture": "img-8593-085-115-selected90",
+      "selectedModel": "1",
+      "stageStatus": "staged",
+      "score": 1700.27,
+      "registrationRatio": 0.1667,
+      "densePoints": 598184,
+      "meshFaces": 54850,
+      "staged": {
+        "sceneUrl": "scenes/img-8593-085-115-openmvs/scene.json",
+        "assetUrl": "assets/img-8593-085-115-openmvs-scene_textured.ply",
+        "pointCloudAssetUrl": "assets/img-8593-085-115-openmvs-scene_dense_points.ply",
+        "textureAssetUrl": "assets/img-8593-085-115-openmvs-scene_textured0.png",
+        "assetBytes": 2415919,
+        "pointCloudBytes": 3000180,
+        "quality": {
+          "primaryTarget": false,
+          "registeredImages": 15,
+          "frames": 90,
+          "registrationRatio": 0.1667,
+          "sparsePoints": 2934,
+          "densePoints": 598184,
+          "meshFaces": 54850,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0,
+          "blurRejectRatio": 0.3333333333333333,
+          "exposureRejectRatio": 0.011111111111111112,
+          "score": 1700.27
+        }
+      },
+      "nextActions": [
+        "ready"
+      ]
+    },
+    {
+      "input": "IMG_9189.MOV",
+      "inputSlug": "img-9189",
+      "primaryTarget": false,
+      "captures": [
+        "img-9189-fps12",
+        "img-9189-fps12-best",
+        "img-9189-fps8"
+      ],
+      "selectedCapture": "img-9189-fps12",
+      "selectedModel": "2",
+      "stageStatus": "staged",
+      "score": 7585.67,
+      "registrationRatio": 0.6034,
+      "densePoints": 495576,
+      "meshFaces": 30894,
+      "staged": {
+        "sceneUrl": "scenes/img-9189-openmvs/scene.json",
+        "assetUrl": "assets/img-9189-openmvs-scene_textured.ply",
+        "pointCloudAssetUrl": "assets/img-9189-openmvs-scene_dense_points.ply",
+        "textureAssetUrl": "assets/img-9189-openmvs-scene_textured0.png",
+        "assetBytes": 1360331,
+        "pointCloudBytes": 3000180,
+        "quality": {
+          "primaryTarget": false,
+          "registeredImages": 70,
+          "frames": 116,
+          "registrationRatio": 0.6034,
+          "sparsePoints": 2882,
+          "densePoints": 495576,
+          "meshFaces": 30894,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0,
+          "blurRejectRatio": 0.0,
+          "exposureRejectRatio": 0.0,
+          "score": 7585.67
+        }
+      },
+      "nextActions": [
+        "ready"
+      ]
+    },
+    {
+      "input": "2026-05-14-03-42-00.mov",
+      "inputSlug": "video-20260514-034200",
+      "primaryTarget": false,
+      "captures": [
+        "video-20260514-034200-fps12",
+        "video-20260514-034200-fps12-pinhole",
+        "video-20260514-034200-fps12-selected-smoke",
+        "video-20260514-034200-fps4",
+        "video-20260514-034200-fps4-pinhole"
+      ],
+      "selectedCapture": "video-20260514-034200-fps12-pinhole",
+      "selectedModel": "0",
+      "stageStatus": "staged",
+      "score": 29411.55,
+      "registrationRatio": 1.0,
+      "densePoints": 3754093,
+      "meshFaces": 87678,
+      "staged": {
+        "sceneUrl": "scenes/video-20260514-034200-openmvs/scene.json",
+        "assetUrl": "assets/video-20260514-034200-openmvs-scene_textured.ply",
+        "pointCloudAssetUrl": "assets/video-20260514-034200-openmvs-scene_dense_points.ply",
+        "textureAssetUrl": "assets/video-20260514-034200-openmvs-scene_textured0.png",
+        "assetBytes": 3864155,
+        "pointCloudBytes": 3000180,
+        "quality": {
+          "primaryTarget": false,
+          "registeredImages": 283,
+          "frames": 283,
+          "registrationRatio": 1.0,
+          "sparsePoints": 17924,
+          "densePoints": 3754093,
+          "meshFaces": 87678,
+          "componentCount": 1,
+          "largestComponentRatio": 1.0,
+          "blurRejectRatio": 0.0,
+          "exposureRejectRatio": 0.0,
+          "score": 29411.55
+        }
+      },
+      "nextActions": [
+        "ready"
+      ]
+    }
+  ]
+}

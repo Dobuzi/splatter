@@ -44,6 +44,9 @@ Commands:
   openmvs-sweep <capture> [model]            Run OpenMVS quality variants for one capture
   openmvs-sweep-all [input-dir]              Sweep all input captures, apply winners, and restage
   openmvs-validate                           Validate staged OpenMVS mesh assets and camera framing
+  pipeline-manifest [input-dir] [output]      Write manifest-driven pipeline status
+  pipeline-run [input-dir]                    Orchestrate primary target staging from manifest
+  trellis2-generate <image> [output-dir]      Plan or run optional remote TRELLIS.2 generation
   viewer-qa                                  Validate viewer scene assets and point-cloud wiring
   mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
   mlx-diagnose [args]                        Diagnose gsplat-mlx NaN sources
@@ -206,6 +209,32 @@ case "$1" in
       exit 1
     fi
     scripts/openmvs_validate.py
+    ;;
+  pipeline-manifest)
+    shift
+    input_dir="${1:-input}"
+    if (( $# > 2 )); then
+      echo "Usage: splatter pipeline-manifest [input-dir] [output-json]" >&2
+      exit 1
+    fi
+    if (( $# == 2 )); then
+      scripts/pipeline_manifest.py "$input_dir" "$2"
+    else
+      scripts/pipeline_manifest.py "$input_dir"
+    fi
+    ;;
+  pipeline-run)
+    shift
+    input_dir="${1:-input}"
+    if (( $# > 1 )); then
+      echo "Usage: splatter pipeline-run [input-dir]" >&2
+      exit 1
+    fi
+    scripts/pipeline_run.py "$input_dir"
+    ;;
+  trellis2-generate)
+    shift
+    scripts/trellis2_adapter.py "$@"
     ;;
   viewer-qa)
     shift
