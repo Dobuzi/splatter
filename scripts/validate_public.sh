@@ -53,6 +53,12 @@ function validateSceneConfig(config, file) {
   if (config.pointCloudAssetUrl) {
     assertPublicRelative(config.pointCloudAssetUrl, `${file} pointCloudAssetUrl`);
   }
+  if (config.voxelGridAssetUrl) {
+    assertPublicRelative(config.voxelGridAssetUrl, `${file} voxelGridAssetUrl`);
+  }
+  if (config.voxelGridUrl) {
+    assertPublicRelative(config.voxelGridUrl, `${file} voxelGridUrl`);
+  }
   if (config.textureAssetUrl) {
     assertPublicRelative(config.textureAssetUrl, `${file} textureAssetUrl`);
   }
@@ -76,7 +82,7 @@ function validateSceneConfig(config, file) {
       }
     }
   }
-  return [config.assetUrl, config.previewAssetUrl, config.pointCloudAssetUrl, config.textureAssetUrl].filter(Boolean);
+  return [config.assetUrl, config.previewAssetUrl, config.pointCloudAssetUrl, config.voxelGridAssetUrl, config.voxelGridUrl, config.textureAssetUrl].filter(Boolean);
 }
 
 const assetUrls = new Set(validateSceneConfig(readJson("public/scene.json"), "scene.json"));
@@ -167,7 +173,7 @@ if [[ ! -f "$asset_path" ]]; then
 fi
 
 case "$asset_path" in
-  *.sog|*.ply|*.compressed.ply|*.png) ;;
+  *.sog|*.ply|*.compressed.ply|*.png|*.json) ;;
   *)
     echo "Unsupported scene asset format: $asset_path" >&2
     exit 1

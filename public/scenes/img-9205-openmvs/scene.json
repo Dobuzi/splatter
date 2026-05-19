@@ -6,7 +6,7 @@
   "fileSize": "2.48 MB",
   "capture": "img-9205-fps1-pinhole, 158 frames, 80 COLMAP images",
   "training": "OpenMVS CPU dense, 709193 dense points, 32988 vertices, 58090 faces",
-  "delivery": "Largest-Component Textured Mesh 2.48 MB; dense point cloud 5.01 MB",
+  "delivery": "Largest-Component Textured Mesh 2.48 MB; dense point cloud 5.01 MB; occupancy voxels 56.13 KB",
   "viewer": {
     "background": [
       0.02,
@@ -97,6 +97,19 @@
       "points": 350000,
       "maxPoints": 350000,
       "source": "scene_dense.ply"
+    },
+    "voxelGrid": {
+      "resolution": 96,
+      "dims": [
+        94,
+        43,
+        97
+      ],
+      "cellSize": 0.33087172110875446,
+      "occupiedVoxels": 3820,
+      "totalVoxels": 392074,
+      "occupancyRatio": 0.009743058708305065,
+      "source": "assets/img-9205-openmvs-scene_dense_points.ply"
     }
   },
   "quality": {
@@ -114,5 +127,7 @@
     "score": 8558.04
   },
   "textureAssetUrl": "assets/img-9205-openmvs-scene_textured0.png",
-  "pointCloudAssetUrl": "assets/img-9205-openmvs-scene_dense_points.ply"
+  "pointCloudAssetUrl": "assets/img-9205-openmvs-scene_dense_points.ply",
+  "voxelGridUrl": "assets/img-9205-openmvs-occupancy-r96.json",
+  "voxelGridAssetUrl": "assets/img-9205-openmvs-occupancy-r96.ply"
 }

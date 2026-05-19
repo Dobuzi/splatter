@@ -34,9 +34,12 @@ def stage_status(row, input_slug):
         "sceneUrl": scene_url if scene_path.is_file() else None,
         "assetUrl": scene.get("assetUrl") or (row or {}).get("assetUrl"),
         "pointCloudAssetUrl": scene.get("pointCloudAssetUrl") or (row or {}).get("denseAssetUrl"),
+        "voxelGridUrl": scene.get("voxelGridUrl"),
+        "voxelGridAssetUrl": scene.get("voxelGridAssetUrl"),
         "textureAssetUrl": scene.get("textureAssetUrl") or (row or {}).get("textureAssetUrl"),
         "assetBytes": asset_size(scene.get("assetUrl") or (row or {}).get("assetUrl")),
         "pointCloudBytes": asset_size(scene.get("pointCloudAssetUrl") or (row or {}).get("denseAssetUrl")),
+        "voxelGridBytes": asset_size(scene.get("voxelGridAssetUrl")),
         "quality": scene.get("quality", {}),
     }
 

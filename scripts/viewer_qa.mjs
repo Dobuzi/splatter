@@ -9,7 +9,7 @@ const pipelinePrimaryTargets = new Set(pipelineManifest.primaryTargets || []);
 
 for (const scene of manifest.scenes || []) {
   const config = JSON.parse(fs.readFileSync(`public/${scene.sceneUrl}`, 'utf8'));
-  for (const key of ['assetUrl', 'textureAssetUrl', 'pointCloudAssetUrl']) {
+  for (const key of ['assetUrl', 'textureAssetUrl', 'pointCloudAssetUrl', 'voxelGridAssetUrl', 'voxelGridUrl']) {
     if (!config[key]) continue;
     const path = `public/${config[key]}`;
     if (!fs.existsSync(path)) {
@@ -18,6 +18,12 @@ for (const scene of manifest.scenes || []) {
   }
   if (config.format === 'PLY Mesh' && config.pointCloudAssetUrl && !config.metrics?.pointCloud) {
     failures.push(`${scene.id}: pointCloudAssetUrl requires metrics.pointCloud`);
+  }
+  if (config.voxelGridAssetUrl && !config.metrics?.voxelGrid) {
+    failures.push(`${scene.id}: voxelGridAssetUrl requires metrics.voxelGrid`);
+  }
+  if (scene.primaryTarget === true && config.format === 'PLY Mesh' && !config.voxelGridAssetUrl) {
+    failures.push(`${scene.id}: primary mesh scene requires voxelGridAssetUrl`);
   }
   if (!Array.isArray(config.camera?.position) || !Array.isArray(config.camera?.target)) {
     failures.push(`${scene.id}: camera framing is missing`);

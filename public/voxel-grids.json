@@ -1,0 +1,43 @@
+{
+  "resolution": 96,
+  "scenes": [
+    {
+      "input": "public/assets/img-9142-openmvs-scene_dense_points.ply",
+      "outputJson": "public/assets/img-9142-openmvs-occupancy-r96.json",
+      "outputPly": "public/assets/img-9142-openmvs-occupancy-r96.ply",
+      "resolution": 96,
+      "dims": [
+        90,
+        53,
+        97
+      ],
+      "occupiedVoxels": 9944,
+      "totalVoxels": 462690,
+      "occupancyRatio": 0.02149171151310813,
+      "scene": "img-9142-openmvs",
+      "voxelGridUrl": "assets/img-9142-openmvs-occupancy-r96.json",
+      "voxelGridAssetUrl": "assets/img-9142-openmvs-occupancy-r96.ply",
+      "assetBytes": 149338,
+      "jsonBytes": 193834
+    },
+    {
+      "input": "public/assets/img-9205-openmvs-scene_dense_points.ply",
+      "outputJson": "public/assets/img-9205-openmvs-occupancy-r96.json",
+      "outputPly": "public/assets/img-9205-openmvs-occupancy-r96.ply",
+      "resolution": 96,
+      "dims": [
+        94,
+        43,
+        97
+      ],
+      "occupiedVoxels": 3820,
+      "totalVoxels": 392074,
+      "occupancyRatio": 0.009743058708305065,
+      "scene": "img-9205-openmvs",
+      "voxelGridUrl": "assets/img-9205-openmvs-occupancy-r96.json",
+      "voxelGridAssetUrl": "assets/img-9205-openmvs-occupancy-r96.ply",
+      "assetBytes": 57478,
+      "jsonBytes": 75649
+    }
+  ]
+}

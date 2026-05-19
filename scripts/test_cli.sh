@@ -27,6 +27,8 @@ fi
 "$cli" --help | grep -q "mesh-validate"
 "$cli" --help | grep -q "mesh-simplify"
 "$cli" --help | grep -q "mesh-largest-component"
+"$cli" --help | grep -q "voxel-grid"
+"$cli" --help | grep -q "voxel-stage-primary"
 "$cli" --help | grep -q "surface-reconstruct"
 "$cli" --help | grep -q "openmvs-batch"
 "$cli" --help | grep -q "openmvs-sweep"
@@ -137,6 +139,11 @@ if "$cli" surface-reconstruct >/dev/null 2>&1; then
   exit 1
 fi
 
+if "$cli" voxel-grid >/dev/null 2>&1; then
+  echo "Voxel grid without required args should fail" >&2
+  exit 1
+fi
+
 if "$cli" trellis2-generate >/dev/null 2>&1; then
   echo "TRELLIS.2 generate without required args should fail" >&2
   exit 1
@@ -243,6 +250,9 @@ with open(path, "wb") as handle:
 PY
 largest_output=$("$cli" mesh-largest-component "$checkpoint_dir/two-components.ply" "$checkpoint_dir/largest.ply")
 printf '%s\n' "$largest_output" | grep -q '"outputFaces": 1'
+voxel_output=$("$cli" voxel-grid "$checkpoint_dir/sample_1000.ply" "$checkpoint_dir/voxels.json" "$checkpoint_dir/voxels.ply" 8 "$checkpoint_dir/sample_1000.ply")
+printf '%s\n' "$voxel_output" | grep -q '"occupiedVoxels": 1'
+printf '%s\n' "$voxel_output" | grep -q '"resolution": 8'
 
 mask_output=$(SPLAT_MASK_DRY_RUN=1 "$cli" mask-frames missing-capture)
 printf '%s\n' "$mask_output" | grep -q "Mask generation"

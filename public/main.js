@@ -921,28 +921,48 @@ async function installPointCloudScene(config, app, child) {
   return child;
 }
 
-function installRenderModeTools(config, meshEntity, pointEntity) {
+async function installVoxelGridScene(config, app, child) {
+  if (!config.voxelGridAssetUrl) {
+    return null;
+  }
+  const meshData = await loadPlyMesh(config.voxelGridAssetUrl);
+  createPointCloud(app, meshData, child);
+  return child;
+}
+
+function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity) {
   const meshButton = tools?.querySelector('[data-action="render-mesh"]');
   const pointButton = tools?.querySelector('[data-action="render-points"]');
-  if (!meshButton || !pointButton || !pointEntity) {
+  const voxelButton = tools?.querySelector('[data-action="render-voxels"]');
+  if (!meshButton || !pointButton || !voxelButton || (!pointEntity && !voxelEntity)) {
     return;
   }
   meshButton.hidden = false;
-  pointButton.hidden = false;
+  pointButton.hidden = !pointEntity;
+  voxelButton.hidden = !voxelEntity;
 
   function setMode(mode) {
     const showPoints = mode === 'points';
-    meshEntity.enabled = !showPoints;
-    pointEntity.enabled = showPoints;
-    meshButton.setAttribute('aria-pressed', String(!showPoints));
-    pointButton.setAttribute('aria-pressed', String(showPoints));
-    localStorage.setItem(pointCloudStorageKey(config), mode);
-    setStatus(showPoints ? 'Ready · Points' : 'Ready · Mesh');
+    const showVoxels = mode === 'voxels';
+    meshEntity.enabled = !showPoints && !showVoxels;
+    if (pointEntity) {
+      pointEntity.enabled = showPoints;
+    }
+    if (voxelEntity) {
+      voxelEntity.enabled = showVoxels;
+    }
+    meshButton.setAttribute('aria-pressed', String(meshEntity.enabled));
+    pointButton.setAttribute('aria-pressed', String(Boolean(pointEntity && showPoints)));
+    voxelButton.setAttribute('aria-pressed', String(Boolean(voxelEntity && showVoxels)));
+    localStorage.setItem(pointCloudStorageKey(config), showVoxels && voxelEntity ? 'voxels' : showPoints && pointEntity ? 'points' : 'mesh');
+    setStatus(showVoxels && voxelEntity ? 'Ready · Voxels' : showPoints && pointEntity ? 'Ready · Points' : 'Ready · Mesh');
   }
 
   meshButton.addEventListener('click', () => setMode('mesh'));
   pointButton.addEventListener('click', () => setMode('points'));
-  setMode(localStorage.getItem(pointCloudStorageKey(config)) === 'points' ? 'points' : 'mesh');
+  voxelButton.addEventListener('click', () => setMode('voxels'));
+  const saved = localStorage.getItem(pointCloudStorageKey(config));
+  setMode(saved === 'voxels' && voxelEntity ? 'voxels' : saved === 'points' && pointEntity ? 'points' : 'mesh');
 }
 
 async function boot() {
@@ -996,20 +1016,26 @@ async function boot() {
   const sceneRoot = new Entity('Scene Transform');
   const sceneEntity = new Entity(isMeshScene(config) ? 'PLY Mesh' : 'Gaussian Splat');
   const pointEntity = new Entity('Dense Point Cloud');
+  const voxelEntity = new Entity('Occupancy Voxel Grid');
   app.root.addChild(sceneRoot);
   sceneRoot.addChild(sceneEntity);
   sceneRoot.addChild(pointEntity);
+  sceneRoot.addChild(voxelEntity);
   sceneEntity.setPosition(0, 0, 0);
   pointEntity.setPosition(0, 0, 0);
+  voxelEntity.setPosition(0, 0, 0);
   applySplatTransform(sceneRoot, sceneEntity, transform);
   applySplatTransform(sceneRoot, pointEntity, transform);
-  installTransformTools(config, sceneRoot, [sceneEntity, pointEntity], transform);
+  applySplatTransform(sceneRoot, voxelEntity, transform);
+  installTransformTools(config, sceneRoot, [sceneEntity, pointEntity, voxelEntity], transform);
 
   if (isMeshScene(config)) {
     await installMeshScene(config, app, sceneRoot, sceneEntity);
     await installPointCloudScene(config, app, pointEntity);
+    await installVoxelGridScene(config, app, voxelEntity);
     pointEntity.enabled = false;
-    installRenderModeTools(config, sceneEntity, pointEntity);
+    voxelEntity.enabled = false;
+    installRenderModeTools(config, sceneEntity, config.pointCloudAssetUrl ? pointEntity : null, config.voxelGridAssetUrl ? voxelEntity : null);
   } else {
     const previewAssetUrl = config.previewAssetUrl || config.assetUrl;
     const previewAsset = await loadAsset(new Asset('capture-preview', 'gsplat', {

@@ -208,6 +208,23 @@ COLMAP_NUM_THREADS=4 \
   bin/splatter surface-reconstruct selected-capture
 ```
 
+Generate a 3D occupancy voxel grid from dense reconstruction output:
+
+```sh
+# Generic conversion from dense point PLY to an occupancy JSON plus voxel-center PLY.
+bin/splatter voxel-grid \
+  public/assets/img-9142-openmvs-scene_dense_points.ply \
+  output/img-9142-occupancy-r96.json \
+  output/img-9142-occupancy-r96.ply \
+  96 \
+  public/assets/img-9142-openmvs-scene_textured.ply
+
+# Stage voxel grids for the primary OpenMVS scenes and expose them in the viewer.
+bin/splatter voxel-stage-primary 96
+```
+
+The JSON stores the grid origin, cell size, dimensions, occupied flat voxel indices, and per-voxel sample counts. The PLY stores occupied voxel centers for browser rendering through the viewer's `Voxel` mode.
+
 Long OpenSplat runs should leave checkpoints:
 
 ```sh
