@@ -363,7 +363,10 @@ def update_manifest(rows):
         )
     manifest["scenes"] = scenes
     manifest["primaryTargets"] = primary_input_slugs()
-    if not manifest.get("defaultScene") and scenes:
+    primary_openmvs = next((scene for scene in scenes if scene.get("primaryTarget") and scene.get("id", "").endswith("-openmvs")), None)
+    if primary_openmvs:
+        manifest["defaultScene"] = primary_openmvs["id"]
+    elif not manifest.get("defaultScene") and scenes:
         manifest["defaultScene"] = scenes[0]["id"]
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 

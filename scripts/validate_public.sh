@@ -5,7 +5,7 @@ scene_file="public/scene.json"
 index_file="public/index.html"
 main_file="public/main.js"
 max_asset_bytes=$((25 * 1024 * 1024))
-max_public_bytes="${SPLAT_MAX_PUBLIC_BYTES:-$((650 * 1024 * 1024))}"
+max_public_bytes="${SPLAT_MAX_PUBLIC_BYTES:-$((180 * 1024 * 1024))}"
 
 if [[ ! -f "$index_file" ]]; then
   echo "Missing $index_file" >&2
@@ -146,6 +146,41 @@ echo "Validated public viewer"
 echo "Scene asset: $asset_path"
 echo "Asset bytes: $asset_bytes"
 done
+
+unreferenced_assets=$(ASSET_URLS="$asset_urls" node <<'NODE'
+const fs = require("fs");
+const path = require("path");
+
+const referenced = new Set(process.env.ASSET_URLS.split(/\r?\n/).filter(Boolean));
+const allowUnreferenced = new Set(["assets/.gitkeep"]);
+const unreferenced = [];
+
+function walk(dir) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      walk(fullPath);
+    } else if (entry.isFile()) {
+      const publicPath = fullPath.replace(/^public\//, "");
+      if (!referenced.has(publicPath) && !allowUnreferenced.has(publicPath)) {
+        unreferenced.push(publicPath);
+      }
+    }
+  }
+}
+
+walk("public/assets");
+for (const asset of unreferenced.sort()) {
+  console.log(asset);
+}
+NODE
+)
+
+if [[ -n "$unreferenced_assets" ]]; then
+  echo "Unreferenced public assets found:" >&2
+  printf '%s\n' "$unreferenced_assets" >&2
+  exit 1
+fi
 
 public_bytes=$(node <<'NODE'
 const fs = require("fs");
