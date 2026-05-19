@@ -46,7 +46,7 @@ Commands:
   openmvs-validate                           Validate staged OpenMVS mesh assets and camera framing
   pipeline-manifest [input-dir] [output]      Write manifest-driven pipeline status
   pipeline-run [input-dir]                    Orchestrate primary target staging from manifest
-  trellis2-generate <image> [output-dir]      Plan or run optional remote TRELLIS.2 generation
+  trellis2-generate [--check] <image> [out]   Plan or run optional TRELLIS.2 generation
   viewer-qa                                  Validate viewer scene assets and point-cloud wiring
   mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
   mlx-diagnose [args]                        Diagnose gsplat-mlx NaN sources

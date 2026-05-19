@@ -221,6 +221,26 @@ Additional OpenSplat flags can be passed with `OPENSPLAT_EXTRA_ARGS`, for exampl
 
 `quality-sweep` uses a middle capture frame as the default holdout and writes PSNR/SSIM metrics under `output/metrics/`. Set `SPLAT_SWEEP_VAL_IMAGE=none` to disable holdout validation, or set it to a specific frame filename such as `frame_00042.jpg`.
 
+TRELLIS.2 can be wired in as an optional generated-asset branch, but keep the upstream CPU note scoped correctly. The README's "Single CPU" path is for `Textured Mesh -> O-Voxel` dataset conversion, while image-to-3D examples use a CUDA pipeline (`TrellisImageTo3DPipeline`, `pipeline.cuda()`) and upstream recommends a 24GB+ NVIDIA GPU for `microsoft/TRELLIS.2-4B`.
+
+```sh
+# Inspect whether the current machine can run TRELLIS.2 image-to-3D directly.
+bin/splatter trellis2-generate --check
+
+# Use a local Linux/CUDA wrapper when available.
+TRELLIS2_BACKEND=local \
+TRELLIS2_LOCAL_COMMAND="python /opt/trellis2/run_image_to_3d.py" \
+SPLAT_TRELLIS2_EXECUTE=1 \
+  bin/splatter trellis2-generate captures/img-9142-fps2/images/frame_00030.jpg
+
+# Or keep it on a remote CUDA host.
+TRELLIS2_REMOTE_COMMAND="ssh trellis-host /opt/trellis2/run_image_to_3d.sh" \
+SPLAT_TRELLIS2_EXECUTE=1 \
+  bin/splatter trellis2-generate captures/img-9142-fps2/images/frame_00030.jpg
+```
+
+MLX is not a drop-in accelerator for the upstream TRELLIS.2 PyTorch/CUDA code. Use MLX in this repo for capture triage, frame quality scoring, and helper models that already have MLX ports; direct TRELLIS.2 acceleration would require a separate model/runtime port.
+
 Quality gates used before staging:
 
 - COLMAP passes `bin/splatter colmap-gate`: registered image count, registration ratio, sparse point count, and reprojection error.

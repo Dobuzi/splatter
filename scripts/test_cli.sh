@@ -287,6 +287,10 @@ printf '%s\n' "$pipeline_output" | grep -q 'public/pipeline-manifest.json'
 trellis_plan=$("$cli" trellis2-generate "$checkpoint_dir/sample_1000.ply")
 printf '%s\n' "$trellis_plan" | grep -q '"backend": "trellis2-remote"'
 printf '%s\n' "$trellis_plan" | grep -q 'remote command not configured'
+trellis_check=$("$cli" trellis2-generate --check)
+printf '%s\n' "$trellis_check" | grep -q '"backend": "trellis2-preflight"'
+printf '%s\n' "$trellis_check" | grep -q 'Textured Mesh -> O-Voxel'
+printf '%s\n' "$trellis_check" | grep -q 'MLX would require a model/runtime port'
 "$cli" viewer-qa >/dev/null
 mlx_frame_output=$("$cli" mlx-frame-quality --dry-run)
 printf '%s\n' "$mlx_frame_output" | grep -q "frame quality scoring"
