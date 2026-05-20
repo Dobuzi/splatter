@@ -7,7 +7,7 @@ from voxel_grid import create_voxel_grid
 
 
 def usage():
-    print("Usage: scripts/stage_voxel_grids.py [resolution]", file=sys.stderr)
+    print("Usage: scripts/stage_voxel_grids.py [resolution] [min-count] [dilate]", file=sys.stderr)
 
 
 def asset_url_to_path(url):
@@ -24,7 +24,7 @@ def human_size(bytes_count):
     return f"{size:.2f} {units[unit]}" if unit else f"{int(size)} B"
 
 
-def stage_scene(scene, resolution):
+def stage_scene(scene, resolution, min_count=1, dilate=0):
     scene_path = Path("public") / scene["sceneUrl"]
     config = json.loads(scene_path.read_text(encoding="utf-8"))
     point_url = config.get("pointCloudAssetUrl")
@@ -33,26 +33,34 @@ def stage_scene(scene, resolution):
         return None
 
     scene_id = scene["id"]
-    output_json = Path("public/assets") / f"{scene_id}-occupancy-r{resolution}.json"
-    output_ply = Path("public/assets") / f"{scene_id}-occupancy-r{resolution}.ply"
-    report = create_voxel_grid(asset_url_to_path(point_url), output_json, output_ply, resolution, asset_url_to_path(mesh_url))
+    suffix = f"r{resolution}-m{min_count}-d{dilate}"
+    output_json = Path("public/assets") / f"{scene_id}-occupancy-{suffix}.json"
+    output_ply = Path("public/assets") / f"{scene_id}-occupancy-{suffix}.ply"
+    report = create_voxel_grid(asset_url_to_path(point_url), output_json, output_ply, resolution, asset_url_to_path(mesh_url), min_count, dilate)
     grid = json.loads(output_json.read_text(encoding="utf-8"))
 
     config["voxelGridUrl"] = f"assets/{output_json.name}"
     config["voxelGridAssetUrl"] = f"assets/{output_ply.name}"
     config.setdefault("metrics", {})["voxelGrid"] = {
         "resolution": resolution,
+        "minCount": min_count,
+        "dilate": dilate,
         "dims": grid["dims"],
         "cellSize": grid["cellSize"],
         "occupiedVoxels": grid["occupiedVoxels"],
         "totalVoxels": grid["totalVoxels"],
         "occupancyRatio": grid["occupancyRatio"],
+        "pointCoverage": grid["pointCoverage"],
+        "componentCount": grid["componentCount"],
+        "largestComponentRatio": grid["largestComponentRatio"],
         "source": point_url,
     }
     delivery = config.get("delivery", "")
     voxel_size = human_size(output_ply.stat().st_size)
-    if "occupancy voxels" not in delivery:
-        config["delivery"] = f"{delivery}; occupancy voxels {voxel_size}" if delivery else f"occupancy voxels {voxel_size}"
+    voxel_delivery = f"occupancy voxels {voxel_size}"
+    parts = [part.strip() for part in delivery.split(";") if part.strip() and "occupancy voxels" not in part]
+    parts.append(voxel_delivery)
+    config["delivery"] = "; ".join(parts)
     scene_path.write_text(json.dumps(config, indent=2) + "\n", encoding="utf-8")
 
     report["scene"] = scene_id
@@ -64,12 +72,17 @@ def stage_scene(scene, resolution):
 
 
 def main():
-    if len(sys.argv) > 2:
+    if len(sys.argv) > 4:
         usage()
         return 1
-    resolution = int(sys.argv[1]) if len(sys.argv) == 2 else 96
+    resolution = int(sys.argv[1]) if len(sys.argv) >= 2 else 96
+    min_count = int(sys.argv[2]) if len(sys.argv) >= 3 else 1
+    dilate = int(sys.argv[3]) if len(sys.argv) == 4 else 0
     if resolution <= 0 or resolution > 512:
         print("resolution must be between 1 and 512", file=sys.stderr)
+        return 1
+    if min_count <= 0 or dilate < 0 or dilate > 4:
+        print("min-count must be positive and dilate must be between 0 and 4", file=sys.stderr)
         return 1
 
     manifest_path = Path("public/scenes.json")
@@ -77,10 +90,10 @@ def main():
     staged = []
     for scene in manifest.get("scenes", []):
         if scene.get("primaryTarget") is True and scene.get("id", "").endswith("-openmvs"):
-            row = stage_scene(scene, resolution)
+            row = stage_scene(scene, resolution, min_count, dilate)
             if row:
                 staged.append(row)
-    report = {"resolution": resolution, "scenes": staged}
+    report = {"resolution": resolution, "minCount": min_count, "dilate": dilate, "scenes": staged}
     Path("public/voxel-grids.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))
     return 0

@@ -221,9 +221,13 @@ bin/splatter voxel-grid \
 
 # Stage voxel grids for the primary OpenMVS scenes and expose them in the viewer.
 bin/splatter voxel-stage-primary 96
+
+# Run the recursive quality loop over resolution / density threshold / dilation
+# candidates and stage the best primary grids.
+bin/splatter voxel-improve-primary
 ```
 
-The JSON stores the grid origin, cell size, dimensions, occupied flat voxel indices, and per-voxel sample counts. The PLY stores occupied voxel centers for browser rendering through the viewer's `Voxel` mode.
+The JSON stores the grid origin, cell size, dimensions, occupied flat voxel indices, per-voxel sample counts, point coverage, and connectivity metrics. The PLY stores occupied voxel centers for browser rendering through the viewer's `Voxel` mode. The improvement loop scores candidates by point coverage, largest connected voxel component, detail, sparse noise, and Pages asset budget, then writes `public/voxel-improvement.json`.
 
 Long OpenSplat runs should leave checkpoints:
 

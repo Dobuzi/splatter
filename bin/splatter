@@ -39,9 +39,10 @@ Commands:
   mesh-validate <ply>                        Plan optional surface/mesh validation
   mesh-simplify <input> <output> [max-faces]  Write a lightweight cleaned mesh PLY
   mesh-largest-component <input> <output>    Keep only the largest connected mesh component
-  voxel-grid <points> <json> <ply> [res] [bbox]
+  voxel-grid <points> <json> <ply> [res] [bbox] [min] [dilate]
                                              Build a 3D occupancy voxel grid
-  voxel-stage-primary [res]                  Stage occupancy voxel grids for primary OpenMVS scenes
+  voxel-stage-primary [res] [min] [dilate]   Stage occupancy voxel grids for primary OpenMVS scenes
+  voxel-improve-primary [res-list]           Sweep and stage best primary voxel grids
   surface-reconstruct <capture> [model]      Run COLMAP dense depth, fusion, and mesh
   openmvs-batch [input-dir]                  Run OpenMVS for best capture per input and stage mesh results
   openmvs-sweep <capture> [model]            Run OpenMVS quality variants for one capture
@@ -190,11 +191,19 @@ case "$1" in
     ;;
   voxel-stage-primary)
     shift
-    if (( $# > 1 )); then
-      echo "Usage: splatter voxel-stage-primary [resolution]" >&2
+    if (( $# > 3 )); then
+      echo "Usage: splatter voxel-stage-primary [resolution] [min-count] [dilate]" >&2
       exit 1
     fi
     scripts/stage_voxel_grids.py "$@"
+    ;;
+  voxel-improve-primary)
+    shift
+    if (( $# > 1 )); then
+      echo "Usage: splatter voxel-improve-primary [resolution-list]" >&2
+      exit 1
+    fi
+    scripts/voxel_improve.py "$@"
     ;;
   surface-reconstruct)
     shift

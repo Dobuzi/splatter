@@ -29,6 +29,7 @@ fi
 "$cli" --help | grep -q "mesh-largest-component"
 "$cli" --help | grep -q "voxel-grid"
 "$cli" --help | grep -q "voxel-stage-primary"
+"$cli" --help | grep -q "voxel-improve-primary"
 "$cli" --help | grep -q "surface-reconstruct"
 "$cli" --help | grep -q "openmvs-batch"
 "$cli" --help | grep -q "openmvs-sweep"
@@ -253,6 +254,9 @@ printf '%s\n' "$largest_output" | grep -q '"outputFaces": 1'
 voxel_output=$("$cli" voxel-grid "$checkpoint_dir/sample_1000.ply" "$checkpoint_dir/voxels.json" "$checkpoint_dir/voxels.ply" 8 "$checkpoint_dir/sample_1000.ply")
 printf '%s\n' "$voxel_output" | grep -q '"occupiedVoxels": 1'
 printf '%s\n' "$voxel_output" | grep -q '"resolution": 8'
+voxel_filtered_output=$("$cli" voxel-grid "$checkpoint_dir/sample_1000.ply" "$checkpoint_dir/voxels-filtered.json" "$checkpoint_dir/voxels-filtered.ply" 8 "$checkpoint_dir/sample_1000.ply" 1 1)
+printf '%s\n' "$voxel_filtered_output" | grep -q '"dilate": 1'
+printf '%s\n' "$voxel_filtered_output" | grep -q '"pointCoverage": 1.0'
 
 mask_output=$(SPLAT_MASK_DRY_RUN=1 "$cli" mask-frames missing-capture)
 printf '%s\n' "$mask_output" | grep -q "Mask generation"

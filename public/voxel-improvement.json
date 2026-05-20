@@ -1,0 +1,1178 @@
+{
+  "schemaVersion": 1,
+  "strategy": "recursive candidate sweep scored by point coverage, voxel connectivity, detail, sparse noise, and asset budget",
+  "maxIterations": 3,
+  "resolutions": [
+    64,
+    80,
+    96,
+    112,
+    128
+  ],
+  "minCounts": [
+    1,
+    2,
+    3
+  ],
+  "dilates": [
+    0,
+    1
+  ],
+  "scenes": [
+    {
+      "scene": "img-9142-openmvs",
+      "status": "staged",
+      "best": {
+        "resolution": 144,
+        "minCount": 2,
+        "dilate": 1,
+        "dims": [
+          134,
+          79,
+          145
+        ],
+        "occupiedVoxels": 45052,
+        "pointCoverage": 0.9902628571428571,
+        "largestComponentRatio": 0.932145076800142,
+        "componentCount": 57,
+        "singletonVoxelRatio": 0.16866277343363356,
+        "estimatedAssetBytes": 675868,
+        "score": 98.3312
+      },
+      "iterations": [
+        {
+          "iteration": 1,
+          "resolutions": [
+            64,
+            80,
+            96,
+            112,
+            128
+          ],
+          "minCounts": [
+            1,
+            2,
+            3
+          ],
+          "dilates": [
+            0,
+            1
+          ],
+          "best": {
+            "resolution": 128,
+            "minCount": 1,
+            "dilate": 1,
+            "dims": [
+              119,
+              70,
+              129
+            ],
+            "occupiedVoxels": 41571,
+            "pointCoverage": 1.0,
+            "largestComponentRatio": 0.941834451901566,
+            "componentCount": 37,
+            "singletonVoxelRatio": 0.15114734299516908,
+            "estimatedAssetBytes": 623653,
+            "score": 98.187
+          },
+          "topCandidates": [
+            {
+              "resolution": 128,
+              "minCount": 1,
+              "dilate": 1,
+              "dims": [
+                119,
+                70,
+                129
+              ],
+              "occupiedVoxels": 41571,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.941834451901566,
+              "componentCount": 37,
+              "singletonVoxelRatio": 0.15114734299516908,
+              "estimatedAssetBytes": 623653,
+              "score": 98.187
+            },
+            {
+              "resolution": 128,
+              "minCount": 2,
+              "dilate": 1,
+              "dims": [
+                119,
+                70,
+                129
+              ],
+              "occupiedVoxels": 37131,
+              "pointCoverage": 0.9928485714285714,
+              "largestComponentRatio": 0.9361988634833428,
+              "componentCount": 43,
+              "singletonVoxelRatio": 0.15114734299516908,
+              "estimatedAssetBytes": 557053,
+              "score": 96.979
+            },
+            {
+              "resolution": 112,
+              "minCount": 1,
+              "dilate": 1,
+              "dims": [
+                105,
+                62,
+                113
+              ],
+              "occupiedVoxels": 32415,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.9293536942773407,
+              "componentCount": 32,
+              "singletonVoxelRatio": 0.13135985198889916,
+              "estimatedAssetBytes": 486313,
+              "score": 96.0478
+            },
+            {
+              "resolution": 128,
+              "minCount": 3,
+              "dilate": 1,
+              "dims": [
+                119,
+                70,
+                129
+              ],
+              "occupiedVoxels": 33878,
+              "pointCoverage": 0.9832485714285715,
+              "largestComponentRatio": 0.9186492709132771,
+              "componentCount": 52,
+              "singletonVoxelRatio": 0.15114734299516908,
+              "estimatedAssetBytes": 508258,
+              "score": 95.5589
+            },
+            {
+              "resolution": 112,
+              "minCount": 2,
+              "dilate": 1,
+              "dims": [
+                105,
+                62,
+                113
+              ],
+              "occupiedVoxels": 29417,
+              "pointCoverage": 0.9951314285714286,
+              "largestComponentRatio": 0.9239895298636842,
+              "componentCount": 39,
+              "singletonVoxelRatio": 0.13135985198889916,
+              "estimatedAssetBytes": 441343,
+              "score": 95.1956
+            },
+            {
+              "resolution": 112,
+              "minCount": 3,
+              "dilate": 1,
+              "dims": [
+                105,
+                62,
+                113
+              ],
+              "occupiedVoxels": 27279,
+              "pointCoverage": 0.9885142857142857,
+              "largestComponentRatio": 0.9304959859232377,
+              "componentCount": 37,
+              "singletonVoxelRatio": 0.13135985198889916,
+              "estimatedAssetBytes": 409273,
+              "score": 94.6423
+            },
+            {
+              "resolution": 96,
+              "minCount": 1,
+              "dilate": 1,
+              "dims": [
+                90,
+                53,
+                97
+              ],
+              "occupiedVoxels": 24673,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.9402180521217525,
+              "componentCount": 24,
+              "singletonVoxelRatio": 0.11413917940466613,
+              "estimatedAssetBytes": 370183,
+              "score": 94.5742
+            },
+            {
+              "resolution": 96,
+              "minCount": 2,
+              "dilate": 1,
+              "dims": [
+                90,
+                53,
+                97
+              ],
+              "occupiedVoxels": 22705,
+              "pointCoverage": 0.9967571428571429,
+              "largestComponentRatio": 0.9409821625192689,
+              "componentCount": 27,
+              "singletonVoxelRatio": 0.11413917940466613,
+              "estimatedAssetBytes": 340663,
+              "score": 94.1065
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "resolutions": [
+            64,
+            80,
+            96,
+            112,
+            120,
+            128,
+            136,
+            144
+          ],
+          "minCounts": [
+            1,
+            2,
+            3
+          ],
+          "dilates": [
+            0,
+            1,
+            2
+          ],
+          "best": {
+            "resolution": 144,
+            "minCount": 2,
+            "dilate": 1,
+            "dims": [
+              134,
+              79,
+              145
+            ],
+            "occupiedVoxels": 45052,
+            "pointCoverage": 0.9902628571428571,
+            "largestComponentRatio": 0.932145076800142,
+            "componentCount": 57,
+            "singletonVoxelRatio": 0.16866277343363356,
+            "estimatedAssetBytes": 675868,
+            "score": 98.3312
+          },
+          "topCandidates": [
+            {
+              "resolution": 144,
+              "minCount": 2,
+              "dilate": 1,
+              "dims": [
+                134,
+                79,
+                145
+              ],
+              "occupiedVoxels": 45052,
+              "pointCoverage": 0.9902628571428571,
+              "largestComponentRatio": 0.932145076800142,
+              "componentCount": 57,
+              "singletonVoxelRatio": 0.16866277343363356,
+              "estimatedAssetBytes": 675868,
+              "score": 98.3312
+            },
+            {
+              "resolution": 128,
+              "minCount": 1,
+              "dilate": 1,
+              "dims": [
+                119,
+                70,
+                129
+              ],
+              "occupiedVoxels": 41571,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.941834451901566,
+              "componentCount": 37,
+              "singletonVoxelRatio": 0.15114734299516908,
+              "estimatedAssetBytes": 623653,
+              "score": 98.187
+            },
+            {
+              "resolution": 136,
+              "minCount": 1,
+              "dilate": 1,
+              "dims": [
+                127,
+                75,
+                137
+              ],
+              "occupiedVoxels": 46147,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.9236136693609552,
+              "componentCount": 48,
+              "singletonVoxelRatio": 0.1572567434749372,
+              "estimatedAssetBytes": 692293,
+              "score": 97.8822
+            },
+            {
+              "resolution": 136,
+              "minCount": 2,
+              "dilate": 1,
+              "dims": [
+                127,
+                75,
+                137
+              ],
+              "occupiedVoxels": 41028,
+              "pointCoverage": 0.9917714285714285,
+              "largestComponentRatio": 0.9230769230769231,
+              "componentCount": 52,
+              "singletonVoxelRatio": 0.1572567434749372,
+              "estimatedAssetBytes": 615508,
+              "score": 97.4372
+            },
+            {
+              "resolution": 120,
+              "minCount": 1,
+              "dilate": 1,
+              "dims": [
+                112,
+                66,
+                121
+              ],
+              "occupiedVoxels": 36913,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.9432178365345543,
+              "componentCount": 34,
+              "singletonVoxelRatio": 0.14291508923742563,
+              "estimatedAssetBytes": 553783,
+              "score": 97.28
+            },
+            {
+              "resolution": 96,
+              "minCount": 1,
+              "dilate": 2,
+              "dims": [
+                90,
+                53,
+                97
+              ],
+              "occupiedVoxels": 41129,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.9371732840574777,
+              "componentCount": 16,
+              "singletonVoxelRatio": 0.11413917940466613,
+              "estimatedAssetBytes": 617023,
+              "score": 97.067
+            },
+            {
+              "resolution": 128,
+              "minCount": 2,
+              "dilate": 1,
+              "dims": [
+                119,
+                70,
+                129
+              ],
+              "occupiedVoxels": 37131,
+              "pointCoverage": 0.9928485714285714,
+              "largestComponentRatio": 0.9361988634833428,
+              "componentCount": 43,
+              "singletonVoxelRatio": 0.15114734299516908,
+              "estimatedAssetBytes": 557053,
+              "score": 96.979
+            },
+            {
+              "resolution": 144,
+              "minCount": 3,
+              "dilate": 1,
+              "dims": [
+                134,
+                79,
+                145
+              ],
+              "occupiedVoxels": 40552,
+              "pointCoverage": 0.9772514285714285,
+              "largestComponentRatio": 0.9210643124876702,
+              "componentCount": 70,
+              "singletonVoxelRatio": 0.16866277343363356,
+              "estimatedAssetBytes": 608368,
+              "score": 96.7087
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "resolutions": [
+            64,
+            80,
+            96,
+            112,
+            120,
+            128,
+            136,
+            144,
+            152,
+            160
+          ],
+          "minCounts": [
+            1,
+            2,
+            3
+          ],
+          "dilates": [
+            0,
+            1,
+            2
+          ],
+          "best": {
+            "resolution": 144,
+            "minCount": 2,
+            "dilate": 1,
+            "dims": [
+              134,
+              79,
+              145
+            ],
+            "occupiedVoxels": 45052,
+            "pointCoverage": 0.9902628571428571,
+            "largestComponentRatio": 0.932145076800142,
+            "componentCount": 57,
+            "singletonVoxelRatio": 0.16866277343363356,
+            "estimatedAssetBytes": 675868,
+            "score": 98.3312
+          },
+          "topCandidates": [
+            {
+              "resolution": 144,
+              "minCount": 2,
+              "dilate": 1,
+              "dims": [
+                134,
+                79,
+                145
+              ],
+              "occupiedVoxels": 45052,
+              "pointCoverage": 0.9902628571428571,
+              "largestComponentRatio": 0.932145076800142,
+              "componentCount": 57,
+              "singletonVoxelRatio": 0.16866277343363356,
+              "estimatedAssetBytes": 675868,
+              "score": 98.3312
+            },
+            {
+              "resolution": 128,
+              "minCount": 1,
+              "dilate": 1,
+              "dims": [
+                119,
+                70,
+                129
+              ],
+              "occupiedVoxels": 41571,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.941834451901566,
+              "componentCount": 37,
+              "singletonVoxelRatio": 0.15114734299516908,
+              "estimatedAssetBytes": 623653,
+              "score": 98.187
+            },
+            {
+              "resolution": 136,
+              "minCount": 1,
+              "dilate": 1,
+              "dims": [
+                127,
+                75,
+                137
+              ],
+              "occupiedVoxels": 46147,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.9236136693609552,
+              "componentCount": 48,
+              "singletonVoxelRatio": 0.1572567434749372,
+              "estimatedAssetBytes": 692293,
+              "score": 97.8822
+            },
+            {
+              "resolution": 136,
+              "minCount": 2,
+              "dilate": 1,
+              "dims": [
+                127,
+                75,
+                137
+              ],
+              "occupiedVoxels": 41028,
+              "pointCoverage": 0.9917714285714285,
+              "largestComponentRatio": 0.9230769230769231,
+              "componentCount": 52,
+              "singletonVoxelRatio": 0.1572567434749372,
+              "estimatedAssetBytes": 615508,
+              "score": 97.4372
+            },
+            {
+              "resolution": 120,
+              "minCount": 1,
+              "dilate": 1,
+              "dims": [
+                112,
+                66,
+                121
+              ],
+              "occupiedVoxels": 36913,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.9432178365345543,
+              "componentCount": 34,
+              "singletonVoxelRatio": 0.14291508923742563,
+              "estimatedAssetBytes": 553783,
+              "score": 97.28
+            },
+            {
+              "resolution": 96,
+              "minCount": 1,
+              "dilate": 2,
+              "dims": [
+                90,
+                53,
+                97
+              ],
+              "occupiedVoxels": 41129,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.9371732840574777,
+              "componentCount": 16,
+              "singletonVoxelRatio": 0.11413917940466613,
+              "estimatedAssetBytes": 617023,
+              "score": 97.067
+            },
+            {
+              "resolution": 152,
+              "minCount": 3,
+              "dilate": 1,
+              "dims": [
+                142,
+                83,
+                153
+              ],
+              "occupiedVoxels": 44028,
+              "pointCoverage": 0.9738542857142857,
+              "largestComponentRatio": 0.912987189970019,
+              "componentCount": 81,
+              "singletonVoxelRatio": 0.17963721474546518,
+              "estimatedAssetBytes": 660508,
+              "score": 97.0632
+            },
+            {
+              "resolution": 128,
+              "minCount": 2,
+              "dilate": 1,
+              "dims": [
+                119,
+                70,
+                129
+              ],
+              "occupiedVoxels": 37131,
+              "pointCoverage": 0.9928485714285714,
+              "largestComponentRatio": 0.9361988634833428,
+              "componentCount": 43,
+              "singletonVoxelRatio": 0.15114734299516908,
+              "estimatedAssetBytes": 557053,
+              "score": 96.979
+            }
+          ]
+        }
+      ],
+      "staged": {
+        "input": "public/assets/img-9142-openmvs-scene_dense_points.ply",
+        "outputJson": "public/assets/img-9142-openmvs-occupancy-r144-m2-d1.json",
+        "outputPly": "public/assets/img-9142-openmvs-occupancy-r144-m2-d1.ply",
+        "resolution": 144,
+        "minCount": 2,
+        "dilate": 1,
+        "dims": [
+          134,
+          79,
+          145
+        ],
+        "occupiedVoxels": 45052,
+        "totalVoxels": 1534970,
+        "occupancyRatio": 0.029350410757213497,
+        "pointCoverage": 0.9902628571428571,
+        "largestComponentRatio": 0.932145076800142,
+        "scene": "img-9142-openmvs",
+        "voxelGridUrl": "assets/img-9142-openmvs-occupancy-r144-m2-d1.json",
+        "voxelGridAssetUrl": "assets/img-9142-openmvs-occupancy-r144-m2-d1.ply",
+        "assetBytes": 675959,
+        "jsonBytes": 879898
+      }
+    },
+    {
+      "scene": "img-9205-openmvs",
+      "status": "staged",
+      "best": {
+        "resolution": 144,
+        "minCount": 1,
+        "dilate": 2,
+        "dims": [
+          140,
+          64,
+          145
+        ],
+        "occupiedVoxels": 39508,
+        "pointCoverage": 1.0,
+        "largestComponentRatio": 0.674850663156829,
+        "componentCount": 38,
+        "singletonVoxelRatio": 0.14180583073874894,
+        "estimatedAssetBytes": 592708,
+        "score": 92.3808
+      },
+      "iterations": [
+        {
+          "iteration": 1,
+          "resolutions": [
+            64,
+            80,
+            96,
+            112,
+            128
+          ],
+          "minCounts": [
+            1,
+            2,
+            3
+          ],
+          "dilates": [
+            0,
+            1
+          ],
+          "best": {
+            "resolution": 96,
+            "minCount": 1,
+            "dilate": 1,
+            "dims": [
+              94,
+              43,
+              97
+            ],
+            "occupiedVoxels": 11371,
+            "pointCoverage": 1.0,
+            "largestComponentRatio": 0.6418081083457919,
+            "componentCount": 41,
+            "singletonVoxelRatio": 0.11204188481675392,
+            "estimatedAssetBytes": 170653,
+            "score": 85.9399
+          },
+          "topCandidates": [
+            {
+              "resolution": 96,
+              "minCount": 1,
+              "dilate": 1,
+              "dims": [
+                94,
+                43,
+                97
+              ],
+              "occupiedVoxels": 11371,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.6418081083457919,
+              "componentCount": 41,
+              "singletonVoxelRatio": 0.11204188481675392,
+              "estimatedAssetBytes": 170653,
+              "score": 85.9399
+            },
+            {
+              "resolution": 96,
+              "minCount": 2,
+              "dilate": 1,
+              "dims": [
+                94,
+                43,
+                97
+              ],
+              "occupiedVoxels": 10436,
+              "pointCoverage": 0.9987771428571428,
+              "largestComponentRatio": 0.6339593714066692,
+              "componentCount": 48,
+              "singletonVoxelRatio": 0.11204188481675392,
+              "estimatedAssetBytes": 156628,
+              "score": 85.5546
+            },
+            {
+              "resolution": 128,
+              "minCount": 1,
+              "dilate": 1,
+              "dims": [
+                125,
+                57,
+                129
+              ],
+              "occupiedVoxels": 17581,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.5263068084864342,
+              "componentCount": 71,
+              "singletonVoxelRatio": 0.13040529082584365,
+              "estimatedAssetBytes": 263803,
+              "score": 85.3136
+            },
+            {
+              "resolution": 80,
+              "minCount": 3,
+              "dilate": 1,
+              "dims": [
+                79,
+                36,
+                81
+              ],
+              "occupiedVoxels": 7660,
+              "pointCoverage": 0.9980885714285714,
+              "largestComponentRatio": 0.6557441253263707,
+              "componentCount": 38,
+              "singletonVoxelRatio": 0.09703779366700716,
+              "estimatedAssetBytes": 114988,
+              "score": 84.9629
+            },
+            {
+              "resolution": 112,
+              "minCount": 1,
+              "dilate": 1,
+              "dims": [
+                109,
+                50,
+                113
+              ],
+              "occupiedVoxels": 14392,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.5527376320177877,
+              "componentCount": 57,
+              "singletonVoxelRatio": 0.1153052805280528,
+              "estimatedAssetBytes": 215968,
+              "score": 84.9587
+            },
+            {
+              "resolution": 80,
+              "minCount": 2,
+              "dilate": 1,
+              "dims": [
+                79,
+                36,
+                81
+              ],
+              "occupiedVoxels": 8125,
+              "pointCoverage": 0.9991857142857142,
+              "largestComponentRatio": 0.6473846153846153,
+              "componentCount": 36,
+              "singletonVoxelRatio": 0.09703779366700716,
+              "estimatedAssetBytes": 121963,
+              "score": 84.9117
+            },
+            {
+              "resolution": 112,
+              "minCount": 2,
+              "dilate": 1,
+              "dims": [
+                109,
+                50,
+                113
+              ],
+              "occupiedVoxels": 13176,
+              "pointCoverage": 0.9984028571428571,
+              "largestComponentRatio": 0.5583636915604129,
+              "componentCount": 61,
+              "singletonVoxelRatio": 0.1153052805280528,
+              "estimatedAssetBytes": 197728,
+              "score": 84.8054
+            },
+            {
+              "resolution": 64,
+              "minCount": 3,
+              "dilate": 1,
+              "dims": [
+                63,
+                29,
+                65
+              ],
+              "occupiedVoxels": 5487,
+              "pointCoverage": 0.9987685714285714,
+              "largestComponentRatio": 0.6947330052852196,
+              "componentCount": 25,
+              "singletonVoxelRatio": 0.08489208633093526,
+              "estimatedAssetBytes": 82393,
+              "score": 84.7842
+            }
+          ]
+        },
+        {
+          "iteration": 2,
+          "resolutions": [
+            64,
+            80,
+            88,
+            96,
+            104,
+            112,
+            128
+          ],
+          "minCounts": [
+            1,
+            2,
+            3
+          ],
+          "dilates": [
+            0,
+            1,
+            2
+          ],
+          "best": {
+            "resolution": 128,
+            "minCount": 1,
+            "dilate": 2,
+            "dims": [
+              125,
+              57,
+              129
+            ],
+            "occupiedVoxels": 32869,
+            "pointCoverage": 1.0,
+            "largestComponentRatio": 0.6905594937479084,
+            "componentCount": 31,
+            "singletonVoxelRatio": 0.13040529082584365,
+            "estimatedAssetBytes": 493123,
+            "score": 91.3053
+          },
+          "topCandidates": [
+            {
+              "resolution": 128,
+              "minCount": 1,
+              "dilate": 2,
+              "dims": [
+                125,
+                57,
+                129
+              ],
+              "occupiedVoxels": 32869,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.6905594937479084,
+              "componentCount": 31,
+              "singletonVoxelRatio": 0.13040529082584365,
+              "estimatedAssetBytes": 493123,
+              "score": 91.3053
+            },
+            {
+              "resolution": 128,
+              "minCount": 2,
+              "dilate": 2,
+              "dims": [
+                125,
+                57,
+                129
+              ],
+              "occupiedVoxels": 30240,
+              "pointCoverage": 0.9978028571428571,
+              "largestComponentRatio": 0.6587962962962963,
+              "componentCount": 38,
+              "singletonVoxelRatio": 0.13040529082584365,
+              "estimatedAssetBytes": 453688,
+              "score": 90.0767
+            },
+            {
+              "resolution": 128,
+              "minCount": 3,
+              "dilate": 2,
+              "dims": [
+                125,
+                57,
+                129
+              ],
+              "occupiedVoxels": 28282,
+              "pointCoverage": 0.9949571428571429,
+              "largestComponentRatio": 0.6665016618343823,
+              "componentCount": 41,
+              "singletonVoxelRatio": 0.13040529082584365,
+              "estimatedAssetBytes": 424318,
+              "score": 89.7851
+            },
+            {
+              "resolution": 112,
+              "minCount": 2,
+              "dilate": 2,
+              "dims": [
+                109,
+                50,
+                113
+              ],
+              "occupiedVoxels": 24962,
+              "pointCoverage": 0.9984028571428571,
+              "largestComponentRatio": 0.7002243409983174,
+              "componentCount": 27,
+              "singletonVoxelRatio": 0.1153052805280528,
+              "estimatedAssetBytes": 374518,
+              "score": 89.7597
+            },
+            {
+              "resolution": 112,
+              "minCount": 1,
+              "dilate": 2,
+              "dims": [
+                109,
+                50,
+                113
+              ],
+              "occupiedVoxels": 26737,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.681976287541609,
+              "componentCount": 22,
+              "singletonVoxelRatio": 0.1153052805280528,
+              "estimatedAssetBytes": 401143,
+              "score": 89.7222
+            },
+            {
+              "resolution": 104,
+              "minCount": 3,
+              "dilate": 2,
+              "dims": [
+                102,
+                47,
+                105
+              ],
+              "occupiedVoxels": 21182,
+              "pointCoverage": 0.9966685714285715,
+              "largestComponentRatio": 0.7077235388537437,
+              "componentCount": 27,
+              "singletonVoxelRatio": 0.12129502963976288,
+              "estimatedAssetBytes": 317818,
+              "score": 88.997
+            },
+            {
+              "resolution": 104,
+              "minCount": 1,
+              "dilate": 2,
+              "dims": [
+                102,
+                47,
+                105
+              ],
+              "occupiedVoxels": 24094,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.6785091724080684,
+              "componentCount": 19,
+              "singletonVoxelRatio": 0.12129502963976288,
+              "estimatedAssetBytes": 361498,
+              "score": 88.9904
+            },
+            {
+              "resolution": 104,
+              "minCount": 2,
+              "dilate": 2,
+              "dims": [
+                102,
+                47,
+                105
+              ],
+              "occupiedVoxels": 22384,
+              "pointCoverage": 0.99848,
+              "largestComponentRatio": 0.69415654038599,
+              "componentCount": 22,
+              "singletonVoxelRatio": 0.12129502963976288,
+              "estimatedAssetBytes": 335848,
+              "score": 88.9851
+            }
+          ]
+        },
+        {
+          "iteration": 3,
+          "resolutions": [
+            64,
+            80,
+            88,
+            96,
+            104,
+            112,
+            120,
+            128,
+            136,
+            144
+          ],
+          "minCounts": [
+            1,
+            2,
+            3
+          ],
+          "dilates": [
+            0,
+            1,
+            2
+          ],
+          "best": {
+            "resolution": 144,
+            "minCount": 1,
+            "dilate": 2,
+            "dims": [
+              140,
+              64,
+              145
+            ],
+            "occupiedVoxels": 39508,
+            "pointCoverage": 1.0,
+            "largestComponentRatio": 0.674850663156829,
+            "componentCount": 38,
+            "singletonVoxelRatio": 0.14180583073874894,
+            "estimatedAssetBytes": 592708,
+            "score": 92.3808
+          },
+          "topCandidates": [
+            {
+              "resolution": 144,
+              "minCount": 1,
+              "dilate": 2,
+              "dims": [
+                140,
+                64,
+                145
+              ],
+              "occupiedVoxels": 39508,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.674850663156829,
+              "componentCount": 38,
+              "singletonVoxelRatio": 0.14180583073874894,
+              "estimatedAssetBytes": 592708,
+              "score": 92.3808
+            },
+            {
+              "resolution": 136,
+              "minCount": 1,
+              "dilate": 2,
+              "dims": [
+                132,
+                61,
+                137
+              ],
+              "occupiedVoxels": 36202,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.672200430915419,
+              "componentCount": 38,
+              "singletonVoxelRatio": 0.1372972972972973,
+              "estimatedAssetBytes": 543118,
+              "score": 91.6197
+            },
+            {
+              "resolution": 128,
+              "minCount": 1,
+              "dilate": 2,
+              "dims": [
+                125,
+                57,
+                129
+              ],
+              "occupiedVoxels": 32869,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.6905594937479084,
+              "componentCount": 31,
+              "singletonVoxelRatio": 0.13040529082584365,
+              "estimatedAssetBytes": 493123,
+              "score": 91.3053
+            },
+            {
+              "resolution": 144,
+              "minCount": 2,
+              "dilate": 2,
+              "dims": [
+                140,
+                64,
+                145
+              ],
+              "occupiedVoxels": 35882,
+              "pointCoverage": 0.9971371428571428,
+              "largestComponentRatio": 0.6431358341229586,
+              "componentCount": 47,
+              "singletonVoxelRatio": 0.14180583073874894,
+              "estimatedAssetBytes": 538318,
+              "score": 90.9616
+            },
+            {
+              "resolution": 144,
+              "minCount": 3,
+              "dilate": 2,
+              "dims": [
+                140,
+                64,
+                145
+              ],
+              "occupiedVoxels": 33637,
+              "pointCoverage": 0.99372,
+              "largestComponentRatio": 0.6561524511698428,
+              "componentCount": 48,
+              "singletonVoxelRatio": 0.14180583073874894,
+              "estimatedAssetBytes": 504643,
+              "score": 90.7108
+            },
+            {
+              "resolution": 120,
+              "minCount": 1,
+              "dilate": 2,
+              "dims": [
+                117,
+                54,
+                121
+              ],
+              "occupiedVoxels": 29946,
+              "pointCoverage": 1.0,
+              "largestComponentRatio": 0.6857677152207307,
+              "componentCount": 26,
+              "singletonVoxelRatio": 0.12903828197945846,
+              "estimatedAssetBytes": 449278,
+              "score": 90.5323
+            },
+            {
+              "resolution": 120,
+              "minCount": 2,
+              "dilate": 2,
+              "dims": [
+                117,
+                54,
+                121
+              ],
+              "occupiedVoxels": 27605,
+              "pointCoverage": 0.9980257142857143,
+              "largestComponentRatio": 0.7024089838797319,
+              "componentCount": 33,
+              "singletonVoxelRatio": 0.12903828197945846,
+              "estimatedAssetBytes": 414163,
+              "score": 90.4257
+            },
+            {
+              "resolution": 120,
+              "minCount": 3,
+              "dilate": 2,
+              "dims": [
+                117,
+                54,
+                121
+              ],
+              "occupiedVoxels": 25929,
+              "pointCoverage": 0.9954428571428572,
+              "largestComponentRatio": 0.7124455243164025,
+              "componentCount": 37,
+              "singletonVoxelRatio": 0.12903828197945846,
+              "estimatedAssetBytes": 389023,
+              "score": 90.2437
+            }
+          ]
+        }
+      ],
+      "staged": {
+        "input": "public/assets/img-9205-openmvs-scene_dense_points.ply",
+        "outputJson": "public/assets/img-9205-openmvs-occupancy-r144-m1-d2.json",
+        "outputPly": "public/assets/img-9205-openmvs-occupancy-r144-m1-d2.ply",
+        "resolution": 144,
+        "minCount": 1,
+        "dilate": 2,
+        "dims": [
+          140,
+          64,
+          145
+        ],
+        "occupiedVoxels": 39508,
+        "totalVoxels": 1299200,
+        "occupancyRatio": 0.03040948275862069,
+        "pointCoverage": 1.0,
+        "largestComponentRatio": 0.674850663156829,
+        "scene": "img-9205-openmvs",
+        "voxelGridUrl": "assets/img-9205-openmvs-occupancy-r144-m1-d2.json",
+        "voxelGridAssetUrl": "assets/img-9205-openmvs-occupancy-r144-m1-d2.ply",
+        "assetBytes": 592799,
+        "jsonBytes": 769904
+      }
+    }
+  ]
+}
