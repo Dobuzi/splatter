@@ -8,6 +8,9 @@ import {
   MeshInstance,
   PRIMITIVE_POINTS,
   RESOLUTION_AUTO,
+  SEMANTIC_COLOR,
+  SEMANTIC_POSITION,
+  ShaderMaterial,
   StandardMaterial,
   createMesh
 } from 'playcanvas';
@@ -260,6 +263,10 @@ function isMeshScene(config) {
 
 function pointCloudStorageKey(config) {
   return `splatter:render-mode:${config.assetUrl}`;
+}
+
+function voxelSizeStorageKey(config) {
+  return `splatter:voxel-size:${config.assetUrl}`;
 }
 
 function transformStorageKey(config) {
@@ -883,6 +890,59 @@ function createPointCloud(app, meshData, child) {
   child.addComponent('render', { meshInstances: [meshInstance] });
 }
 
+function createVoxelMaterial(pointSize) {
+  const material = new ShaderMaterial({
+    uniqueName: 'splatter-voxel-points',
+    attributes: {
+      vertex_position: SEMANTIC_POSITION,
+      vertex_color: SEMANTIC_COLOR
+    },
+    vertexGLSL: `
+      attribute vec3 vertex_position;
+      attribute vec4 vertex_color;
+      uniform mat4 matrix_model;
+      uniform mat4 matrix_viewProjection;
+      uniform float uPointSize;
+      varying vec4 vColor;
+
+      void main(void) {
+        gl_Position = matrix_viewProjection * matrix_model * vec4(vertex_position, 1.0);
+        gl_PointSize = uPointSize;
+        vColor = vertex_color;
+      }
+    `,
+    fragmentGLSL: `
+      precision mediump float;
+      varying vec4 vColor;
+
+      void main(void) {
+        vec2 point = gl_PointCoord * 2.0 - 1.0;
+        if (dot(point, point) > 1.0) {
+          discard;
+        }
+        gl_FragColor = vec4(vColor.rgb, 1.0);
+      }
+    `
+  });
+  material.setParameter('uPointSize', pointSize);
+  material.update();
+  return material;
+}
+
+function createVoxelPointCloud(app, meshData, child, pointSize) {
+  const mesh = createMesh(app.graphicsDevice, meshData.positions, {
+    colors: meshData.colors
+  });
+  mesh.primitive[0].type = PRIMITIVE_POINTS;
+  mesh.primitive[0].base = 0;
+  mesh.primitive[0].count = meshData.positions.length / 3;
+  mesh.primitive[0].indexed = false;
+  const material = createVoxelMaterial(pointSize);
+  const meshInstance = new MeshInstance(mesh, material, child);
+  child.addComponent('render', { meshInstances: [meshInstance] });
+  return meshInstance;
+}
+
 async function installMeshScene(config, app, root, child) {
   const meshData = await loadPlyMesh(config.assetUrl);
   if (meshData.pointCloud) {
@@ -921,22 +981,57 @@ async function installPointCloudScene(config, app, child) {
   return child;
 }
 
-async function installVoxelGridScene(config, app, child) {
+async function installVoxelGridScene(config, app, child, pointSize) {
   if (!config.voxelGridAssetUrl) {
     return null;
   }
   const meshData = await loadPlyMesh(config.voxelGridAssetUrl);
-  createPointCloud(app, meshData, child);
-  return child;
+  return createVoxelPointCloud(app, meshData, child, pointSize);
 }
 
-function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity) {
+function clampVoxelSize(value) {
+  return Math.min(16, Math.max(1, Math.round(value)));
+}
+
+function loadVoxelSize(config) {
+  const saved = localStorage.getItem(voxelSizeStorageKey(config));
+  const size = saved === null ? 5 : Number(saved);
+  return clampVoxelSize(Number.isFinite(size) ? size : 5);
+}
+
+function installVoxelSizeTool(config, voxelMeshInstance) {
+  const control = tools?.querySelector('[data-action="voxel-size"]');
+  const input = control?.querySelector('input');
+  const output = control?.querySelector('output');
+  if (!control || !input || !output || !voxelMeshInstance?.material) {
+    return { setVisible() {} };
+  }
+
+  function setSize(value) {
+    const size = clampVoxelSize(Number(value));
+    input.value = String(size);
+    output.textContent = String(size);
+    voxelMeshInstance.material.setParameter('uPointSize', size);
+    localStorage.setItem(voxelSizeStorageKey(config), String(size));
+  }
+
+  setSize(loadVoxelSize(config));
+  input.addEventListener('input', () => setSize(input.value));
+  return {
+    setVisible(visible) {
+      control.hidden = !visible;
+    }
+  };
+}
+
+function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, voxelMeshInstance) {
   const meshButton = tools?.querySelector('[data-action="render-mesh"]');
   const pointButton = tools?.querySelector('[data-action="render-points"]');
   const voxelButton = tools?.querySelector('[data-action="render-voxels"]');
   if (!meshButton || !pointButton || !voxelButton || (!pointEntity && !voxelEntity)) {
     return;
   }
+  const voxelSizeTool = installVoxelSizeTool(config, voxelMeshInstance);
   meshButton.hidden = false;
   pointButton.hidden = !pointEntity;
   voxelButton.hidden = !voxelEntity;
@@ -954,6 +1049,7 @@ function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity) {
     meshButton.setAttribute('aria-pressed', String(meshEntity.enabled));
     pointButton.setAttribute('aria-pressed', String(Boolean(pointEntity && showPoints)));
     voxelButton.setAttribute('aria-pressed', String(Boolean(voxelEntity && showVoxels)));
+    voxelSizeTool.setVisible(Boolean(voxelEntity && showVoxels));
     localStorage.setItem(pointCloudStorageKey(config), showVoxels && voxelEntity ? 'voxels' : showPoints && pointEntity ? 'points' : 'mesh');
     setStatus(showVoxels && voxelEntity ? 'Ready · Voxels' : showPoints && pointEntity ? 'Ready · Points' : 'Ready · Mesh');
   }
@@ -1032,18 +1128,18 @@ async function boot() {
   if (isMeshScene(config)) {
     await installMeshScene(config, app, sceneRoot, sceneEntity);
     await installPointCloudScene(config, app, pointEntity);
-    await installVoxelGridScene(config, app, voxelEntity);
+    const voxelMeshInstance = await installVoxelGridScene(config, app, voxelEntity, loadVoxelSize(config));
     pointEntity.enabled = false;
     voxelEntity.enabled = false;
-    installRenderModeTools(config, sceneEntity, config.pointCloudAssetUrl ? pointEntity : null, config.voxelGridAssetUrl ? voxelEntity : null);
+    installRenderModeTools(config, sceneEntity, config.pointCloudAssetUrl ? pointEntity : null, config.voxelGridAssetUrl ? voxelEntity : null, voxelMeshInstance);
   } else {
     const previewAssetUrl = config.previewAssetUrl || config.assetUrl;
     const previewAsset = await loadAsset(new Asset('capture-preview', 'gsplat', {
       url: previewAssetUrl
     }), app);
     sceneEntity.addComponent('gsplat', { asset: previewAsset });
+    setStatus('Ready');
   }
-  setStatus('Ready');
   window.__splatterMetrics = {
     sceneId: activeSceneId,
     pipelineInput: pipelineInputForScene(pipelineManifest, activeScene, config)?.inputSlug || null,

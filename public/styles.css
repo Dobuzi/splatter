@@ -183,6 +183,34 @@ code {
   color: #ffffff;
 }
 
+.range-tool {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  background: rgba(5, 6, 9, 0.72);
+  color: #f5f7fb;
+  font-size: 12px;
+  backdrop-filter: blur(14px);
+}
+
+.range-tool[hidden] {
+  display: none;
+}
+
+.range-tool input {
+  width: 92px;
+}
+
+.range-tool output {
+  min-width: 18px;
+  color: #dce7f6;
+  text-align: right;
+}
+
 @media (max-width: 620px) {
   #hud {
     align-items: flex-start;
@@ -220,6 +248,11 @@ code {
   }
 
   #tools button {
+    min-height: 30px;
+    padding: 0 8px;
+  }
+
+  .range-tool {
     min-height: 30px;
     padding: 0 8px;
   }

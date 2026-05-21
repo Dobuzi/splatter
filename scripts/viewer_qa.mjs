@@ -3,6 +3,8 @@ import fs from 'node:fs';
 
 const manifest = JSON.parse(fs.readFileSync('public/scenes.json', 'utf8'));
 const pipelineManifest = JSON.parse(fs.readFileSync('public/pipeline-manifest.json', 'utf8'));
+const indexHtml = fs.readFileSync('public/index.html', 'utf8');
+const mainJs = fs.readFileSync('public/main.js', 'utf8');
 const failures = [];
 const scenePrimaryTargets = new Set(manifest.primaryTargets || []);
 const pipelinePrimaryTargets = new Set(pipelineManifest.primaryTargets || []);
@@ -45,6 +47,13 @@ for (const primaryTarget of scenePrimaryTargets) {
   if (!manifest.scenes.some((scene) => scene.primaryTarget === true && scene.sceneUrl === input.staged?.sceneUrl)) {
     failures.push(`${primaryTarget}: staged scene is not exposed as primary in scenes.json`);
   }
+}
+
+if (!indexHtml.includes('data-action="voxel-size"')) {
+  failures.push('viewer is missing the voxel size control');
+}
+if (!mainJs.includes('voxelSizeStorageKey') || !mainJs.includes('uPointSize')) {
+  failures.push('viewer is missing persisted voxel point size rendering');
 }
 
 if (failures.length) {
