@@ -216,6 +216,31 @@ with open(path, "wb") as handle:
     handle.write(header.encode("ascii"))
     handle.write(struct.pack("<fff", 1.0, 2.0, 3.0))
 PY
+python3 - "$checkpoint_dir/colored_points.ply" <<'PY'
+import struct
+import sys
+
+path = sys.argv[1]
+header = """ply
+format binary_little_endian 1.0
+element vertex 2
+property float x
+property float y
+property float z
+property uchar red
+property uchar green
+property uchar blue
+end_header
+"""
+vertices = [
+    (1.0, 2.0, 3.0, 255, 0, 0),
+    (1.0, 2.0, 3.0, 0, 0, 255),
+]
+with open(path, "wb") as handle:
+    handle.write(header.encode("ascii"))
+    for vertex in vertices:
+        handle.write(struct.pack("<fffBBB", *vertex))
+PY
 checkpoint_binary_output=$("$cli" select-checkpoint "$checkpoint_dir/sample")
 printf '%s\n' "$checkpoint_binary_output" | grep -q '"format": "binary_little_endian"'
 printf '%s\n' "$checkpoint_binary_output" | grep -q '"finite": true'
@@ -257,6 +282,10 @@ printf '%s\n' "$voxel_output" | grep -q '"resolution": 8'
 voxel_filtered_output=$("$cli" voxel-grid "$checkpoint_dir/sample_1000.ply" "$checkpoint_dir/voxels-filtered.json" "$checkpoint_dir/voxels-filtered.ply" 8 "$checkpoint_dir/sample_1000.ply" 1 1)
 printf '%s\n' "$voxel_filtered_output" | grep -q '"dilate": 1'
 printf '%s\n' "$voxel_filtered_output" | grep -q '"pointCoverage": 1.0'
+voxel_color_output=$("$cli" voxel-grid "$checkpoint_dir/colored_points.ply" "$checkpoint_dir/voxels-colored.json" "$checkpoint_dir/voxels-colored.ply" 8 "$checkpoint_dir/colored_points.ply" 1 1)
+printf '%s\n' "$voxel_color_output" | grep -q '"colorSource": "input-point-average"'
+grep -q '"colors"' "$checkpoint_dir/voxels-colored.json"
+grep -q '128' "$checkpoint_dir/voxels-colored.json"
 
 mask_output=$(SPLAT_MASK_DRY_RUN=1 "$cli" mask-frames missing-capture)
 printf '%s\n' "$mask_output" | grep -q "Mask generation"

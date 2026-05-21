@@ -18,11 +18,12 @@
       "occupancyRatio": 0.029350410757213497,
       "pointCoverage": 0.9902628571428571,
       "largestComponentRatio": 0.932145076800142,
+      "colorSource": "input-point-average",
       "scene": "img-9142-openmvs",
       "voxelGridUrl": "assets/img-9142-openmvs-occupancy-r144-m2-d1.json",
       "voxelGridAssetUrl": "assets/img-9142-openmvs-occupancy-r144-m2-d1.ply",
       "assetBytes": 675959,
-      "jsonBytes": 879898
+      "jsonBytes": 2855448
     },
     {
       "input": "public/assets/img-9205-openmvs-scene_dense_points.ply",
@@ -41,11 +42,12 @@
       "occupancyRatio": 0.03040948275862069,
       "pointCoverage": 1.0,
       "largestComponentRatio": 0.674850663156829,
+      "colorSource": "input-point-average",
       "scene": "img-9205-openmvs",
       "voxelGridUrl": "assets/img-9205-openmvs-occupancy-r144-m1-d2.json",
       "voxelGridAssetUrl": "assets/img-9205-openmvs-occupancy-r144-m1-d2.ply",
       "assetBytes": 592799,
-      "jsonBytes": 769904
+      "jsonBytes": 2494619
     }
   ]
 }

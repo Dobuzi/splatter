@@ -62,16 +62,33 @@ def neighbor_indices(index, dims):
             yield flat_index(nx, ny, nz, dims)
 
 
-def dilate_counts(counts, dims, iterations):
+def add_color(target, color):
+    if target is None:
+        return list(color)
+    return [target[index] + color[index] for index in range(3)]
+
+
+def average_color(color_sum, count):
+    if count <= 0:
+        return [210, 218, 230]
+    return [min(255, max(0, round(value / count))) for value in color_sum]
+
+
+def dilate_counts_and_colors(counts, colors, dims, iterations):
     result = dict(counts)
+    result_colors = {index: list(color) for index, color in colors.items()}
     for _ in range(iterations):
         expanded = dict(result)
+        expanded_colors = {index: list(color) for index, color in result_colors.items()}
         for index, count in result.items():
             fill_count = max(1, count // 2)
             for neighbor in neighbor_indices(index, dims):
-                expanded[neighbor] = max(expanded.get(neighbor, 0), fill_count)
+                if fill_count > expanded.get(neighbor, 0):
+                    expanded[neighbor] = fill_count
+                    expanded_colors[neighbor] = list(result_colors[index])
         result = expanded
-    return result
+        result_colors = expanded_colors
+    return result, result_colors
 
 
 def component_metrics(occupied, dims):
@@ -105,6 +122,7 @@ def build_grid(vertices, bbox, resolution, min_count=1, dilate=0):
     spec = grid_spec(bbox, resolution)
     dims = spec["dims"]
     raw_counts = {}
+    raw_color_sums = {}
     for vertex in vertices:
         coords = []
         for axis in range(3):
@@ -112,8 +130,17 @@ def build_grid(vertices, bbox, resolution, min_count=1, dilate=0):
             coords.append(min(max(value, 0), dims[axis] - 1))
         key = flat_index(coords[0], coords[1], coords[2], dims)
         raw_counts[key] = raw_counts.get(key, 0) + 1
+        raw_color_sums[key] = add_color(raw_color_sums.get(key), vertex[3:6])
     retained_counts = {index: count for index, count in raw_counts.items() if count >= min_count}
-    counts = dilate_counts(retained_counts, dims, dilate) if dilate else retained_counts
+    retained_colors = {
+        index: average_color(raw_color_sums[index], count)
+        for index, count in retained_counts.items()
+    }
+    if dilate:
+        counts, colors_by_index = dilate_counts_and_colors(retained_counts, retained_colors, dims, dilate)
+    else:
+        counts = retained_counts
+        colors_by_index = retained_colors
     occupied = sorted(counts)
     total_voxels = dims[0] * dims[1] * dims[2]
     retained_points = sum(retained_counts.values())
@@ -129,6 +156,8 @@ def build_grid(vertices, bbox, resolution, min_count=1, dilate=0):
         "bbox": {"min": bbox["min"], "max": bbox["max"], "size": spec["size"]},
         "occupied": occupied,
         "counts": [counts[index] for index in occupied],
+        "colors": [colors_by_index[index] for index in occupied],
+        "colorSource": "input-point-average",
         "occupiedVoxels": len(occupied),
         "totalVoxels": total_voxels,
         "occupancyRatio": len(occupied) / total_voxels if total_voxels else 0,
@@ -143,7 +172,6 @@ def build_grid(vertices, bbox, resolution, min_count=1, dilate=0):
 
 
 def write_voxel_ply(path, grid):
-    max_count = max(grid["counts"]) if grid["counts"] else 1
     header = f"""ply
 format binary_little_endian 1.0
 element vertex {len(grid["occupied"])}
@@ -158,12 +186,9 @@ end_header
     spec = {"origin": grid["origin"], "cellSize": grid["cellSize"], "dims": grid["dims"]}
     with Path(path).open("wb") as handle:
         handle.write(header.encode("ascii"))
-        for index, count in zip(grid["occupied"], grid["counts"]):
+        for index, color in zip(grid["occupied"], grid["colors"]):
             x, y, z = voxel_center(index, spec)
-            density = min(1.0, math.log1p(count) / math.log1p(max_count))
-            red = int(96 + 120 * density)
-            green = int(170 + 60 * density)
-            blue = int(220 + 35 * density)
+            red, green, blue = color
             handle.write(struct.pack("<fffBBB", x, y, z, red, green, blue))
 
 
@@ -193,6 +218,7 @@ def create_voxel_grid(input_path, output_json, output_ply, resolution=96, bbox_m
         "occupancyRatio": grid["occupancyRatio"],
         "pointCoverage": grid["pointCoverage"],
         "largestComponentRatio": grid["largestComponentRatio"],
+        "colorSource": grid["colorSource"],
     }
 
 

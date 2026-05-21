@@ -227,7 +227,7 @@ bin/splatter voxel-stage-primary 96
 bin/splatter voxel-improve-primary
 ```
 
-The JSON stores the grid origin, cell size, dimensions, occupied flat voxel indices, per-voxel sample counts, point coverage, and connectivity metrics. The PLY stores occupied voxel centers for browser rendering through the viewer's `Voxel` mode. The improvement loop scores candidates by point coverage, largest connected voxel component, detail, sparse noise, and Pages asset budget, then writes `public/voxel-improvement.json`.
+The JSON stores the grid origin, cell size, dimensions, occupied flat voxel indices, per-voxel sample counts, averaged voxel colors, point coverage, and connectivity metrics. The PLY stores occupied voxel centers with the averaged source point color for browser rendering through the viewer's `Voxel` mode. The improvement loop scores candidates by point coverage, largest connected voxel component, detail, sparse noise, and Pages asset budget, then writes `public/voxel-improvement.json`.
 
 Long OpenSplat runs should leave checkpoints:
 

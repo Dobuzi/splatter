@@ -114,6 +114,7 @@
       "pointCoverage": 1.0,
       "componentCount": 38,
       "largestComponentRatio": 0.674850663156829,
+      "colorSource": "input-point-average",
       "source": "assets/img-9205-openmvs-scene_dense_points.ply"
     }
   },

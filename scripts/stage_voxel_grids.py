@@ -53,6 +53,7 @@ def stage_scene(scene, resolution, min_count=1, dilate=0):
         "pointCoverage": grid["pointCoverage"],
         "componentCount": grid["componentCount"],
         "largestComponentRatio": grid["largestComponentRatio"],
+        "colorSource": grid["colorSource"],
         "source": point_url,
     }
     delivery = config.get("delivery", "")
