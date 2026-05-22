@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 
-def run_probe(python_path, repo_dir, sparse_backend):
+def run_probe(python_path, repo_dir, checkpoint_root, sparse_backend):
     env = os.environ.copy()
     root = Path.cwd()
     env.update(
@@ -27,6 +27,7 @@ import sys
 from pathlib import Path
 
 repo = Path(os.environ["SAM3D_REPO"]).resolve()
+checkpoint_root = Path(os.environ["SAM3D_CHECKPOINT_ROOT"]).resolve()
 sys.path.insert(0, str(repo))
 sys.path.insert(0, str(repo / "notebook"))
 
@@ -69,8 +70,9 @@ except Exception as exc:
         "error": str(exc),
     }
 
-config_path = repo / "checkpoints" / "hf" / "pipeline.yaml"
+config_path = checkpoint_root / "hf" / "pipeline.yaml"
 report["checkpoints"] = {
+    "checkpointRoot": str(checkpoint_root),
     "pipelineYaml": str(config_path),
     "pipelineYamlPresent": config_path.exists(),
 }
@@ -79,7 +81,7 @@ print(json.dumps(report))
     proc = subprocess.run(
         [str(python_path), "-c", code],
         cwd=repo_dir,
-        env={**env, "SAM3D_REPO": str(repo_dir)},
+        env={**env, "SAM3D_REPO": str(repo_dir), "SAM3D_CHECKPOINT_ROOT": str(checkpoint_root)},
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -111,6 +113,10 @@ def main():
     if not python_path.is_absolute():
         python_path = Path.cwd() / python_path
     repo_dir = repo_dir.resolve()
+    checkpoint_root = Path(os.environ.get("SAM3D_CHECKPOINT_ROOT", "models/checkpoints"))
+    if not checkpoint_root.is_absolute():
+        checkpoint_root = Path.cwd() / checkpoint_root
+    checkpoint_root = checkpoint_root.resolve()
     result = {
         "mode": "sam3d-mac-port-check",
         "platform": {"system": platform.system(), "machine": platform.machine()},
@@ -118,6 +124,7 @@ def main():
         "python": str(python_path),
         "pythonPresent": python_path.exists(),
         "repoPresent": repo_dir.exists(),
+        "checkpointRoot": str(checkpoint_root),
         "probes": [],
         "nextBlockers": [],
     }
@@ -127,7 +134,7 @@ def main():
         return 0
 
     for backend in ["spconv", "torchsparse"]:
-        result["probes"].append(run_probe(python_path, repo_dir, backend))
+        result["probes"].append(run_probe(python_path, repo_dir, checkpoint_root, backend))
 
     blockers = []
     best = None

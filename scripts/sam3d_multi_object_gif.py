@@ -11,9 +11,27 @@ def module_available(name):
     return util.find_spec(name) is not None
 
 
-def check_environment(repo_dir, tag):
+def checkpoint_config_path(checkpoint_root, tag):
+    root = checkpoint_root.resolve()
+    if root.name == tag:
+        return root / "pipeline.yaml"
+    return root / tag / "pipeline.yaml"
+
+
+def default_checkpoint_root(repo_dir):
+    env_root = os.environ.get("SAM3D_CHECKPOINT_ROOT")
+    if env_root:
+        return Path(env_root)
+    models_root = Path("models/checkpoints")
+    if models_root.exists():
+        return models_root
+    return repo_dir / "checkpoints"
+
+
+def check_environment(repo_dir, tag, checkpoint_root=None):
     repo_dir = repo_dir.resolve()
-    config_path = repo_dir / "checkpoints" / tag / "pipeline.yaml"
+    checkpoint_root = default_checkpoint_root(repo_dir) if checkpoint_root is None else checkpoint_root
+    config_path = checkpoint_config_path(checkpoint_root, tag)
     notebook_dir = repo_dir / "notebook"
     modules = {
         "PIL": module_available("PIL"),
@@ -26,14 +44,20 @@ def check_environment(repo_dir, tag):
         "pytorch3d": module_available("pytorch3d"),
         "sam3d_objects": module_available("sam3d_objects"),
     }
+    sparse_backends = {
+        "spconv": module_available("spconv"),
+        "torchsparse": module_available("torchsparse"),
+    }
     return {
         "repoDir": str(repo_dir),
+        "checkpointRoot": str(checkpoint_root),
         "notebookDir": str(notebook_dir),
         "configPath": str(config_path),
         "notebookPresent": notebook_dir.is_dir(),
         "configPresent": config_path.exists(),
         "pythonModules": modules,
-        "ready": notebook_dir.is_dir() and config_path.exists() and all(modules.values()),
+        "sparseBackends": sparse_backends,
+        "ready": notebook_dir.is_dir() and config_path.exists() and all(modules.values()) and any(sparse_backends.values()),
     }
 
 
@@ -54,7 +78,8 @@ def run_multi_object(args):
     os.environ.setdefault("XDG_CACHE_HOME", str(root / ".local"))
     os.environ.setdefault("WARP_CACHE_PATH", str(root / ".local" / "warp"))
     repo_dir = args.sam3d_repo.resolve()
-    env = check_environment(repo_dir, args.tag)
+    checkpoint_root = args.checkpoint_root or default_checkpoint_root(repo_dir)
+    env = check_environment(repo_dir, args.tag, checkpoint_root)
     image_path = args.image.resolve()
     output_dir = args.output_dir.resolve()
     masks = numbered_masks(image_path, args.mask_extension)
@@ -107,7 +132,7 @@ def run_multi_object(args):
     posed_path = output_dir / f"{image_name}_posed.ply"
     ply_path = output_dir / f"{image_name}.ply"
     gif_path = output_dir / f"{image_name}.gif"
-    config_path = repo_dir / "checkpoints" / args.tag / "pipeline.yaml"
+    config_path = checkpoint_config_path(checkpoint_root, args.tag)
 
     image = load_image(str(image_path))
     masks = load_masks(str(image_path.parent), extension=args.mask_extension)
@@ -134,6 +159,7 @@ def main():
     parser = argparse.ArgumentParser(description="Run the SAM 3D Objects multi-object notebook flow and export PLY/GIF.")
     parser.add_argument("--check", action="store_true", help="Only report environment readiness.")
     parser.add_argument("--sam3d-repo", type=Path, default=Path(".local/sam-3d-objects"))
+    parser.add_argument("--checkpoint-root", type=Path, help="Directory containing hf/pipeline.yaml, defaults to SAM3D_CHECKPOINT_ROOT, models/checkpoints, then <sam3d-repo>/checkpoints.")
     parser.add_argument("--tag", default="hf")
     parser.add_argument("--mask-extension", default=".png")
     parser.add_argument("--name")
@@ -147,7 +173,8 @@ def main():
     args = parser.parse_args()
 
     if args.check:
-        print(json.dumps({"mode": "sam3d-multi-object-gif-check", **check_environment(args.sam3d_repo, args.tag)}, indent=2))
+        checkpoint_root = args.checkpoint_root or default_checkpoint_root(args.sam3d_repo)
+        print(json.dumps({"mode": "sam3d-multi-object-gif-check", **check_environment(args.sam3d_repo, args.tag, checkpoint_root)}, indent=2))
         return 0
     if args.image is None or args.output_dir is None:
         parser.print_usage(sys.stderr)

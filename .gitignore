@@ -1,6 +1,7 @@
 captures/
 input/
 output/
+models/
 *.log
 public/assets/*-openmvs-scene_dense.ply
 __pycache__/
