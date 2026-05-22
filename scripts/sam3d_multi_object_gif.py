@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import argparse
+import contextlib
+import io
 import json
 import os
 import sys
@@ -9,6 +11,39 @@ from pathlib import Path
 
 def module_available(name):
     return util.find_spec(name) is not None
+
+
+def import_inference_probe(repo_dir, sparse_backends):
+    if sparse_backends["spconv"]:
+        backend = "spconv"
+    elif sparse_backends["torchsparse"]:
+        backend = "torchsparse"
+    else:
+        return {"ok": False, "backend": None, "error": "no sparse backend importable"}
+
+    root = Path.cwd()
+    os.environ.setdefault("SPARSE_BACKEND", backend)
+    os.environ.setdefault("LIDRA_SKIP_INIT", "true")
+    os.environ.setdefault("MPLCONFIGDIR", str(root / ".local" / "mpl"))
+    os.environ.setdefault("XDG_CACHE_HOME", str(root / ".local"))
+    os.environ.setdefault("WARP_CACHE_PATH", str(root / ".local" / "warp"))
+    sys.path.insert(0, str(repo_dir))
+    sys.path.insert(0, str(repo_dir / "notebook"))
+    stdout = io.StringIO()
+    stderr = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(stderr):
+            import inference  # noqa: F401
+    except Exception as exc:
+        return {
+            "ok": False,
+            "backend": backend,
+            "errorType": type(exc).__name__,
+            "error": str(exc),
+            "stdoutTail": stdout.getvalue()[-1000:],
+            "stderrTail": stderr.getvalue()[-1000:],
+        }
+    return {"ok": True, "backend": backend, "stdoutTail": stdout.getvalue()[-1000:], "stderrTail": stderr.getvalue()[-1000:]}
 
 
 def checkpoint_config_path(checkpoint_root, tag):
@@ -48,6 +83,9 @@ def check_environment(repo_dir, tag, checkpoint_root=None):
         "spconv": module_available("spconv"),
         "torchsparse": module_available("torchsparse"),
     }
+    inference_import = {"ok": False, "backend": None, "error": "base environment not ready"}
+    if notebook_dir.is_dir() and config_path.exists() and all(modules.values()) and any(sparse_backends.values()):
+        inference_import = import_inference_probe(repo_dir, sparse_backends)
     return {
         "repoDir": str(repo_dir),
         "checkpointRoot": str(checkpoint_root),
@@ -57,7 +95,8 @@ def check_environment(repo_dir, tag, checkpoint_root=None):
         "configPresent": config_path.exists(),
         "pythonModules": modules,
         "sparseBackends": sparse_backends,
-        "ready": notebook_dir.is_dir() and config_path.exists() and all(modules.values()) and any(sparse_backends.values()),
+        "inferenceImport": inference_import,
+        "ready": notebook_dir.is_dir() and config_path.exists() and all(modules.values()) and inference_import["ok"],
     }
 
 

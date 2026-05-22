@@ -306,7 +306,7 @@ bin/splatter sam3d-multi-gif \
   output/sam3d/kidsroom
 ```
 
-The Mac port can install enough of the stack to import PyTorch, PyTorch3D, Kaolin, and the SAM 3D package, and local checkpoints are expected at `models/checkpoints/hf`. `sam3d-multi-gif --check` only reports ready when a sparse convolution backend (`spconv` or `torchsparse`) is also importable. The remaining blockers are sparse convolution backend availability and whether the current runtime exposes MPS. Use `sam3d-mac-port-check` after dependency changes to keep the status concrete.
+The Mac port can install enough of the stack to import PyTorch, PyTorch3D, Kaolin, and the SAM 3D package, and local checkpoints are expected at `models/checkpoints/hf`. `sam3d-multi-gif --check` only reports ready when the notebook inference import also succeeds. On macOS, `torchsparse` can be built with Homebrew LLVM plus `google-sparsehash`, but the current upstream checkout still blocks on its CUDA assumptions and missing `conv_torchsparse.py` path; `spconv` remains unavailable as a macOS wheel. Use `sam3d-mac-port-check` after dependency changes to keep the status concrete.
 
 Quality gates used before staging:
 
