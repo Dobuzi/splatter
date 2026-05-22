@@ -48,6 +48,11 @@ def numbered_masks(image_path, extension):
 
 
 def run_multi_object(args):
+    root = Path.cwd()
+    os.environ.setdefault("LIDRA_SKIP_INIT", "true")
+    os.environ.setdefault("MPLCONFIGDIR", str(root / ".local" / "mpl"))
+    os.environ.setdefault("XDG_CACHE_HOME", str(root / ".local"))
+    os.environ.setdefault("WARP_CACHE_PATH", str(root / ".local" / "warp"))
     repo_dir = args.sam3d_repo.resolve()
     env = check_environment(repo_dir, args.tag)
     image_path = args.image.resolve()

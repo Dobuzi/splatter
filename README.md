@@ -289,12 +289,20 @@ The upstream multi-object notebook flow can also be run through the local helper
 # Check notebook/runtime readiness.
 bin/splatter sam3d-multi-gif --check --sam3d-repo .local/sam-3d-objects
 
+# Probe the local Mac port attempt. By default this uses:
+# SAM3D_REPO=.local/sam-3d-objects
+# SAM3D_PYTHON=.local/sam3d-mac-venv/bin/python
+bin/splatter sam3d-mac-port-check
+
 # Export output/sam3d/<name>/<name>_posed.ply, <name>.ply, and <name>.gif.
+SAM3D_PYTHON=.local/sam3d-mac-venv/bin/python \
 bin/splatter sam3d-multi-gif \
   --sam3d-repo .local/sam-3d-objects \
   .local/sam-3d-objects/notebook/images/shutterstock_stylish_kidsroom_1640806567/image.png \
   output/sam3d/kidsroom
 ```
+
+The Mac port can install enough of the stack to import PyTorch, PyTorch3D, Kaolin, and the SAM 3D package, but the remaining blockers are sparse convolution backends (`spconv` or `torchsparse`), the gated `checkpoints/hf/pipeline.yaml`, and whether the current runtime exposes MPS. Use `sam3d-mac-port-check` after dependency changes to keep the status concrete.
 
 Quality gates used before staging:
 

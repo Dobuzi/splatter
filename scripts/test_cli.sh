@@ -40,6 +40,7 @@ fi
 "$cli" --help | grep -q "trellis2-generate"
 "$cli" --help | grep -q "sam3d-reconstruct"
 "$cli" --help | grep -q "sam3d-multi-gif"
+"$cli" --help | grep -q "sam3d-mac-port-check"
 "$cli" --help | grep -q "viewer-qa"
 "$cli" --help | grep -q "mlx-smoke"
 "$cli" --help | grep -q "mlx-diagnose"
@@ -364,6 +365,8 @@ printf '%s\n' "$sam3d_multi_check" | grep -q '"ready": false'
 sam3d_multi_plan=$("$cli" sam3d-multi-gif --sam3d-repo .local/sam-3d-objects "$checkpoint_dir/sample_1000.ply" "$checkpoint_dir/sam3d-out" || true)
 printf '%s\n' "$sam3d_multi_plan" | grep -q '"mode": "sam3d-multi-object-gif"'
 printf '%s\n' "$sam3d_multi_plan" | grep -q '"status": "environment not ready"'
+sam3d_mac_check=$("$cli" sam3d-mac-port-check)
+printf '%s\n' "$sam3d_mac_check" | grep -q '"mode": "sam3d-mac-port-check"'
 "$cli" viewer-qa >/dev/null
 mlx_frame_output=$("$cli" mlx-frame-quality --dry-run)
 printf '%s\n' "$mlx_frame_output" | grep -q "frame quality scoring"

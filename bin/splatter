@@ -54,6 +54,7 @@ Commands:
   sam3d-reconstruct [--check] <image> <mask-dir> [out]
                                              Plan or run optional SAM 3D object reconstruction
   sam3d-multi-gif [--check] [image] [out]     Run SAM 3D multi-object notebook flow to PLY/GIF
+  sam3d-mac-port-check                       Probe local Mac SAM 3D port blockers
   viewer-qa                                  Validate viewer scene assets and point-cloud wiring
   mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
   mlx-diagnose [args]                        Diagnose gsplat-mlx NaN sources
@@ -269,7 +270,19 @@ case "$1" in
     ;;
   sam3d-multi-gif)
     shift
-    scripts/sam3d_multi_object_gif.py "$@"
+    if [[ -n "${SAM3D_PYTHON:-}" ]]; then
+      "$SAM3D_PYTHON" scripts/sam3d_multi_object_gif.py "$@"
+    else
+      scripts/sam3d_multi_object_gif.py "$@"
+    fi
+    ;;
+  sam3d-mac-port-check)
+    shift
+    if (( $# != 0 )); then
+      echo "Usage: splatter sam3d-mac-port-check" >&2
+      exit 1
+    fi
+    scripts/sam3d_mac_port_check.py
     ;;
   viewer-qa)
     shift
