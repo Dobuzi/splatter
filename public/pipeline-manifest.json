@@ -12,7 +12,8 @@
     "largest-component cleanup",
     "viewer staging",
     "QA/deploy gates",
-    "optional TRELLIS.2 branch"
+    "optional TRELLIS.2 branch",
+    "optional SAM 3D object reconstruction branch"
   ],
   "inputs": [
     {

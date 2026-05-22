@@ -262,6 +262,27 @@ SPLAT_TRELLIS2_EXECUTE=1 \
 
 MLX is not a drop-in accelerator for the upstream TRELLIS.2 PyTorch/CUDA code. Use MLX in this repo for capture triage, frame quality scoring, and helper models that already have MLX ports; direct TRELLIS.2 acceleration would require a separate model/runtime port.
 
+SAM 3D Objects can be wired in as an optional object reconstruction branch when image masks are available. The practical goal in this repo is 3D rendering, so the adapter treats SAM 3D as `image + object mask -> 3D object asset`; any object class is metadata from mask filenames or a wrapper-produced `objects.json`, not the primary output. Upstream setup requires linux-64, an NVIDIA GPU with at least 32GB VRAM, and gated checkpoints, so on this MacBook Pro the command is a preflight/planning step unless you provide a compatible local wrapper.
+
+```sh
+# Inspect whether the current machine can run SAM 3D Objects directly.
+bin/splatter sam3d-reconstruct --check
+
+# Plan object reconstruction from a representative frame and mask directory.
+bin/splatter sam3d-reconstruct \
+  captures/img-9142-fps2/images/frame_00030.jpg \
+  captures/img-9142-fps2/masks
+
+# Run through a configured wrapper when available. The wrapper receives:
+# <input-image> <mask-dir> <output-dir>
+SAM3D_BACKEND=local \
+SAM3D_LOCAL_COMMAND="python /opt/sam3d/run_objects.py" \
+SPLAT_SAM3D_EXECUTE=1 \
+  bin/splatter sam3d-reconstruct \
+  captures/img-9142-fps2/images/frame_00030.jpg \
+  captures/img-9142-fps2/masks
+```
+
 Quality gates used before staging:
 
 - COLMAP passes `bin/splatter colmap-gate`: registered image count, registration ratio, sparse point count, and reprojection error.

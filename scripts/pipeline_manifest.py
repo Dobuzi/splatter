@@ -126,6 +126,7 @@ def build_manifest(input_dir):
             "viewer staging",
             "QA/deploy gates",
             "optional TRELLIS.2 branch",
+            "optional SAM 3D object reconstruction branch",
         ],
         "inputs": inputs,
     }

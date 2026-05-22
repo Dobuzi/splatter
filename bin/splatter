@@ -51,6 +51,8 @@ Commands:
   pipeline-manifest [input-dir] [output]      Write manifest-driven pipeline status
   pipeline-run [input-dir]                    Orchestrate primary target staging from manifest
   trellis2-generate [--check] <image> [out]   Plan or run optional TRELLIS.2 generation
+  sam3d-reconstruct [--check] <image> <mask-dir> [out]
+                                             Plan or run optional SAM 3D object reconstruction
   viewer-qa                                  Validate viewer scene assets and point-cloud wiring
   mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
   mlx-diagnose [args]                        Diagnose gsplat-mlx NaN sources
@@ -259,6 +261,10 @@ case "$1" in
   trellis2-generate)
     shift
     scripts/trellis2_adapter.py "$@"
+    ;;
+  sam3d-reconstruct)
+    shift
+    scripts/sam3d_adapter.py "$@"
     ;;
   viewer-qa)
     shift
