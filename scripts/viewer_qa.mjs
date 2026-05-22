@@ -55,6 +55,9 @@ if (!indexHtml.includes('data-action="voxel-size"')) {
 if (!mainJs.includes('voxelSizeStorageKey') || !mainJs.includes('uPointSize')) {
   failures.push('viewer is missing persisted voxel point size rendering');
 }
+if (!mainJs.includes('colors.push(red, green, blue, 255)')) {
+  failures.push('PLY vertex colors must stay in 0-255 byte space for PlayCanvas createMesh');
+}
 
 if (failures.length) {
   console.error(failures.join('\n'));

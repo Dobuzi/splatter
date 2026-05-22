@@ -784,7 +784,7 @@ function parseBinaryPly(buffer) {
           }
         }
         positions.push(x, y, z);
-        colors.push(red / 255, green / 255, blue / 255, 1);
+        colors.push(red, green, blue, 255);
       } else if (element.name === 'face') {
         let faceIndices = null;
         let faceTexcoords = null;
