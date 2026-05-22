@@ -283,6 +283,19 @@ SPLAT_SAM3D_EXECUTE=1 \
   captures/img-9142-fps2/masks
 ```
 
+The upstream multi-object notebook flow can also be run through the local helper when a compatible SAM 3D Objects checkout, checkpoints, and dependencies are available. It follows `notebook/demo_multi_object.ipynb`: load all numbered masks next to the image, run inference per mask, merge with `make_scene`, export posed and normalized PLY files, render a turntable, then save a GIF.
+
+```sh
+# Check notebook/runtime readiness.
+bin/splatter sam3d-multi-gif --check --sam3d-repo .local/sam-3d-objects
+
+# Export output/sam3d/<name>/<name>_posed.ply, <name>.ply, and <name>.gif.
+bin/splatter sam3d-multi-gif \
+  --sam3d-repo .local/sam-3d-objects \
+  .local/sam-3d-objects/notebook/images/shutterstock_stylish_kidsroom_1640806567/image.png \
+  output/sam3d/kidsroom
+```
+
 Quality gates used before staging:
 
 - COLMAP passes `bin/splatter colmap-gate`: registered image count, registration ratio, sparse point count, and reprojection error.

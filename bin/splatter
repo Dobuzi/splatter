@@ -53,6 +53,7 @@ Commands:
   trellis2-generate [--check] <image> [out]   Plan or run optional TRELLIS.2 generation
   sam3d-reconstruct [--check] <image> <mask-dir> [out]
                                              Plan or run optional SAM 3D object reconstruction
+  sam3d-multi-gif [--check] [image] [out]     Run SAM 3D multi-object notebook flow to PLY/GIF
   viewer-qa                                  Validate viewer scene assets and point-cloud wiring
   mlx-smoke [steps] [gaussians]              Check local gsplat-mlx viability
   mlx-diagnose [args]                        Diagnose gsplat-mlx NaN sources
@@ -265,6 +266,10 @@ case "$1" in
   sam3d-reconstruct)
     shift
     scripts/sam3d_adapter.py "$@"
+    ;;
+  sam3d-multi-gif)
+    shift
+    scripts/sam3d_multi_object_gif.py "$@"
     ;;
   viewer-qa)
     shift

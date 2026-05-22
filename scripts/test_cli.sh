@@ -39,6 +39,7 @@ fi
 "$cli" --help | grep -q "pipeline-run"
 "$cli" --help | grep -q "trellis2-generate"
 "$cli" --help | grep -q "sam3d-reconstruct"
+"$cli" --help | grep -q "sam3d-multi-gif"
 "$cli" --help | grep -q "viewer-qa"
 "$cli" --help | grep -q "mlx-smoke"
 "$cli" --help | grep -q "mlx-diagnose"
@@ -156,6 +157,11 @@ if "$cli" sam3d-reconstruct >/dev/null 2>&1; then
   exit 1
 fi
 
+if "$cli" sam3d-multi-gif >/dev/null 2>&1; then
+  echo "SAM 3D multi gif without required args should fail" >&2
+  exit 1
+fi
+
 SPLAT_QUALITY_DRY_RUN=1 "$cli" quality-stage public/assets/img-9142-opensplat-webhq-5000-d3-200k-h1.sog "Dry Run" >/dev/null 2>&1 && {
   echo "Quality stage should reject non-PLY input" >&2
   exit 1
@@ -207,6 +213,7 @@ checkpoint_dir=$(mktemp -d "${TMPDIR:-/tmp}/splatter-checkpoint.XXXXXX")
 trap 'rm -f "$temp_video"; rm -rf "$checkpoint_dir"' EXIT
 mkdir -p "$checkpoint_dir/masks"
 : > "$checkpoint_dir/masks/target_object.png"
+: > "$checkpoint_dir/0.png"
 python3 - "$checkpoint_dir/sample_1000.ply" <<'PY'
 import struct
 import sys
@@ -351,6 +358,12 @@ sam3d_check=$("$cli" sam3d-reconstruct --check)
 printf '%s\n' "$sam3d_check" | grep -q '"backend": "sam3d-preflight"'
 printf '%s\n' "$sam3d_check" | grep -q 'imageMaskTo3D'
 printf '%s\n' "$sam3d_check" | grep -q 'not a native semantic classifier'
+sam3d_multi_check=$("$cli" sam3d-multi-gif --check)
+printf '%s\n' "$sam3d_multi_check" | grep -q '"mode": "sam3d-multi-object-gif-check"'
+printf '%s\n' "$sam3d_multi_check" | grep -q '"ready": false'
+sam3d_multi_plan=$("$cli" sam3d-multi-gif --sam3d-repo .local/sam-3d-objects "$checkpoint_dir/sample_1000.ply" "$checkpoint_dir/sam3d-out" || true)
+printf '%s\n' "$sam3d_multi_plan" | grep -q '"mode": "sam3d-multi-object-gif"'
+printf '%s\n' "$sam3d_multi_plan" | grep -q '"status": "environment not ready"'
 "$cli" viewer-qa >/dev/null
 mlx_frame_output=$("$cli" mlx-frame-quality --dry-run)
 printf '%s\n' "$mlx_frame_output" | grep -q "frame quality scoring"
