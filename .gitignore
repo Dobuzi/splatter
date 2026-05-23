@@ -12,3 +12,4 @@ node_modules/
 .local/
 MEMORY.md
 .superpowers/
+logs/
