@@ -34,6 +34,7 @@ fi
 "$cli" --help | grep -q "voxel-stage-free-space-primary"
 "$cli" --help | grep -q "voxel-stage-semantics"
 "$cli" --help | grep -q "sam-mask-voxel-segment"
+"$cli" --help | grep -q "sam-select-mask-frames"
 "$cli" --help | grep -q "sam-generate-mask-assets"
 "$cli" --help | grep -q "sam-stage-voxel-semantics"
 "$cli" --help | grep -q "voxel-improve-primary"
@@ -167,6 +168,11 @@ fi
 
 if "$cli" sam-mask-voxel-segment >/dev/null 2>&1; then
   echo "SAM mask voxel segment without required args should fail" >&2
+  exit 1
+fi
+
+if "$cli" sam-select-mask-frames >/dev/null 2>&1; then
+  echo "SAM mask frame selection without required args should fail" >&2
   exit 1
 fi
 

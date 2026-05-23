@@ -270,6 +270,11 @@ For voxel-level semantics, the highest-quality local integration point is to pro
 # Stage SAM-mask semantic voxels for primary targets when masks are present.
 bin/splatter sam-stage-voxel-semantics
 
+# Pick representative frames for manual or external SAM/SAM3 masking.
+# The copies preserve original frame names so mask PNGs can be projected back.
+bin/splatter sam-select-mask-frames img-9142-fps2 24
+bin/splatter sam-select-mask-frames img-9205-fps1-pinhole 32
+
 # If no SAM/SAM3 masks are available yet, create SAM-compatible bootstrap masks
 # from representative registered frames. These are replaceable placeholders,
 # not real SAM model outputs.
