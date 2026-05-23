@@ -133,6 +133,12 @@ if (fs.existsSync("public/scenes.json")) {
   if (!Array.isArray(pipeline.inputs)) {
     throw new Error("pipeline-manifest.json requires inputs");
   }
+  if (!pipeline.localPolicy || !pipeline.externalAccelerators) {
+    throw new Error("pipeline-manifest.json requires localPolicy and externalAccelerators");
+  }
+  if (pipeline.externalAccelerators.sam3dObjects?.execution !== "external-cuda-worker") {
+    throw new Error("pipeline-manifest.json must mark SAM 3D as an external CUDA worker");
+  }
   for (const primaryTarget of manifest.primaryTargets) {
     const input = pipeline.inputs.find((item) => item.inputSlug === primaryTarget);
     if (!input) {

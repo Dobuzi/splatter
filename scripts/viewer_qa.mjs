@@ -52,8 +52,20 @@ for (const primaryTarget of scenePrimaryTargets) {
 if (!indexHtml.includes('data-action="voxel-size"')) {
   failures.push('viewer is missing the voxel size control');
 }
+if (!indexHtml.includes('id="pipelineSummary"')) {
+  failures.push('viewer is missing the pipeline summary surface');
+}
+if (!pipelineManifest.localPolicy || pipelineManifest.externalAccelerators?.sam3dObjects?.execution !== 'external-cuda-worker') {
+  failures.push('pipeline manifest must expose local policy and external accelerator status');
+}
 if (!mainJs.includes('voxelSizeStorageKey') || !mainJs.includes('uPointSize')) {
   failures.push('viewer is missing persisted voxel point size rendering');
+}
+if (!mainJs.includes('setPipelineSummary') || !mainJs.includes('pipelineSummaryItems')) {
+  failures.push('viewer is missing pipeline summary rendering');
+}
+if (!mainJs.includes('scene.label || scene.input || scene.id')) {
+  failures.push('scene selector should prefer distinct scene labels over raw input names');
 }
 if (!mainJs.includes('colors.push(red, green, blue, 255)')) {
   failures.push('PLY vertex colors must stay in 0-255 byte space for PlayCanvas createMesh');

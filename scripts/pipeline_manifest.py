@@ -8,6 +8,27 @@ from openmvs_batch import capture_candidates, primary_input_slugs, scene_id_for,
 
 VIDEO_EXTS = {".mov", ".mp4", ".m4v"}
 
+LOCAL_POLICY = {
+    "primaryReconstruction": "COLMAP/OpenMVS/3DGS/voxel/mesh stages run locally on this Mac pipeline.",
+    "optionalExternalAccelerators": "SAM 3D Objects and TRELLIS.2 are optional branches and must not block primary viewer staging.",
+}
+
+EXTERNAL_ACCELERATORS = {
+    "sam3dObjects": {
+        "role": "optional image+mask to 3D object asset branch",
+        "execution": "external-cuda-worker",
+        "localStatus": "diagnostic/planning only on macOS",
+        "requiredWorker": "linux-64 NVIDIA CUDA GPU with 32GB+ VRAM and upstream checkpoints",
+        "viewerIntegration": "stage returned PLY/GIF/objects.json outputs when available",
+    },
+    "trellis2": {
+        "role": "optional generated asset branch",
+        "execution": "external-cuda-worker for image-to-3D",
+        "localStatus": "not a local MLX drop-in",
+        "viewerIntegration": "stage returned mesh/gaussian outputs when available",
+    },
+}
+
 
 def usage():
     print("Usage: scripts/pipeline_manifest.py <input-dir> [output-json]", file=sys.stderr)
@@ -24,6 +45,18 @@ def asset_size(asset_url):
         return 0
     path = Path("public") / asset_url
     return path.stat().st_size if path.is_file() else 0
+
+
+def ranking_by_input_slug(ranking):
+    best = {}
+    for row in ranking:
+        input_slug = row.get("input_slug")
+        if not input_slug:
+            continue
+        previous = best.get(input_slug)
+        if previous is None or (row.get("score") or 0) > (previous.get("score") or 0):
+            best[input_slug] = row
+    return best
 
 
 def stage_status(row, input_slug):
@@ -82,7 +115,7 @@ def input_records(input_dir, ranking):
 def build_manifest(input_dir):
     input_dir = Path(input_dir)
     ranking = read_json("public/openmvs-ranking.json", {"ranked": []}).get("ranked", [])
-    ranked_by_slug = {row.get("input_slug"): row for row in ranking}
+    ranked_by_slug = ranking_by_input_slug(ranking)
     primary_slugs = primary_input_slugs()
     inputs = []
 
@@ -118,25 +151,8 @@ def build_manifest(input_dir):
         "schemaVersion": 1,
         "inputDir": str(input_dir),
         "primaryTargets": primary_slugs,
-        "localPolicy": {
-            "primaryReconstruction": "COLMAP/OpenMVS/3DGS/voxel/mesh stages run locally on this Mac pipeline.",
-            "optionalExternalAccelerators": "SAM 3D Objects and TRELLIS.2 are optional branches and must not block primary viewer staging.",
-        },
-        "externalAccelerators": {
-            "sam3dObjects": {
-                "role": "optional image+mask to 3D object asset branch",
-                "execution": "external-cuda-worker",
-                "localStatus": "diagnostic/planning only on macOS",
-                "requiredWorker": "linux-64 NVIDIA CUDA GPU with 32GB+ VRAM and upstream checkpoints",
-                "viewerIntegration": "stage returned PLY/GIF/objects.json outputs when available",
-            },
-            "trellis2": {
-                "role": "optional generated asset branch",
-                "execution": "external-cuda-worker for image-to-3D",
-                "localStatus": "not a local MLX drop-in",
-                "viewerIntegration": "stage returned mesh/gaussian outputs when available",
-            },
-        },
+        "localPolicy": LOCAL_POLICY,
+        "externalAccelerators": EXTERNAL_ACCELERATORS,
         "stages": [
             "capture variants",
             "COLMAP ranking",

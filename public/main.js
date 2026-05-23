@@ -21,6 +21,7 @@ const status = document.querySelector('#status');
 const metadata = document.querySelector('#metadata');
 const qualityBadges = document.querySelector('#qualityBadges');
 const pipelineStatus = document.querySelector('#pipelineStatus');
+const pipelineSummary = document.querySelector('#pipelineSummary');
 const tools = document.querySelector('#tools');
 const sceneSelect = document.querySelector('#sceneSelect');
 
@@ -103,6 +104,45 @@ function setPipelineStatus(pipelineManifest, activeScene, config) {
   pipelineStatus.textContent = `${prefix} ${state}${suffix}`;
   pipelineStatus.title = item.nextActions?.length ? `Next: ${item.nextActions.join(', ')}` : '';
   pipelineStatus.hidden = false;
+}
+
+function pipelineSummaryItems(pipelineManifest) {
+  if (!pipelineManifest || !Array.isArray(pipelineManifest.inputs)) {
+    return [];
+  }
+  const primaryTargets = pipelineManifest.inputs.filter((item) => item.primaryTarget);
+  const readyPrimary = primaryTargets.filter((item) => item.stageStatus === 'staged' && item.nextActions?.includes('ready'));
+  const accelerators = Object.entries(pipelineManifest.externalAccelerators || {}).map(([key, value]) => ({
+    key,
+    label: key === 'sam3dObjects' ? 'SAM 3D' : key === 'trellis2' ? 'TRELLIS.2' : key,
+    status: value.localStatus || value.execution || 'optional'
+  }));
+  return [
+    {
+      label: 'Primary',
+      value: `${readyPrimary.length}/${primaryTargets.length} ready`,
+      tone: readyPrimary.length === primaryTargets.length ? 'ok' : 'warn'
+    },
+    ...accelerators.map((item) => ({
+      label: item.label,
+      value: item.status,
+      tone: 'muted'
+    }))
+  ];
+}
+
+function setPipelineSummary(pipelineManifest) {
+  if (!pipelineSummary) {
+    return;
+  }
+  const items = pipelineSummaryItems(pipelineManifest);
+  pipelineSummary.replaceChildren(...items.map((item) => {
+    const chip = document.createElement('span');
+    chip.dataset.tone = item.tone;
+    chip.textContent = `${item.label}: ${item.value}`;
+    return chip;
+  }));
+  pipelineSummary.hidden = items.length === 0;
 }
 
 function pipelineInputForScene(pipelineManifest, activeScene, config) {
@@ -195,7 +235,7 @@ function installSceneSelector(manifest, activeSceneId) {
   for (const scene of manifest.scenes) {
     const option = document.createElement('option');
     option.value = scene.id;
-    option.textContent = scene.input || scene.label || scene.id;
+    option.textContent = scene.label || scene.input || scene.id;
     sceneSelect.appendChild(option);
   }
 
@@ -219,6 +259,9 @@ function showEmpty(message = 'No scene staged') {
   }
   if (pipelineStatus) {
     pipelineStatus.hidden = true;
+  }
+  if (pipelineSummary) {
+    pipelineSummary.hidden = true;
   }
 }
 
@@ -1081,6 +1124,7 @@ async function boot() {
   setStatus('Loading scene');
   setMetadata(config);
   setPipelineStatus(pipelineManifest, activeScene, config);
+  setPipelineSummary(pipelineManifest);
 
   const canvas = document.createElement('canvas');
   document.body.appendChild(canvas);
