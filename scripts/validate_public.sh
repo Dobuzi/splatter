@@ -74,6 +74,12 @@ function validateSceneConfig(config, file) {
   if (config.semanticVoxelAssetUrl) {
     assertPublicRelative(config.semanticVoxelAssetUrl, `${file} semanticVoxelAssetUrl`);
   }
+  if (config.samSemanticVoxelUrl) {
+    assertPublicRelative(config.samSemanticVoxelUrl, `${file} samSemanticVoxelUrl`);
+  }
+  if (config.samSemanticVoxelAssetUrl) {
+    assertPublicRelative(config.samSemanticVoxelAssetUrl, `${file} samSemanticVoxelAssetUrl`);
+  }
   if (config.textureAssetUrl) {
     assertPublicRelative(config.textureAssetUrl, `${file} textureAssetUrl`);
   }
@@ -108,6 +114,8 @@ function validateSceneConfig(config, file) {
     config.navigableGridAssetUrl,
     config.semanticVoxelUrl,
     config.semanticVoxelAssetUrl,
+    config.samSemanticVoxelUrl,
+    config.samSemanticVoxelAssetUrl,
     config.textureAssetUrl
   ].filter(Boolean);
 }

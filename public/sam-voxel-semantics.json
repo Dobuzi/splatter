@@ -1,0 +1,32 @@
+{
+  "strategy": "SAM/SAM3-level 2D masks projected into COLMAP/OpenMVS voxel space",
+  "minVotes": 1,
+  "scenes": [
+    {
+      "scene": "img-9142-openmvs",
+      "capture": "img-9142-fps2",
+      "maskDir": "captures/img-9142-fps2/sam_masks",
+      "sparseModel": "captures/img-9142-fps2/colmap/sparse/0",
+      "status": "missing SAM masks",
+      "nextAction": "write SAM/SAM3 mask PNGs into captures/img-9142-fps2/sam_masks",
+      "inputContract": {
+        "layoutA": "sam_masks/<label>/<frame_stem>.png",
+        "layoutB": "sam_masks/<frame_stem>__<label>.png",
+        "threshold": "mask pixel > 127"
+      }
+    },
+    {
+      "scene": "img-9205-openmvs",
+      "capture": "img-9205-fps1-pinhole",
+      "maskDir": "captures/img-9205-fps1-pinhole/sam_masks",
+      "sparseModel": "captures/img-9205-fps1-pinhole/colmap/sparse/0",
+      "status": "missing SAM masks",
+      "nextAction": "write SAM/SAM3 mask PNGs into captures/img-9205-fps1-pinhole/sam_masks",
+      "inputContract": {
+        "layoutA": "sam_masks/<label>/<frame_stem>.png",
+        "layoutB": "sam_masks/<frame_stem>__<label>.png",
+        "threshold": "mask pixel > 127"
+      }
+    }
+  ]
+}

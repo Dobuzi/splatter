@@ -264,6 +264,23 @@ MLX is not a drop-in accelerator for the upstream TRELLIS.2 PyTorch/CUDA code. U
 
 SAM 3D Objects can be wired in as an optional object reconstruction branch when image masks are available. The practical goal in this repo is 3D rendering, so the adapter treats SAM 3D as `image + object mask -> 3D object asset`; any object class is metadata from mask filenames or a wrapper-produced `objects.json`, not the primary output. Upstream setup requires linux-64, an NVIDIA GPU with at least 32GB VRAM, and gated checkpoints, so on this MacBook Pro SAM 3D is an external CUDA-worker branch. It must not block the local COLMAP/OpenMVS/3DGS/voxel/mesh pipeline.
 
+For voxel-level semantics, the highest-quality local integration point is to project SAM/SAM3-style 2D masks into the COLMAP/OpenMVS voxel grid. Put binary masks next to the capture using either `captures/<capture>/sam_masks/<label>/<frame_stem>.png` or `captures/<capture>/sam_masks/<frame_stem>__<label>.png`, where `frame_stem` matches the COLMAP image stem such as `frame_00030`. Then run:
+
+```sh
+# Stage SAM-mask semantic voxels for primary targets when masks are present.
+bin/splatter sam-stage-voxel-semantics
+
+# Or run one projection directly.
+bin/splatter sam-mask-voxel-segment \
+  public/assets/img-9142-openmvs-occupancy-r144-m2-d1.json \
+  captures/img-9142-fps2/colmap/sparse/0 \
+  captures/img-9142-fps2/sam_masks \
+  output/img-9142-sam-semantic.json \
+  output/img-9142-sam-semantic.ply
+```
+
+This path keeps SAM/SAM3 as a 2D mask quality source and uses COLMAP camera poses for 3D lifting. Voxels are labeled by multi-view mask votes; unvoted surface voxels remain `unlabeled_surface` instead of inventing object classes.
+
 ```sh
 # Inspect whether the current machine can run SAM 3D Objects directly.
 bin/splatter sam3d-reconstruct --check

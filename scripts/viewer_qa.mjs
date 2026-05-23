@@ -11,7 +11,7 @@ const pipelinePrimaryTargets = new Set(pipelineManifest.primaryTargets || []);
 
 for (const scene of manifest.scenes || []) {
   const config = JSON.parse(fs.readFileSync(`public/${scene.sceneUrl}`, 'utf8'));
-  for (const key of ['assetUrl', 'textureAssetUrl', 'pointCloudAssetUrl', 'voxelGridAssetUrl', 'voxelGridUrl', 'freeSpaceGridUrl', 'freeSpaceGridAssetUrl', 'navigableGridAssetUrl', 'semanticVoxelUrl', 'semanticVoxelAssetUrl']) {
+  for (const key of ['assetUrl', 'textureAssetUrl', 'pointCloudAssetUrl', 'voxelGridAssetUrl', 'voxelGridUrl', 'freeSpaceGridUrl', 'freeSpaceGridAssetUrl', 'navigableGridAssetUrl', 'semanticVoxelUrl', 'semanticVoxelAssetUrl', 'samSemanticVoxelUrl', 'samSemanticVoxelAssetUrl']) {
     if (!config[key]) continue;
     const path = `public/${config[key]}`;
     if (!fs.existsSync(path)) {
@@ -29,6 +29,9 @@ for (const scene of manifest.scenes || []) {
   }
   if (config.semanticVoxelAssetUrl && !config.metrics?.semanticVoxels) {
     failures.push(`${scene.id}: semanticVoxelAssetUrl requires metrics.semanticVoxels`);
+  }
+  if (config.samSemanticVoxelAssetUrl && !config.metrics?.samSemanticVoxels) {
+    failures.push(`${scene.id}: samSemanticVoxelAssetUrl requires metrics.samSemanticVoxels`);
   }
   if (scene.primaryTarget === true && config.format === 'PLY Mesh' && !config.voxelGridAssetUrl) {
     failures.push(`${scene.id}: primary mesh scene requires voxelGridAssetUrl`);
@@ -64,6 +67,9 @@ if (!indexHtml.includes('data-action="render-free-space"') || !indexHtml.include
 if (!indexHtml.includes('data-action="render-semantics"')) {
   failures.push('viewer is missing semantic voxel render mode controls');
 }
+if (!indexHtml.includes('data-action="render-sam-semantics"')) {
+  failures.push('viewer is missing SAM-mask semantic render mode controls');
+}
 if (!indexHtml.includes('id="pipelineSummary"')) {
   failures.push('viewer is missing the pipeline summary surface');
 }
@@ -81,6 +87,9 @@ if (!mainJs.includes('freeSpaceGridAssetUrl') || !mainJs.includes('navigableGrid
 }
 if (!mainJs.includes('semanticVoxelAssetUrl')) {
   failures.push('viewer is missing semantic voxel loading');
+}
+if (!mainJs.includes('samSemanticVoxelAssetUrl')) {
+  failures.push('viewer is missing SAM-mask semantic voxel loading');
 }
 if (!mainJs.includes('setPipelineSummary') || !mainJs.includes('pipelineSummaryItems')) {
   failures.push('viewer is missing pipeline summary rendering');

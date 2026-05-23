@@ -33,6 +33,8 @@ fi
 "$cli" --help | grep -q "voxel-stage-primary"
 "$cli" --help | grep -q "voxel-stage-free-space-primary"
 "$cli" --help | grep -q "voxel-stage-semantics"
+"$cli" --help | grep -q "sam-mask-voxel-segment"
+"$cli" --help | grep -q "sam-stage-voxel-semantics"
 "$cli" --help | grep -q "voxel-improve-primary"
 "$cli" --help | grep -q "surface-reconstruct"
 "$cli" --help | grep -q "openmvs-batch"
@@ -159,6 +161,11 @@ fi
 
 if "$cli" voxel-segment >/dev/null 2>&1; then
   echo "Voxel segment without required args should fail" >&2
+  exit 1
+fi
+
+if "$cli" sam-mask-voxel-segment >/dev/null 2>&1; then
+  echo "SAM mask voxel segment without required args should fail" >&2
   exit 1
 fi
 

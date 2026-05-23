@@ -168,6 +168,16 @@
       "labeledVoxels": 161422,
       "totalVoxels": 1534970,
       "labeledRatio": 0.10516296735441083
+    },
+    "samSemanticVoxels": {
+      "method": "sam-mask-multiview-projection",
+      "status": "missing SAM masks",
+      "maskDir": "captures/img-9142-fps2/sam_masks",
+      "inputContract": {
+        "layoutA": "sam_masks/<label>/<frame_stem>.png",
+        "layoutB": "sam_masks/<frame_stem>__<label>.png",
+        "threshold": "mask pixel > 127"
+      }
     }
   },
   "quality": {

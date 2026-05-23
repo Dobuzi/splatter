@@ -1112,14 +1112,15 @@ function installVoxelSizeTool(config, voxelMeshInstances) {
   };
 }
 
-function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, freeEntity, navigableEntity, semanticEntity, voxelMeshInstances) {
+function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, freeEntity, navigableEntity, semanticEntity, samSemanticEntity, voxelMeshInstances) {
   const meshButton = tools?.querySelector('[data-action="render-mesh"]');
   const pointButton = tools?.querySelector('[data-action="render-points"]');
   const voxelButton = tools?.querySelector('[data-action="render-voxels"]');
   const freeButton = tools?.querySelector('[data-action="render-free-space"]');
   const navigableButton = tools?.querySelector('[data-action="render-navigable"]');
   const semanticButton = tools?.querySelector('[data-action="render-semantics"]');
-  if (!meshButton || !pointButton || !voxelButton || !freeButton || !navigableButton || !semanticButton || (!pointEntity && !voxelEntity && !freeEntity && !navigableEntity && !semanticEntity)) {
+  const samSemanticButton = tools?.querySelector('[data-action="render-sam-semantics"]');
+  if (!meshButton || !pointButton || !voxelButton || !freeButton || !navigableButton || !semanticButton || !samSemanticButton || (!pointEntity && !voxelEntity && !freeEntity && !navigableEntity && !semanticEntity && !samSemanticEntity)) {
     return;
   }
   const voxelSizeTool = installVoxelSizeTool(config, voxelMeshInstances);
@@ -1129,6 +1130,7 @@ function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, fr
   freeButton.hidden = !freeEntity;
   navigableButton.hidden = !navigableEntity;
   semanticButton.hidden = !semanticEntity;
+  samSemanticButton.hidden = !samSemanticEntity;
 
   function setMode(mode) {
     const showPoints = mode === 'points';
@@ -1136,7 +1138,8 @@ function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, fr
     const showFree = mode === 'free-space';
     const showNavigable = mode === 'navigable';
     const showSemantics = mode === 'semantics';
-    meshEntity.enabled = !showPoints && !showVoxels && !showFree && !showNavigable && !showSemantics;
+    const showSamSemantics = mode === 'sam-semantics';
+    meshEntity.enabled = !showPoints && !showVoxels && !showFree && !showNavigable && !showSemantics && !showSamSemantics;
     if (pointEntity) {
       pointEntity.enabled = showPoints;
     }
@@ -1152,16 +1155,20 @@ function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, fr
     if (semanticEntity) {
       semanticEntity.enabled = showSemantics;
     }
+    if (samSemanticEntity) {
+      samSemanticEntity.enabled = showSamSemantics;
+    }
     meshButton.setAttribute('aria-pressed', String(meshEntity.enabled));
     pointButton.setAttribute('aria-pressed', String(Boolean(pointEntity && showPoints)));
     voxelButton.setAttribute('aria-pressed', String(Boolean(voxelEntity && showVoxels)));
     freeButton.setAttribute('aria-pressed', String(Boolean(freeEntity && showFree)));
     navigableButton.setAttribute('aria-pressed', String(Boolean(navigableEntity && showNavigable)));
     semanticButton.setAttribute('aria-pressed', String(Boolean(semanticEntity && showSemantics)));
-    voxelSizeTool.setVisible(Boolean((voxelEntity && showVoxels) || (freeEntity && showFree) || (navigableEntity && showNavigable) || (semanticEntity && showSemantics)));
-    const savedMode = showSemantics && semanticEntity ? 'semantics' : showNavigable && navigableEntity ? 'navigable' : showFree && freeEntity ? 'free-space' : showVoxels && voxelEntity ? 'voxels' : showPoints && pointEntity ? 'points' : 'mesh';
+    samSemanticButton.setAttribute('aria-pressed', String(Boolean(samSemanticEntity && showSamSemantics)));
+    voxelSizeTool.setVisible(Boolean((voxelEntity && showVoxels) || (freeEntity && showFree) || (navigableEntity && showNavigable) || (semanticEntity && showSemantics) || (samSemanticEntity && showSamSemantics)));
+    const savedMode = showSamSemantics && samSemanticEntity ? 'sam-semantics' : showSemantics && semanticEntity ? 'semantics' : showNavigable && navigableEntity ? 'navigable' : showFree && freeEntity ? 'free-space' : showVoxels && voxelEntity ? 'voxels' : showPoints && pointEntity ? 'points' : 'mesh';
     localStorage.setItem(pointCloudStorageKey(config), savedMode);
-    const status = showSemantics && semanticEntity ? 'Ready · Semantic' : showNavigable && navigableEntity ? 'Ready · Move' : showFree && freeEntity ? 'Ready · Free' : showVoxels && voxelEntity ? 'Ready · Voxels' : showPoints && pointEntity ? 'Ready · Points' : 'Ready · Mesh';
+    const status = showSamSemantics && samSemanticEntity ? 'Ready · SAM Semantic' : showSemantics && semanticEntity ? 'Ready · Semantic' : showNavigable && navigableEntity ? 'Ready · Move' : showFree && freeEntity ? 'Ready · Free' : showVoxels && voxelEntity ? 'Ready · Voxels' : showPoints && pointEntity ? 'Ready · Points' : 'Ready · Mesh';
     setStatus(status);
   }
 
@@ -1171,9 +1178,11 @@ function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, fr
   freeButton.addEventListener('click', () => setMode('free-space'));
   navigableButton.addEventListener('click', () => setMode('navigable'));
   semanticButton.addEventListener('click', () => setMode('semantics'));
+  samSemanticButton.addEventListener('click', () => setMode('sam-semantics'));
   const saved = localStorage.getItem(pointCloudStorageKey(config));
   setMode(
-    saved === 'semantics' && semanticEntity ? 'semantics'
+    saved === 'sam-semantics' && samSemanticEntity ? 'sam-semantics'
+      : saved === 'semantics' && semanticEntity ? 'semantics'
       : saved === 'navigable' && navigableEntity ? 'navigable'
       : saved === 'free-space' && freeEntity ? 'free-space'
         : saved === 'voxels' && voxelEntity ? 'voxels'
@@ -1239,6 +1248,7 @@ async function boot() {
   const freeEntity = new Entity('Observed Free Space');
   const navigableEntity = new Entity('Navigable Free Space');
   const semanticEntity = new Entity('Semantic Voxels');
+  const samSemanticEntity = new Entity('SAM Mask Semantic Voxels');
   app.root.addChild(sceneRoot);
   sceneRoot.addChild(sceneEntity);
   sceneRoot.addChild(pointEntity);
@@ -1246,19 +1256,22 @@ async function boot() {
   sceneRoot.addChild(freeEntity);
   sceneRoot.addChild(navigableEntity);
   sceneRoot.addChild(semanticEntity);
+  sceneRoot.addChild(samSemanticEntity);
   sceneEntity.setPosition(0, 0, 0);
   pointEntity.setPosition(0, 0, 0);
   voxelEntity.setPosition(0, 0, 0);
   freeEntity.setPosition(0, 0, 0);
   navigableEntity.setPosition(0, 0, 0);
   semanticEntity.setPosition(0, 0, 0);
+  samSemanticEntity.setPosition(0, 0, 0);
   applySplatTransform(sceneRoot, sceneEntity, transform);
   applySplatTransform(sceneRoot, pointEntity, transform);
   applySplatTransform(sceneRoot, voxelEntity, transform);
   applySplatTransform(sceneRoot, freeEntity, transform);
   applySplatTransform(sceneRoot, navigableEntity, transform);
   applySplatTransform(sceneRoot, semanticEntity, transform);
-  installTransformTools(config, sceneRoot, [sceneEntity, pointEntity, voxelEntity, freeEntity, navigableEntity, semanticEntity], transform);
+  applySplatTransform(sceneRoot, samSemanticEntity, transform);
+  installTransformTools(config, sceneRoot, [sceneEntity, pointEntity, voxelEntity, freeEntity, navigableEntity, semanticEntity, samSemanticEntity], transform);
 
   if (isMeshScene(config)) {
     await installMeshScene(config, app, sceneRoot, sceneEntity);
@@ -1268,11 +1281,13 @@ async function boot() {
     const freeMeshInstance = await installVoxelMaskScene(config.freeSpaceGridAssetUrl, app, freeEntity, voxelSize);
     const navigableMeshInstance = await installVoxelMaskScene(config.navigableGridAssetUrl, app, navigableEntity, voxelSize);
     const semanticMeshInstance = await installVoxelMaskScene(config.semanticVoxelAssetUrl, app, semanticEntity, voxelSize);
+    const samSemanticMeshInstance = await installVoxelMaskScene(config.samSemanticVoxelAssetUrl, app, samSemanticEntity, voxelSize);
     pointEntity.enabled = false;
     voxelEntity.enabled = false;
     freeEntity.enabled = false;
     navigableEntity.enabled = false;
     semanticEntity.enabled = false;
+    samSemanticEntity.enabled = false;
     installRenderModeTools(
       config,
       sceneEntity,
@@ -1281,7 +1296,8 @@ async function boot() {
       config.freeSpaceGridAssetUrl ? freeEntity : null,
       config.navigableGridAssetUrl ? navigableEntity : null,
       config.semanticVoxelAssetUrl ? semanticEntity : null,
-      [voxelMeshInstance, freeMeshInstance, navigableMeshInstance, semanticMeshInstance]
+      config.samSemanticVoxelAssetUrl ? samSemanticEntity : null,
+      [voxelMeshInstance, freeMeshInstance, navigableMeshInstance, semanticMeshInstance, samSemanticMeshInstance]
     );
   } else {
     const previewAssetUrl = config.previewAssetUrl || config.assetUrl;

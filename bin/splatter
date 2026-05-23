@@ -49,6 +49,9 @@ Commands:
   voxel-stage-free-space-primary [max-rays] [max-free]
                                              Stage free/navigable voxel masks for primary OpenMVS scenes
   voxel-stage-semantics                      Stage semantic voxel labels for primary OpenMVS scenes
+  sam-mask-voxel-segment <voxels.json> <colmap-sparse> <mask-dir> <summary.json> <semantic.ply> [min-votes]
+                                             Project SAM/SAM3 masks into occupied voxel labels
+  sam-stage-voxel-semantics [min-votes]      Stage SAM-mask voxel labels for primary OpenMVS scenes
   voxel-improve-primary [res-list]           Sweep and stage best primary voxel grids
   surface-reconstruct <capture> [model]      Run COLMAP dense depth, fusion, and mesh
   openmvs-batch [input-dir]                  Run OpenMVS for best capture per input and stage mesh results
@@ -231,6 +234,18 @@ case "$1" in
       exit 1
     fi
     scripts/stage_voxel_semantics.py
+    ;;
+  sam-mask-voxel-segment)
+    shift
+    scripts/sam_mask_voxel_project.py "$@"
+    ;;
+  sam-stage-voxel-semantics)
+    shift
+    if (( $# > 1 )); then
+      echo "Usage: splatter sam-stage-voxel-semantics [min-votes]" >&2
+      exit 1
+    fi
+    scripts/stage_sam_voxel_semantics.py "$@"
     ;;
   voxel-improve-primary)
     shift

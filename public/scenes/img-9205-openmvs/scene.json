@@ -168,6 +168,16 @@
       "labeledVoxels": 58381,
       "totalVoxels": 1299200,
       "labeledRatio": 0.044936114532019705
+    },
+    "samSemanticVoxels": {
+      "method": "sam-mask-multiview-projection",
+      "status": "missing SAM masks",
+      "maskDir": "captures/img-9205-fps1-pinhole/sam_masks",
+      "inputContract": {
+        "layoutA": "sam_masks/<label>/<frame_stem>.png",
+        "layoutB": "sam_masks/<frame_stem>__<label>.png",
+        "threshold": "mask pixel > 127"
+      }
     }
   },
   "quality": {
