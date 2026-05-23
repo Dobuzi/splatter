@@ -1032,6 +1032,14 @@ async function installVoxelGridScene(config, app, child, pointSize) {
   return createVoxelPointCloud(app, meshData, child, pointSize);
 }
 
+async function installVoxelMaskScene(url, app, child, pointSize) {
+  if (!url) {
+    return null;
+  }
+  const meshData = await loadPlyMesh(url);
+  return createVoxelPointCloud(app, meshData, child, pointSize);
+}
+
 function clampVoxelSize(value) {
   return Math.min(16, Math.max(1, Math.round(value)));
 }
@@ -1042,11 +1050,12 @@ function loadVoxelSize(config) {
   return clampVoxelSize(Number.isFinite(size) ? size : 5);
 }
 
-function installVoxelSizeTool(config, voxelMeshInstance) {
+function installVoxelSizeTool(config, voxelMeshInstances) {
   const control = tools?.querySelector('[data-action="voxel-size"]');
   const input = control?.querySelector('input');
   const output = control?.querySelector('output');
-  if (!control || !input || !output || !voxelMeshInstance?.material) {
+  const meshInstances = voxelMeshInstances.filter((meshInstance) => meshInstance?.material);
+  if (!control || !input || !output || meshInstances.length === 0) {
     return { setVisible() {} };
   }
 
@@ -1054,7 +1063,9 @@ function installVoxelSizeTool(config, voxelMeshInstance) {
     const size = clampVoxelSize(Number(value));
     input.value = String(size);
     output.textContent = String(size);
-    voxelMeshInstance.material.setParameter('uPointSize', size);
+    for (const meshInstance of meshInstances) {
+      meshInstance.material.setParameter('uPointSize', size);
+    }
     localStorage.setItem(voxelSizeStorageKey(config), String(size));
   }
 
@@ -1067,41 +1078,65 @@ function installVoxelSizeTool(config, voxelMeshInstance) {
   };
 }
 
-function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, voxelMeshInstance) {
+function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, freeEntity, navigableEntity, voxelMeshInstances) {
   const meshButton = tools?.querySelector('[data-action="render-mesh"]');
   const pointButton = tools?.querySelector('[data-action="render-points"]');
   const voxelButton = tools?.querySelector('[data-action="render-voxels"]');
-  if (!meshButton || !pointButton || !voxelButton || (!pointEntity && !voxelEntity)) {
+  const freeButton = tools?.querySelector('[data-action="render-free-space"]');
+  const navigableButton = tools?.querySelector('[data-action="render-navigable"]');
+  if (!meshButton || !pointButton || !voxelButton || !freeButton || !navigableButton || (!pointEntity && !voxelEntity && !freeEntity && !navigableEntity)) {
     return;
   }
-  const voxelSizeTool = installVoxelSizeTool(config, voxelMeshInstance);
+  const voxelSizeTool = installVoxelSizeTool(config, voxelMeshInstances);
   meshButton.hidden = false;
   pointButton.hidden = !pointEntity;
   voxelButton.hidden = !voxelEntity;
+  freeButton.hidden = !freeEntity;
+  navigableButton.hidden = !navigableEntity;
 
   function setMode(mode) {
     const showPoints = mode === 'points';
     const showVoxels = mode === 'voxels';
-    meshEntity.enabled = !showPoints && !showVoxels;
+    const showFree = mode === 'free-space';
+    const showNavigable = mode === 'navigable';
+    meshEntity.enabled = !showPoints && !showVoxels && !showFree && !showNavigable;
     if (pointEntity) {
       pointEntity.enabled = showPoints;
     }
     if (voxelEntity) {
       voxelEntity.enabled = showVoxels;
     }
+    if (freeEntity) {
+      freeEntity.enabled = showFree;
+    }
+    if (navigableEntity) {
+      navigableEntity.enabled = showNavigable;
+    }
     meshButton.setAttribute('aria-pressed', String(meshEntity.enabled));
     pointButton.setAttribute('aria-pressed', String(Boolean(pointEntity && showPoints)));
     voxelButton.setAttribute('aria-pressed', String(Boolean(voxelEntity && showVoxels)));
-    voxelSizeTool.setVisible(Boolean(voxelEntity && showVoxels));
-    localStorage.setItem(pointCloudStorageKey(config), showVoxels && voxelEntity ? 'voxels' : showPoints && pointEntity ? 'points' : 'mesh');
-    setStatus(showVoxels && voxelEntity ? 'Ready · Voxels' : showPoints && pointEntity ? 'Ready · Points' : 'Ready · Mesh');
+    freeButton.setAttribute('aria-pressed', String(Boolean(freeEntity && showFree)));
+    navigableButton.setAttribute('aria-pressed', String(Boolean(navigableEntity && showNavigable)));
+    voxelSizeTool.setVisible(Boolean((voxelEntity && showVoxels) || (freeEntity && showFree) || (navigableEntity && showNavigable)));
+    const savedMode = showNavigable && navigableEntity ? 'navigable' : showFree && freeEntity ? 'free-space' : showVoxels && voxelEntity ? 'voxels' : showPoints && pointEntity ? 'points' : 'mesh';
+    localStorage.setItem(pointCloudStorageKey(config), savedMode);
+    const status = showNavigable && navigableEntity ? 'Ready · Move' : showFree && freeEntity ? 'Ready · Free' : showVoxels && voxelEntity ? 'Ready · Voxels' : showPoints && pointEntity ? 'Ready · Points' : 'Ready · Mesh';
+    setStatus(status);
   }
 
   meshButton.addEventListener('click', () => setMode('mesh'));
   pointButton.addEventListener('click', () => setMode('points'));
   voxelButton.addEventListener('click', () => setMode('voxels'));
+  freeButton.addEventListener('click', () => setMode('free-space'));
+  navigableButton.addEventListener('click', () => setMode('navigable'));
   const saved = localStorage.getItem(pointCloudStorageKey(config));
-  setMode(saved === 'voxels' && voxelEntity ? 'voxels' : saved === 'points' && pointEntity ? 'points' : 'mesh');
+  setMode(
+    saved === 'navigable' && navigableEntity ? 'navigable'
+      : saved === 'free-space' && freeEntity ? 'free-space'
+        : saved === 'voxels' && voxelEntity ? 'voxels'
+          : saved === 'points' && pointEntity ? 'points'
+            : 'mesh'
+  );
 }
 
 async function boot() {
@@ -1157,25 +1192,46 @@ async function boot() {
   const sceneEntity = new Entity(isMeshScene(config) ? 'PLY Mesh' : 'Gaussian Splat');
   const pointEntity = new Entity('Dense Point Cloud');
   const voxelEntity = new Entity('Occupancy Voxel Grid');
+  const freeEntity = new Entity('Observed Free Space');
+  const navigableEntity = new Entity('Navigable Free Space');
   app.root.addChild(sceneRoot);
   sceneRoot.addChild(sceneEntity);
   sceneRoot.addChild(pointEntity);
   sceneRoot.addChild(voxelEntity);
+  sceneRoot.addChild(freeEntity);
+  sceneRoot.addChild(navigableEntity);
   sceneEntity.setPosition(0, 0, 0);
   pointEntity.setPosition(0, 0, 0);
   voxelEntity.setPosition(0, 0, 0);
+  freeEntity.setPosition(0, 0, 0);
+  navigableEntity.setPosition(0, 0, 0);
   applySplatTransform(sceneRoot, sceneEntity, transform);
   applySplatTransform(sceneRoot, pointEntity, transform);
   applySplatTransform(sceneRoot, voxelEntity, transform);
-  installTransformTools(config, sceneRoot, [sceneEntity, pointEntity, voxelEntity], transform);
+  applySplatTransform(sceneRoot, freeEntity, transform);
+  applySplatTransform(sceneRoot, navigableEntity, transform);
+  installTransformTools(config, sceneRoot, [sceneEntity, pointEntity, voxelEntity, freeEntity, navigableEntity], transform);
 
   if (isMeshScene(config)) {
     await installMeshScene(config, app, sceneRoot, sceneEntity);
     await installPointCloudScene(config, app, pointEntity);
-    const voxelMeshInstance = await installVoxelGridScene(config, app, voxelEntity, loadVoxelSize(config));
+    const voxelSize = loadVoxelSize(config);
+    const voxelMeshInstance = await installVoxelGridScene(config, app, voxelEntity, voxelSize);
+    const freeMeshInstance = await installVoxelMaskScene(config.freeSpaceGridAssetUrl, app, freeEntity, voxelSize);
+    const navigableMeshInstance = await installVoxelMaskScene(config.navigableGridAssetUrl, app, navigableEntity, voxelSize);
     pointEntity.enabled = false;
     voxelEntity.enabled = false;
-    installRenderModeTools(config, sceneEntity, config.pointCloudAssetUrl ? pointEntity : null, config.voxelGridAssetUrl ? voxelEntity : null, voxelMeshInstance);
+    freeEntity.enabled = false;
+    navigableEntity.enabled = false;
+    installRenderModeTools(
+      config,
+      sceneEntity,
+      config.pointCloudAssetUrl ? pointEntity : null,
+      config.voxelGridAssetUrl ? voxelEntity : null,
+      config.freeSpaceGridAssetUrl ? freeEntity : null,
+      config.navigableGridAssetUrl ? navigableEntity : null,
+      [voxelMeshInstance, freeMeshInstance, navigableMeshInstance]
+    );
   } else {
     const previewAssetUrl = config.previewAssetUrl || config.assetUrl;
     const previewAsset = await loadAsset(new Asset('capture-preview', 'gsplat', {

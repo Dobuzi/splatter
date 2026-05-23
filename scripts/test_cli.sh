@@ -28,7 +28,9 @@ fi
 "$cli" --help | grep -q "mesh-simplify"
 "$cli" --help | grep -q "mesh-largest-component"
 "$cli" --help | grep -q "voxel-grid"
+"$cli" --help | grep -q "voxel-free-space"
 "$cli" --help | grep -q "voxel-stage-primary"
+"$cli" --help | grep -q "voxel-stage-free-space-primary"
 "$cli" --help | grep -q "voxel-improve-primary"
 "$cli" --help | grep -q "surface-reconstruct"
 "$cli" --help | grep -q "openmvs-batch"
@@ -145,6 +147,11 @@ fi
 
 if "$cli" voxel-grid >/dev/null 2>&1; then
   echo "Voxel grid without required args should fail" >&2
+  exit 1
+fi
+
+if "$cli" voxel-free-space >/dev/null 2>&1; then
+  echo "Voxel free-space without required args should fail" >&2
   exit 1
 fi
 
@@ -302,6 +309,13 @@ voxel_color_output=$("$cli" voxel-grid "$checkpoint_dir/colored_points.ply" "$ch
 printf '%s\n' "$voxel_color_output" | grep -q '"colorSource": "input-point-average"'
 grep -q '"colors"' "$checkpoint_dir/voxels-colored.json"
 grep -q '128' "$checkpoint_dir/voxels-colored.json"
+printf '{"cameraCenters":[[-3,2,3]]}\n' > "$checkpoint_dir/cameras.json"
+free_space_output=$("$cli" voxel-free-space "$checkpoint_dir/colored_points.ply" "$checkpoint_dir/voxels-colored.json" "$checkpoint_dir/cameras.json" "$checkpoint_dir/free-space.json" "$checkpoint_dir/free-space.ply" "$checkpoint_dir/navigable.ply" 2 100)
+printf '%s\n' "$free_space_output" | grep -q '"method": "camera-ray-carving"'
+printf '%s\n' "$free_space_output" | grep -q '"freeVoxels"'
+grep -q '"unknownVoxels"' "$checkpoint_dir/free-space.json"
+test -s "$checkpoint_dir/free-space.ply"
+test -s "$checkpoint_dir/navigable.ply"
 
 mask_output=$(SPLAT_MASK_DRY_RUN=1 "$cli" mask-frames missing-capture)
 printf '%s\n' "$mask_output" | grep -q "Mask generation"

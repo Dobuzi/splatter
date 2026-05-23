@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-store">
     <title>Gaussian Splat Viewer</title>
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="styles.css?v=voxel-color-20260522">
+    <link rel="stylesheet" href="styles.css?v=free-space-20260523">
     <script type="importmap">
       {
         "imports": {
@@ -48,12 +48,14 @@
       <button type="button" data-action="render-mesh" hidden>Mesh</button>
       <button type="button" data-action="render-points" hidden>Points</button>
       <button type="button" data-action="render-voxels" hidden>Voxel</button>
+      <button type="button" data-action="render-free-space" hidden>Free</button>
+      <button type="button" data-action="render-navigable" hidden>Move</button>
       <label class="range-tool" data-action="voxel-size" hidden>
         <span>Voxel size</span>
         <input type="range" min="1" max="16" step="1" value="5" aria-label="Voxel size">
         <output>5</output>
       </label>
     </div>
-    <script type="module" src="main.js?v=voxel-color-20260522"></script>
+    <script type="module" src="main.js?v=free-space-20260523"></script>
   </body>
 </html>

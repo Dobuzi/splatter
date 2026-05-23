@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "method": "camera-ray-carving",
+  "cameraSource": "captures/img-9142-fps2/colmap/sparse/0",
+  "pointSource": "public/assets/img-9142-openmvs-scene_dense_points.ply",
+  "occupancySource": "public/assets/img-9142-openmvs-occupancy-r144-m2-d1.json",
+  "sampledRays": 60000,
+  "acceptedRays": 60000,
+  "cameraCount": 59,
+  "freeVoxels": 116370,
+  "navigableVoxels": 14814,
+  "unknownVoxels": 1373548,
+  "totalVoxels": 1534970,
+  "freeRatio": 0.07581255659719734,
+  "navigableRatio": 0.009651002951197743,
+  "upAxis": "y",
+  "floorSide": "max",
+  "freeColor": [
+    70,
+    190,
+    255
+  ],
+  "navigableColor": [
+    94,
+    230,
+    157
+  ],
+  "note": "Free means camera-observed empty space before a reconstructed surface; unknown space is intentionally not marked as free."
+}

@@ -41,7 +41,11 @@ Commands:
   mesh-largest-component <input> <output>    Keep only the largest connected mesh component
   voxel-grid <points> <json> <ply> [res] [bbox] [min] [dilate]
                                              Build a 3D occupancy voxel grid
+  voxel-free-space <points> <voxels.json> <camera-source> <summary.json> <free.ply> <navigable.ply> [max-rays] [max-free]
+                                             Build camera-carved free/navigable voxel masks
   voxel-stage-primary [res] [min] [dilate]   Stage occupancy voxel grids for primary OpenMVS scenes
+  voxel-stage-free-space-primary [max-rays] [max-free]
+                                             Stage free/navigable voxel masks for primary OpenMVS scenes
   voxel-improve-primary [res-list]           Sweep and stage best primary voxel grids
   surface-reconstruct <capture> [model]      Run COLMAP dense depth, fusion, and mesh
   openmvs-batch [input-dir]                  Run OpenMVS for best capture per input and stage mesh results
@@ -193,6 +197,10 @@ case "$1" in
     shift
     scripts/voxel_grid.py "$@"
     ;;
+  voxel-free-space)
+    shift
+    scripts/voxel_free_space.py "$@"
+    ;;
   voxel-stage-primary)
     shift
     if (( $# > 3 )); then
@@ -200,6 +208,14 @@ case "$1" in
       exit 1
     fi
     scripts/stage_voxel_grids.py "$@"
+    ;;
+  voxel-stage-free-space-primary)
+    shift
+    if (( $# > 2 )); then
+      echo "Usage: splatter voxel-stage-free-space-primary [max-rays] [max-free]" >&2
+      exit 1
+    fi
+    scripts/stage_free_space_grids.py "$@"
     ;;
   voxel-improve-primary)
     shift

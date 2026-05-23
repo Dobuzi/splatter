@@ -59,6 +59,15 @@ function validateSceneConfig(config, file) {
   if (config.voxelGridUrl) {
     assertPublicRelative(config.voxelGridUrl, `${file} voxelGridUrl`);
   }
+  if (config.freeSpaceGridUrl) {
+    assertPublicRelative(config.freeSpaceGridUrl, `${file} freeSpaceGridUrl`);
+  }
+  if (config.freeSpaceGridAssetUrl) {
+    assertPublicRelative(config.freeSpaceGridAssetUrl, `${file} freeSpaceGridAssetUrl`);
+  }
+  if (config.navigableGridAssetUrl) {
+    assertPublicRelative(config.navigableGridAssetUrl, `${file} navigableGridAssetUrl`);
+  }
   if (config.textureAssetUrl) {
     assertPublicRelative(config.textureAssetUrl, `${file} textureAssetUrl`);
   }
@@ -82,7 +91,17 @@ function validateSceneConfig(config, file) {
       }
     }
   }
-  return [config.assetUrl, config.previewAssetUrl, config.pointCloudAssetUrl, config.voxelGridAssetUrl, config.voxelGridUrl, config.textureAssetUrl].filter(Boolean);
+  return [
+    config.assetUrl,
+    config.previewAssetUrl,
+    config.pointCloudAssetUrl,
+    config.voxelGridAssetUrl,
+    config.voxelGridUrl,
+    config.freeSpaceGridUrl,
+    config.freeSpaceGridAssetUrl,
+    config.navigableGridAssetUrl,
+    config.textureAssetUrl
+  ].filter(Boolean);
 }
 
 const assetUrls = new Set(validateSceneConfig(readJson("public/scene.json"), "scene.json"));

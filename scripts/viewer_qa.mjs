@@ -11,7 +11,7 @@ const pipelinePrimaryTargets = new Set(pipelineManifest.primaryTargets || []);
 
 for (const scene of manifest.scenes || []) {
   const config = JSON.parse(fs.readFileSync(`public/${scene.sceneUrl}`, 'utf8'));
-  for (const key of ['assetUrl', 'textureAssetUrl', 'pointCloudAssetUrl', 'voxelGridAssetUrl', 'voxelGridUrl']) {
+  for (const key of ['assetUrl', 'textureAssetUrl', 'pointCloudAssetUrl', 'voxelGridAssetUrl', 'voxelGridUrl', 'freeSpaceGridUrl', 'freeSpaceGridAssetUrl', 'navigableGridAssetUrl']) {
     if (!config[key]) continue;
     const path = `public/${config[key]}`;
     if (!fs.existsSync(path)) {
@@ -23,6 +23,9 @@ for (const scene of manifest.scenes || []) {
   }
   if (config.voxelGridAssetUrl && !config.metrics?.voxelGrid) {
     failures.push(`${scene.id}: voxelGridAssetUrl requires metrics.voxelGrid`);
+  }
+  if ((config.freeSpaceGridAssetUrl || config.navigableGridAssetUrl) && !config.metrics?.freeSpaceGrid) {
+    failures.push(`${scene.id}: free-space assets require metrics.freeSpaceGrid`);
   }
   if (scene.primaryTarget === true && config.format === 'PLY Mesh' && !config.voxelGridAssetUrl) {
     failures.push(`${scene.id}: primary mesh scene requires voxelGridAssetUrl`);
@@ -52,6 +55,9 @@ for (const primaryTarget of scenePrimaryTargets) {
 if (!indexHtml.includes('data-action="voxel-size"')) {
   failures.push('viewer is missing the voxel size control');
 }
+if (!indexHtml.includes('data-action="render-free-space"') || !indexHtml.includes('data-action="render-navigable"')) {
+  failures.push('viewer is missing free-space render mode controls');
+}
 if (!indexHtml.includes('id="pipelineSummary"')) {
   failures.push('viewer is missing the pipeline summary surface');
 }
@@ -60,6 +66,9 @@ if (!pipelineManifest.localPolicy || pipelineManifest.externalAccelerators?.sam3
 }
 if (!mainJs.includes('voxelSizeStorageKey') || !mainJs.includes('uPointSize')) {
   failures.push('viewer is missing persisted voxel point size rendering');
+}
+if (!mainJs.includes('freeSpaceGridAssetUrl') || !mainJs.includes('navigableGridAssetUrl')) {
+  failures.push('viewer is missing free/navigable voxel loading');
 }
 if (!mainJs.includes('setPipelineSummary') || !mainJs.includes('pipelineSummaryItems')) {
   failures.push('viewer is missing pipeline summary rendering');

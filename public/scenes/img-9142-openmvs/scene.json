@@ -6,7 +6,7 @@
   "fileSize": "14.75 MB",
   "capture": "img-9142-fps2, 61 frames, 59 COLMAP images",
   "training": "OpenMVS CPU dense, 1473200 dense points, 175900 vertices, 351572 faces",
-  "delivery": "Largest-Component Textured Mesh 14.75 MB; dense point cloud 5.01 MB; occupancy voxels 660.12 KB",
+  "delivery": "Largest-Component Textured Mesh 14.75 MB; dense point cloud 5.01 MB; occupancy voxels 660.12 KB; free-space mask 1.66 MB; navigable mask 217.18 KB",
   "viewer": {
     "background": [
       0.02,
@@ -116,6 +116,20 @@
       "largestComponentRatio": 0.932145076800142,
       "colorSource": "input-point-average",
       "source": "assets/img-9142-openmvs-scene_dense_points.ply"
+    },
+    "freeSpaceGrid": {
+      "method": "camera-ray-carving",
+      "cameraCount": 59,
+      "sampledRays": 60000,
+      "acceptedRays": 60000,
+      "freeVoxels": 116370,
+      "navigableVoxels": 14814,
+      "unknownVoxels": 1373548,
+      "freeRatio": 0.07581255659719734,
+      "navigableRatio": 0.009651002951197743,
+      "upAxis": "y",
+      "floorSide": "max",
+      "source": "assets/img-9142-openmvs-scene_dense_points.ply"
     }
   },
   "quality": {
@@ -135,5 +149,8 @@
   "textureAssetUrl": "assets/img-9142-openmvs-scene_textured0.png",
   "pointCloudAssetUrl": "assets/img-9142-openmvs-scene_dense_points.ply",
   "voxelGridUrl": "assets/img-9142-openmvs-occupancy-r144-m2-d1.json",
-  "voxelGridAssetUrl": "assets/img-9142-openmvs-occupancy-r144-m2-d1.ply"
+  "voxelGridAssetUrl": "assets/img-9142-openmvs-occupancy-r144-m2-d1.ply",
+  "freeSpaceGridUrl": "assets/img-9142-openmvs-free-space-r144-m2-d1.json",
+  "freeSpaceGridAssetUrl": "assets/img-9142-openmvs-free-space-r144-m2-d1.ply",
+  "navigableGridAssetUrl": "assets/img-9142-openmvs-navigable-r144-m2-d1.ply"
 }
