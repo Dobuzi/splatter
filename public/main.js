@@ -1112,13 +1112,14 @@ function installVoxelSizeTool(config, voxelMeshInstances) {
   };
 }
 
-function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, freeEntity, navigableEntity, voxelMeshInstances) {
+function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, freeEntity, navigableEntity, semanticEntity, voxelMeshInstances) {
   const meshButton = tools?.querySelector('[data-action="render-mesh"]');
   const pointButton = tools?.querySelector('[data-action="render-points"]');
   const voxelButton = tools?.querySelector('[data-action="render-voxels"]');
   const freeButton = tools?.querySelector('[data-action="render-free-space"]');
   const navigableButton = tools?.querySelector('[data-action="render-navigable"]');
-  if (!meshButton || !pointButton || !voxelButton || !freeButton || !navigableButton || (!pointEntity && !voxelEntity && !freeEntity && !navigableEntity)) {
+  const semanticButton = tools?.querySelector('[data-action="render-semantics"]');
+  if (!meshButton || !pointButton || !voxelButton || !freeButton || !navigableButton || !semanticButton || (!pointEntity && !voxelEntity && !freeEntity && !navigableEntity && !semanticEntity)) {
     return;
   }
   const voxelSizeTool = installVoxelSizeTool(config, voxelMeshInstances);
@@ -1127,13 +1128,15 @@ function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, fr
   voxelButton.hidden = !voxelEntity;
   freeButton.hidden = !freeEntity;
   navigableButton.hidden = !navigableEntity;
+  semanticButton.hidden = !semanticEntity;
 
   function setMode(mode) {
     const showPoints = mode === 'points';
     const showVoxels = mode === 'voxels';
     const showFree = mode === 'free-space';
     const showNavigable = mode === 'navigable';
-    meshEntity.enabled = !showPoints && !showVoxels && !showFree && !showNavigable;
+    const showSemantics = mode === 'semantics';
+    meshEntity.enabled = !showPoints && !showVoxels && !showFree && !showNavigable && !showSemantics;
     if (pointEntity) {
       pointEntity.enabled = showPoints;
     }
@@ -1146,15 +1149,19 @@ function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, fr
     if (navigableEntity) {
       navigableEntity.enabled = showNavigable;
     }
+    if (semanticEntity) {
+      semanticEntity.enabled = showSemantics;
+    }
     meshButton.setAttribute('aria-pressed', String(meshEntity.enabled));
     pointButton.setAttribute('aria-pressed', String(Boolean(pointEntity && showPoints)));
     voxelButton.setAttribute('aria-pressed', String(Boolean(voxelEntity && showVoxels)));
     freeButton.setAttribute('aria-pressed', String(Boolean(freeEntity && showFree)));
     navigableButton.setAttribute('aria-pressed', String(Boolean(navigableEntity && showNavigable)));
-    voxelSizeTool.setVisible(Boolean((voxelEntity && showVoxels) || (freeEntity && showFree) || (navigableEntity && showNavigable)));
-    const savedMode = showNavigable && navigableEntity ? 'navigable' : showFree && freeEntity ? 'free-space' : showVoxels && voxelEntity ? 'voxels' : showPoints && pointEntity ? 'points' : 'mesh';
+    semanticButton.setAttribute('aria-pressed', String(Boolean(semanticEntity && showSemantics)));
+    voxelSizeTool.setVisible(Boolean((voxelEntity && showVoxels) || (freeEntity && showFree) || (navigableEntity && showNavigable) || (semanticEntity && showSemantics)));
+    const savedMode = showSemantics && semanticEntity ? 'semantics' : showNavigable && navigableEntity ? 'navigable' : showFree && freeEntity ? 'free-space' : showVoxels && voxelEntity ? 'voxels' : showPoints && pointEntity ? 'points' : 'mesh';
     localStorage.setItem(pointCloudStorageKey(config), savedMode);
-    const status = showNavigable && navigableEntity ? 'Ready · Move' : showFree && freeEntity ? 'Ready · Free' : showVoxels && voxelEntity ? 'Ready · Voxels' : showPoints && pointEntity ? 'Ready · Points' : 'Ready · Mesh';
+    const status = showSemantics && semanticEntity ? 'Ready · Semantic' : showNavigable && navigableEntity ? 'Ready · Move' : showFree && freeEntity ? 'Ready · Free' : showVoxels && voxelEntity ? 'Ready · Voxels' : showPoints && pointEntity ? 'Ready · Points' : 'Ready · Mesh';
     setStatus(status);
   }
 
@@ -1163,9 +1170,11 @@ function installRenderModeTools(config, meshEntity, pointEntity, voxelEntity, fr
   voxelButton.addEventListener('click', () => setMode('voxels'));
   freeButton.addEventListener('click', () => setMode('free-space'));
   navigableButton.addEventListener('click', () => setMode('navigable'));
+  semanticButton.addEventListener('click', () => setMode('semantics'));
   const saved = localStorage.getItem(pointCloudStorageKey(config));
   setMode(
-    saved === 'navigable' && navigableEntity ? 'navigable'
+    saved === 'semantics' && semanticEntity ? 'semantics'
+      : saved === 'navigable' && navigableEntity ? 'navigable'
       : saved === 'free-space' && freeEntity ? 'free-space'
         : saved === 'voxels' && voxelEntity ? 'voxels'
           : saved === 'points' && pointEntity ? 'points'
@@ -1229,23 +1238,27 @@ async function boot() {
   const voxelEntity = new Entity('Occupancy Voxel Grid');
   const freeEntity = new Entity('Observed Free Space');
   const navigableEntity = new Entity('Navigable Free Space');
+  const semanticEntity = new Entity('Semantic Voxels');
   app.root.addChild(sceneRoot);
   sceneRoot.addChild(sceneEntity);
   sceneRoot.addChild(pointEntity);
   sceneRoot.addChild(voxelEntity);
   sceneRoot.addChild(freeEntity);
   sceneRoot.addChild(navigableEntity);
+  sceneRoot.addChild(semanticEntity);
   sceneEntity.setPosition(0, 0, 0);
   pointEntity.setPosition(0, 0, 0);
   voxelEntity.setPosition(0, 0, 0);
   freeEntity.setPosition(0, 0, 0);
   navigableEntity.setPosition(0, 0, 0);
+  semanticEntity.setPosition(0, 0, 0);
   applySplatTransform(sceneRoot, sceneEntity, transform);
   applySplatTransform(sceneRoot, pointEntity, transform);
   applySplatTransform(sceneRoot, voxelEntity, transform);
   applySplatTransform(sceneRoot, freeEntity, transform);
   applySplatTransform(sceneRoot, navigableEntity, transform);
-  installTransformTools(config, sceneRoot, [sceneEntity, pointEntity, voxelEntity, freeEntity, navigableEntity], transform);
+  applySplatTransform(sceneRoot, semanticEntity, transform);
+  installTransformTools(config, sceneRoot, [sceneEntity, pointEntity, voxelEntity, freeEntity, navigableEntity, semanticEntity], transform);
 
   if (isMeshScene(config)) {
     await installMeshScene(config, app, sceneRoot, sceneEntity);
@@ -1254,10 +1267,12 @@ async function boot() {
     const voxelMeshInstance = await installVoxelGridScene(config, app, voxelEntity, voxelSize);
     const freeMeshInstance = await installVoxelMaskScene(config.freeSpaceGridAssetUrl, app, freeEntity, voxelSize);
     const navigableMeshInstance = await installVoxelMaskScene(config.navigableGridAssetUrl, app, navigableEntity, voxelSize);
+    const semanticMeshInstance = await installVoxelMaskScene(config.semanticVoxelAssetUrl, app, semanticEntity, voxelSize);
     pointEntity.enabled = false;
     voxelEntity.enabled = false;
     freeEntity.enabled = false;
     navigableEntity.enabled = false;
+    semanticEntity.enabled = false;
     installRenderModeTools(
       config,
       sceneEntity,
@@ -1265,7 +1280,8 @@ async function boot() {
       config.voxelGridAssetUrl ? voxelEntity : null,
       config.freeSpaceGridAssetUrl ? freeEntity : null,
       config.navigableGridAssetUrl ? navigableEntity : null,
-      [voxelMeshInstance, freeMeshInstance, navigableMeshInstance]
+      config.semanticVoxelAssetUrl ? semanticEntity : null,
+      [voxelMeshInstance, freeMeshInstance, navigableMeshInstance, semanticMeshInstance]
     );
   } else {
     const previewAssetUrl = config.previewAssetUrl || config.assetUrl;

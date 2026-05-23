@@ -43,9 +43,12 @@ Commands:
                                              Build a 3D occupancy voxel grid
   voxel-free-space <points> <voxels.json> <camera-source> <summary.json> <free.ply> <navigable.ply> [max-rays] [max-free]
                                              Build camera-carved free/navigable voxel masks
+  voxel-segment <voxels.json> <free.ply> <navigable.ply> <summary.json> <semantic.ply>
+                                             Fuse voxel layers into semantic voxel labels
   voxel-stage-primary [res] [min] [dilate]   Stage occupancy voxel grids for primary OpenMVS scenes
   voxel-stage-free-space-primary [max-rays] [max-free]
                                              Stage free/navigable voxel masks for primary OpenMVS scenes
+  voxel-stage-semantics                      Stage semantic voxel labels for primary OpenMVS scenes
   voxel-improve-primary [res-list]           Sweep and stage best primary voxel grids
   surface-reconstruct <capture> [model]      Run COLMAP dense depth, fusion, and mesh
   openmvs-batch [input-dir]                  Run OpenMVS for best capture per input and stage mesh results
@@ -201,6 +204,10 @@ case "$1" in
     shift
     scripts/voxel_free_space.py "$@"
     ;;
+  voxel-segment)
+    shift
+    scripts/voxel_semantic_segment.py "$@"
+    ;;
   voxel-stage-primary)
     shift
     if (( $# > 3 )); then
@@ -216,6 +223,14 @@ case "$1" in
       exit 1
     fi
     scripts/stage_free_space_grids.py "$@"
+    ;;
+  voxel-stage-semantics)
+    shift
+    if (( $# != 0 )); then
+      echo "Usage: splatter voxel-stage-semantics" >&2
+      exit 1
+    fi
+    scripts/stage_voxel_semantics.py
     ;;
   voxel-improve-primary)
     shift

@@ -29,8 +29,10 @@ fi
 "$cli" --help | grep -q "mesh-largest-component"
 "$cli" --help | grep -q "voxel-grid"
 "$cli" --help | grep -q "voxel-free-space"
+"$cli" --help | grep -q "voxel-segment"
 "$cli" --help | grep -q "voxel-stage-primary"
 "$cli" --help | grep -q "voxel-stage-free-space-primary"
+"$cli" --help | grep -q "voxel-stage-semantics"
 "$cli" --help | grep -q "voxel-improve-primary"
 "$cli" --help | grep -q "surface-reconstruct"
 "$cli" --help | grep -q "openmvs-batch"
@@ -152,6 +154,11 @@ fi
 
 if "$cli" voxel-free-space >/dev/null 2>&1; then
   echo "Voxel free-space without required args should fail" >&2
+  exit 1
+fi
+
+if "$cli" voxel-segment >/dev/null 2>&1; then
+  echo "Voxel segment without required args should fail" >&2
   exit 1
 fi
 
@@ -316,6 +323,11 @@ printf '%s\n' "$free_space_output" | grep -q '"freeVoxels"'
 grep -q '"unknownVoxels"' "$checkpoint_dir/free-space.json"
 test -s "$checkpoint_dir/free-space.ply"
 test -s "$checkpoint_dir/navigable.ply"
+semantic_output=$("$cli" voxel-segment "$checkpoint_dir/voxels-colored.json" "$checkpoint_dir/free-space.ply" "$checkpoint_dir/navigable.ply" "$checkpoint_dir/semantic.json" "$checkpoint_dir/semantic.ply")
+printf '%s\n' "$semantic_output" | grep -q '"method": "occupancy-free-space-fusion"'
+printf '%s\n' "$semantic_output" | grep -q '"occupied_surface"'
+grep -q '"semanticAsset"' "$checkpoint_dir/semantic.json"
+test -s "$checkpoint_dir/semantic.ply"
 
 mask_output=$(SPLAT_MASK_DRY_RUN=1 "$cli" mask-frames missing-capture)
 printf '%s\n' "$mask_output" | grep -q "Mask generation"

@@ -1,0 +1,106 @@
+{
+  "scenes": [
+    {
+      "scene": "img-9142-openmvs",
+      "semanticVoxelUrl": "assets/img-9142-openmvs-semantic-r144-m2-d1.json",
+      "semanticVoxelAssetUrl": "assets/img-9142-openmvs-semantic-r144-m2-d1.ply",
+      "assetBytes": 2582962,
+      "schemaVersion": 1,
+      "method": "occupancy-free-space-fusion",
+      "occupancySource": "public/assets/img-9142-openmvs-occupancy-r144-m2-d1.json",
+      "freeSpaceSource": "public/assets/img-9142-openmvs-free-space-r144-m2-d1.ply",
+      "navigableSource": "public/assets/img-9142-openmvs-navigable-r144-m2-d1.ply",
+      "semanticAsset": "public/assets/img-9142-openmvs-semantic-r144-m2-d1.ply",
+      "labels": {
+        "occupied_surface": {
+          "id": 1,
+          "color": [
+            226,
+            180,
+            92
+          ],
+          "description": "Reconstructed occupied surface voxel"
+        },
+        "observed_free_space": {
+          "id": 2,
+          "color": [
+            70,
+            190,
+            255
+          ],
+          "description": "Camera-observed empty voxel before a reconstructed surface"
+        },
+        "navigable_space": {
+          "id": 3,
+          "color": [
+            94,
+            230,
+            157
+          ],
+          "description": "Observed free voxel with local support and clearance"
+        }
+      },
+      "counts": {
+        "unknown": 1373548,
+        "occupied_surface": 45052,
+        "observed_free_space": 101556,
+        "navigable_space": 14814
+      },
+      "labeledVoxels": 161422,
+      "totalVoxels": 1534970,
+      "labeledRatio": 0.10516296735441083,
+      "note": "Unknown voxels are counted but not rendered to avoid treating unobserved space as a semantic class."
+    },
+    {
+      "scene": "img-9205-openmvs",
+      "semanticVoxelUrl": "assets/img-9205-openmvs-semantic-r144-m1-d2.json",
+      "semanticVoxelAssetUrl": "assets/img-9205-openmvs-semantic-r144-m1-d2.ply",
+      "assetBytes": 934305,
+      "schemaVersion": 1,
+      "method": "occupancy-free-space-fusion",
+      "occupancySource": "public/assets/img-9205-openmvs-occupancy-r144-m1-d2.json",
+      "freeSpaceSource": "public/assets/img-9205-openmvs-free-space-r144-m1-d2.ply",
+      "navigableSource": "public/assets/img-9205-openmvs-navigable-r144-m1-d2.ply",
+      "semanticAsset": "public/assets/img-9205-openmvs-semantic-r144-m1-d2.ply",
+      "labels": {
+        "occupied_surface": {
+          "id": 1,
+          "color": [
+            226,
+            180,
+            92
+          ],
+          "description": "Reconstructed occupied surface voxel"
+        },
+        "observed_free_space": {
+          "id": 2,
+          "color": [
+            70,
+            190,
+            255
+          ],
+          "description": "Camera-observed empty voxel before a reconstructed surface"
+        },
+        "navigable_space": {
+          "id": 3,
+          "color": [
+            94,
+            230,
+            157
+          ],
+          "description": "Observed free voxel with local support and clearance"
+        }
+      },
+      "counts": {
+        "unknown": 1240819,
+        "occupied_surface": 39508,
+        "observed_free_space": 18429,
+        "navigable_space": 444
+      },
+      "labeledVoxels": 58381,
+      "totalVoxels": 1299200,
+      "labeledRatio": 0.044936114532019705,
+      "note": "Unknown voxels are counted but not rendered to avoid treating unobserved space as a semantic class."
+    }
+  ]
+}

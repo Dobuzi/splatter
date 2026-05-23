@@ -6,7 +6,7 @@
   "fileSize": "14.75 MB",
   "capture": "img-9142-fps2, 61 frames, 59 COLMAP images",
   "training": "OpenMVS CPU dense, 1473200 dense points, 175900 vertices, 351572 faces",
-  "delivery": "Largest-Component Textured Mesh 14.75 MB; dense point cloud 5.01 MB; occupancy voxels 660.12 KB; free-space mask 1.66 MB; navigable mask 217.18 KB",
+  "delivery": "Largest-Component Textured Mesh 14.75 MB; dense point cloud 5.01 MB; occupancy voxels 660.12 KB; free-space mask 1.66 MB; navigable mask 217.18 KB; semantic voxels 2.46 MB",
   "viewer": {
     "background": [
       0.02,
@@ -130,6 +130,44 @@
       "upAxis": "y",
       "floorSide": "max",
       "source": "assets/img-9142-openmvs-scene_dense_points.ply"
+    },
+    "semanticVoxels": {
+      "method": "occupancy-free-space-fusion",
+      "labels": {
+        "occupied_surface": {
+          "id": 1,
+          "color": [
+            226,
+            180,
+            92
+          ]
+        },
+        "observed_free_space": {
+          "id": 2,
+          "color": [
+            70,
+            190,
+            255
+          ]
+        },
+        "navigable_space": {
+          "id": 3,
+          "color": [
+            94,
+            230,
+            157
+          ]
+        }
+      },
+      "counts": {
+        "unknown": 1373548,
+        "occupied_surface": 45052,
+        "observed_free_space": 101556,
+        "navigable_space": 14814
+      },
+      "labeledVoxels": 161422,
+      "totalVoxels": 1534970,
+      "labeledRatio": 0.10516296735441083
     }
   },
   "quality": {
@@ -152,5 +190,7 @@
   "voxelGridAssetUrl": "assets/img-9142-openmvs-occupancy-r144-m2-d1.ply",
   "freeSpaceGridUrl": "assets/img-9142-openmvs-free-space-r144-m2-d1.json",
   "freeSpaceGridAssetUrl": "assets/img-9142-openmvs-free-space-r144-m2-d1.ply",
-  "navigableGridAssetUrl": "assets/img-9142-openmvs-navigable-r144-m2-d1.ply"
+  "navigableGridAssetUrl": "assets/img-9142-openmvs-navigable-r144-m2-d1.ply",
+  "semanticVoxelUrl": "assets/img-9142-openmvs-semantic-r144-m2-d1.json",
+  "semanticVoxelAssetUrl": "assets/img-9142-openmvs-semantic-r144-m2-d1.ply"
 }
