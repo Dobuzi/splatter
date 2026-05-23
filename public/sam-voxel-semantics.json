@@ -5,7 +5,7 @@
     {
       "scene": "img-9142-openmvs",
       "capture": "img-9142-fps2",
-      "maskDir": "captures/img-9142-fps2/sam_masks",
+      "maskDir": "captures/img-9142-fps2/sam_masks/object",
       "sparseModel": "captures/img-9142-fps2/colmap/sparse/0",
       "samSemanticVoxelUrl": "assets/img-9142-openmvs-sam-semantic-r144-m2-d1.json",
       "samSemanticVoxelAssetUrl": "assets/img-9142-openmvs-sam-semantic-r144-m2-d1.ply",
@@ -18,13 +18,13 @@
       "minVotes": 1,
       "registeredImages": 59,
       "maskFrames": 24,
-      "matchedMaskFrames": 24,
+      "matchedMaskFrames": 23,
       "maskFiles": 24,
-      "projectedVoxelTests": 305842,
-      "positiveVotes": 32298,
-      "labeledVoxels": 17530,
+      "projectedVoxelTests": 283809,
+      "positiveVotes": 48302,
+      "labeledVoxels": 24282,
       "surfaceVoxels": 45052,
-      "labelCoverage": 0.38910592204563615,
+      "labelCoverage": 0.5389771819231111,
       "labels": {
         "unlabeled_surface": {
           "id": 1,
@@ -34,18 +34,18 @@
             92
           ]
         },
-        "bootstrap object": {
+        "sam object": {
           "id": 2,
           "color": [
-            158,
             93,
-            146
+            190,
+            208
           ]
         }
       },
       "counts": {
-        "unlabeled_surface": 27522,
-        "bootstrap object": 17530
+        "unlabeled_surface": 20770,
+        "sam object": 24282
       },
       "status": "segmented",
       "inputContract": {
@@ -57,7 +57,7 @@
     {
       "scene": "img-9205-openmvs",
       "capture": "img-9205-fps1-pinhole",
-      "maskDir": "captures/img-9205-fps1-pinhole/sam_masks",
+      "maskDir": "captures/img-9205-fps1-pinhole/sam_masks/object",
       "sparseModel": "captures/img-9205-fps1-pinhole/colmap/sparse/0",
       "samSemanticVoxelUrl": "assets/img-9205-openmvs-sam-semantic-r144-m1-d2.json",
       "samSemanticVoxelAssetUrl": "assets/img-9205-openmvs-sam-semantic-r144-m1-d2.ply",
@@ -70,13 +70,13 @@
       "minVotes": 1,
       "registeredImages": 80,
       "maskFrames": 32,
-      "matchedMaskFrames": 32,
+      "matchedMaskFrames": 18,
       "maskFiles": 32,
-      "projectedVoxelTests": 255533,
-      "positiveVotes": 62818,
-      "labeledVoxels": 26384,
+      "projectedVoxelTests": 141556,
+      "positiveVotes": 19242,
+      "labeledVoxels": 13161,
       "surfaceVoxels": 39508,
-      "labelCoverage": 0.6678141135972461,
+      "labelCoverage": 0.3331224055887415,
       "labels": {
         "unlabeled_surface": {
           "id": 1,
@@ -86,18 +86,18 @@
             92
           ]
         },
-        "bootstrap object": {
+        "sam object": {
           "id": 2,
           "color": [
-            158,
             93,
-            146
+            190,
+            208
           ]
         }
       },
       "counts": {
-        "unlabeled_surface": 13124,
-        "bootstrap object": 26384
+        "unlabeled_surface": 26347,
+        "sam object": 13161
       },
       "status": "segmented",
       "inputContract": {

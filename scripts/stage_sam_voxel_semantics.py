@@ -20,7 +20,11 @@ def capture_slug(config):
 
 
 def mask_dir_for_capture(capture):
-    return Path("captures") / capture / "sam_masks"
+    root = Path("captures") / capture / "sam_masks"
+    object_dir = root / "object"
+    if object_dir.exists() and any(path.suffix.lower() == ".png" for path in object_dir.iterdir() if path.is_file()):
+        return object_dir
+    return root
 
 
 def sparse_model_for_capture(capture):

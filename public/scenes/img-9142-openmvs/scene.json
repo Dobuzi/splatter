@@ -172,14 +172,14 @@
     "samSemanticVoxels": {
       "method": "sam-mask-multiview-projection",
       "status": "segmented",
-      "maskDir": "captures/img-9142-fps2/sam_masks",
+      "maskDir": "captures/img-9142-fps2/sam_masks/object",
       "minVotes": 1,
       "maskFrames": 24,
-      "matchedMaskFrames": 24,
+      "matchedMaskFrames": 23,
       "maskFiles": 24,
-      "labeledVoxels": 17530,
+      "labeledVoxels": 24282,
       "surfaceVoxels": 45052,
-      "labelCoverage": 0.38910592204563615,
+      "labelCoverage": 0.5389771819231111,
       "labels": {
         "unlabeled_surface": {
           "id": 1,
@@ -189,18 +189,18 @@
             92
           ]
         },
-        "bootstrap object": {
+        "sam object": {
           "id": 2,
           "color": [
-            158,
             93,
-            146
+            190,
+            208
           ]
         }
       },
       "counts": {
-        "unlabeled_surface": 27522,
-        "bootstrap object": 17530
+        "unlabeled_surface": 20770,
+        "sam object": 24282
       }
     }
   },

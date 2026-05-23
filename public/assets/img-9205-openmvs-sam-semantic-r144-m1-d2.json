@@ -3,18 +3,18 @@
   "method": "sam-mask-multiview-projection",
   "occupancySource": "public/assets/img-9205-openmvs-occupancy-r144-m1-d2.json",
   "cameraSource": "captures/img-9205-fps1-pinhole/colmap/sparse/0",
-  "maskDir": "captures/img-9205-fps1-pinhole/sam_masks",
+  "maskDir": "captures/img-9205-fps1-pinhole/sam_masks/object",
   "semanticAsset": "public/assets/img-9205-openmvs-sam-semantic-r144-m1-d2.ply",
   "minVotes": 1,
   "registeredImages": 80,
   "maskFrames": 32,
-  "matchedMaskFrames": 32,
+  "matchedMaskFrames": 18,
   "maskFiles": 32,
-  "projectedVoxelTests": 255533,
-  "positiveVotes": 62818,
-  "labeledVoxels": 26384,
+  "projectedVoxelTests": 141556,
+  "positiveVotes": 19242,
+  "labeledVoxels": 13161,
   "surfaceVoxels": 39508,
-  "labelCoverage": 0.6678141135972461,
+  "labelCoverage": 0.3331224055887415,
   "labels": {
     "unlabeled_surface": {
       "id": 1,
@@ -24,18 +24,18 @@
         92
       ]
     },
-    "bootstrap object": {
+    "sam object": {
       "id": 2,
       "color": [
-        158,
         93,
-        146
+        190,
+        208
       ]
     }
   },
   "counts": {
-    "unlabeled_surface": 13124,
-    "bootstrap object": 26384
+    "unlabeled_surface": 26347,
+    "sam object": 13161
   },
   "status": "segmented",
   "inputContract": {

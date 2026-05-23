@@ -53,6 +53,8 @@ Commands:
                                              Project SAM/SAM3 masks into occupied voxel labels
   sam-select-mask-frames <capture> [max]      Select representative frames for SAM/SAM3 masking
   sam-prepare-mask-workspace [out]            Package selected frames for SAM/SAM3 masking
+  sam-auto-masks [--check] <capture> [max-frames] [label]
+                                             Generate real SAM masks from selected capture frames
   sam-generate-mask-assets <capture> [max-frames] [label]
                                              Generate SAM-compatible bootstrap mask assets
   sam-stage-voxel-semantics [min-votes]      Stage SAM-mask voxel labels for primary OpenMVS scenes
@@ -254,6 +256,16 @@ case "$1" in
       exit 1
     fi
     scripts/prepare_sam_mask_workspace.py "$@"
+    ;;
+  sam-auto-masks)
+    shift
+    if [[ -n "${SAM_MASK_PYTHON:-}" ]]; then
+      "$SAM_MASK_PYTHON" scripts/sam_auto_masks.py "$@"
+    elif [[ -x ".local/sam3d-mac-venv/bin/python" ]]; then
+      .local/sam3d-mac-venv/bin/python scripts/sam_auto_masks.py "$@"
+    else
+      scripts/sam_auto_masks.py "$@"
+    fi
     ;;
   sam-generate-mask-assets)
     shift

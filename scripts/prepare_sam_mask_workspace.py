@@ -33,6 +33,12 @@ Capture: `{capture}`
 
 Use the JPG files in `images/` as the input images.
 
+For local automatic SAM masks, run from the repository root:
+
+```sh
+SAM_MASK_MODEL=facebook/sam-vit-base SPLAT_SAM_ALLOW_DOWNLOAD=1 bin/splatter sam-auto-masks {capture}
+```
+
 ## Where To Put Mask Results
 
 Save binary mask PNG files under:
