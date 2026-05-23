@@ -118,6 +118,25 @@ def build_manifest(input_dir):
         "schemaVersion": 1,
         "inputDir": str(input_dir),
         "primaryTargets": primary_slugs,
+        "localPolicy": {
+            "primaryReconstruction": "COLMAP/OpenMVS/3DGS/voxel/mesh stages run locally on this Mac pipeline.",
+            "optionalExternalAccelerators": "SAM 3D Objects and TRELLIS.2 are optional branches and must not block primary viewer staging.",
+        },
+        "externalAccelerators": {
+            "sam3dObjects": {
+                "role": "optional image+mask to 3D object asset branch",
+                "execution": "external-cuda-worker",
+                "localStatus": "diagnostic/planning only on macOS",
+                "requiredWorker": "linux-64 NVIDIA CUDA GPU with 32GB+ VRAM and upstream checkpoints",
+                "viewerIntegration": "stage returned PLY/GIF/objects.json outputs when available",
+            },
+            "trellis2": {
+                "role": "optional generated asset branch",
+                "execution": "external-cuda-worker for image-to-3D",
+                "localStatus": "not a local MLX drop-in",
+                "viewerIntegration": "stage returned mesh/gaussian outputs when available",
+            },
+        },
         "stages": [
             "capture variants",
             "COLMAP ranking",

@@ -336,6 +336,8 @@ openmvs_sweep_all_output=$(SPLAT_OPENMVS_SWEEP_ALL_DRY_RUN=1 "$cli" openmvs-swee
 printf '%s\n' "$openmvs_sweep_all_output" | grep -q "candidates"
 pipeline_manifest_output=$("$cli" pipeline-manifest input)
 printf '%s\n' "$pipeline_manifest_output" | grep -q '"primaryTargets"'
+printf '%s\n' "$pipeline_manifest_output" | grep -q '"externalAccelerators"'
+printf '%s\n' "$pipeline_manifest_output" | grep -q '"external-cuda-worker"'
 printf '%s\n' "$pipeline_manifest_output" | grep -q '"optional TRELLIS.2 branch"'
 printf '%s\n' "$pipeline_manifest_output" | grep -q '"optional SAM 3D object reconstruction branch"'
 missing_input_manifest_output=$("$cli" pipeline-manifest missing-input-dir)
@@ -354,10 +356,12 @@ printf '%s\n' "$trellis_check" | grep -q 'MLX would require a model/runtime port
 sam3d_plan=$("$cli" sam3d-reconstruct "$checkpoint_dir/sample_1000.ply" "$checkpoint_dir/masks")
 printf '%s\n' "$sam3d_plan" | grep -q '"backend": "sam3d-remote"'
 printf '%s\n' "$sam3d_plan" | grep -q 'remote command not configured'
+printf '%s\n' "$sam3d_plan" | grep -q 'external-cuda-worker'
 printf '%s\n' "$sam3d_plan" | grep -q '"label": "target object"'
 sam3d_check=$("$cli" sam3d-reconstruct --check)
 printf '%s\n' "$sam3d_check" | grep -q '"backend": "sam3d-preflight"'
 printf '%s\n' "$sam3d_check" | grep -q 'imageMaskTo3D'
+printf '%s\n' "$sam3d_check" | grep -q 'external-cuda-worker'
 printf '%s\n' "$sam3d_check" | grep -q 'not a native semantic classifier'
 sam3d_multi_check=$("$cli" sam3d-multi-gif --check)
 printf '%s\n' "$sam3d_multi_check" | grep -q '"mode": "sam3d-multi-object-gif-check"'

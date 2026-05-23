@@ -48,6 +48,7 @@ def mlx_status():
 
 def environment_report():
     torch = torch_status()
+    local_supported = bool(platform.system() == "Linux" and torch.get("cuda"))
     return {
         "platform": {"system": platform.system(), "machine": platform.machine()},
         "pythonModules": {
@@ -59,8 +60,19 @@ def environment_report():
             "imageMaskTo3D": "The upstream object pipeline takes an image and object mask, then reconstructs a 3D object asset.",
             "classification": "SAM 3D Objects is not a native semantic classifier; this adapter treats mask labels or wrapper objects.json metadata as object classes.",
         },
+        "recommendedExecution": {
+            "mode": "external-cuda-worker",
+            "localMacRole": "prepare representative images, masks, manifests, and viewer staging metadata; do not block the local reconstruction pipeline on SAM 3D.",
+            "workerRole": "run upstream PyTorch/CUDA SAM 3D Objects inference and return PLY/GIF/objects.json outputs.",
+        },
+        "workerRequirements": {
+            "os": "linux-64",
+            "gpu": "NVIDIA CUDA GPU",
+            "vram": "32GB+ recommended by upstream setup",
+            "packages": ["PyTorch CUDA", "spconv-cu121", "SAM 3D Objects checkpoints"],
+        },
         "localImageMaskTo3D": {
-            "possible": bool(platform.system() == "Linux" and torch.get("cuda")),
+            "possible": local_supported,
             "reason": "upstream setup requires linux-64, an NVIDIA GPU with at least 32GB VRAM, and gated model checkpoints",
         },
         "mlxAcceleration": {
@@ -77,7 +89,7 @@ def selected_backend():
         raise ValueError("SAM3D_BACKEND must be auto, local, or remote")
     if backend != "auto":
         return backend
-    if os.environ.get("SAM3D_LOCAL_COMMAND", "").strip():
+    if environment_report()["localImageMaskTo3D"]["possible"] and os.environ.get("SAM3D_LOCAL_COMMAND", "").strip():
         return "local"
     return "remote"
 
@@ -169,6 +181,13 @@ def main():
         return 2
 
     command = command_for(image_path, mask_dir, output_dir, backend)
+    if backend == "local" and not report["environment"]["localImageMaskTo3D"]["possible"] and os.environ.get("SAM3D_ALLOW_UNSUPPORTED_LOCAL", "0") != "1":
+        report["status"] = "local backend unsupported on this machine"
+        report["configure"] = "Use SAM3D_BACKEND=remote with a Linux/CUDA worker, or set SAM3D_ALLOW_UNSUPPORTED_LOCAL=1 only for a custom experimental local port."
+        report["exampleWrapper"] = "ssh sam3d-host /opt/sam3d/run_objects.sh"
+        print(json.dumps(report, indent=2))
+        return 0
+
     if not command:
         report["status"] = f"{backend} command not configured"
         report["configure"] = f"Set SAM3D_{backend.upper()}_COMMAND to a wrapper that accepts: <input-image> <mask-dir> <output-dir>"
