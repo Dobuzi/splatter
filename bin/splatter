@@ -51,6 +51,8 @@ Commands:
   voxel-stage-semantics                      Stage semantic voxel labels for primary OpenMVS scenes
   sam-mask-voxel-segment <voxels.json> <colmap-sparse> <mask-dir> <summary.json> <semantic.ply> [min-votes]
                                              Project SAM/SAM3 masks into occupied voxel labels
+  sam-generate-mask-assets <capture> [max-frames] [label]
+                                             Generate SAM-compatible bootstrap mask assets
   sam-stage-voxel-semantics [min-votes]      Stage SAM-mask voxel labels for primary OpenMVS scenes
   voxel-improve-primary [res-list]           Sweep and stage best primary voxel grids
   surface-reconstruct <capture> [model]      Run COLMAP dense depth, fusion, and mesh
@@ -238,6 +240,10 @@ case "$1" in
   sam-mask-voxel-segment)
     shift
     scripts/sam_mask_voxel_project.py "$@"
+    ;;
+  sam-generate-mask-assets)
+    shift
+    scripts/generate_sam_mask_assets.py "$@"
     ;;
   sam-stage-voxel-semantics)
     shift

@@ -270,6 +270,13 @@ For voxel-level semantics, the highest-quality local integration point is to pro
 # Stage SAM-mask semantic voxels for primary targets when masks are present.
 bin/splatter sam-stage-voxel-semantics
 
+# If no SAM/SAM3 masks are available yet, create SAM-compatible bootstrap masks
+# from representative registered frames. These are replaceable placeholders,
+# not real SAM model outputs.
+bin/splatter sam-generate-mask-assets img-9142-fps2 24 bootstrap_object
+bin/splatter sam-generate-mask-assets img-9205-fps1-pinhole 32 bootstrap_object
+bin/splatter sam-stage-voxel-semantics
+
 # Or run one projection directly.
 bin/splatter sam-mask-voxel-segment \
   public/assets/img-9142-openmvs-occupancy-r144-m2-d1.json \

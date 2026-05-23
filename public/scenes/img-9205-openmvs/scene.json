@@ -6,7 +6,7 @@
   "fileSize": "2.48 MB",
   "capture": "img-9205-fps1-pinhole, 158 frames, 80 COLMAP images",
   "training": "OpenMVS CPU dense, 709193 dense points, 32988 vertices, 58090 faces",
-  "delivery": "Largest-Component Textured Mesh 2.48 MB; dense point cloud 5.01 MB; occupancy voxels 578.91 KB; free-space mask 276.63 KB; navigable mask 6.68 KB; semantic voxels 912.41 KB",
+  "delivery": "Largest-Component Textured Mesh 2.48 MB; dense point cloud 5.01 MB; occupancy voxels 578.91 KB; free-space mask 276.63 KB; navigable mask 6.68 KB; semantic voxels 912.41 KB; SAM-mask semantic voxels 617.52 KB",
   "viewer": {
     "background": [
       0.02,
@@ -171,12 +171,36 @@
     },
     "samSemanticVoxels": {
       "method": "sam-mask-multiview-projection",
-      "status": "missing SAM masks",
+      "status": "segmented",
       "maskDir": "captures/img-9205-fps1-pinhole/sam_masks",
-      "inputContract": {
-        "layoutA": "sam_masks/<label>/<frame_stem>.png",
-        "layoutB": "sam_masks/<frame_stem>__<label>.png",
-        "threshold": "mask pixel > 127"
+      "minVotes": 1,
+      "maskFrames": 32,
+      "matchedMaskFrames": 32,
+      "maskFiles": 32,
+      "labeledVoxels": 26384,
+      "surfaceVoxels": 39508,
+      "labelCoverage": 0.6678141135972461,
+      "labels": {
+        "unlabeled_surface": {
+          "id": 1,
+          "color": [
+            226,
+            180,
+            92
+          ]
+        },
+        "bootstrap object": {
+          "id": 2,
+          "color": [
+            158,
+            93,
+            146
+          ]
+        }
+      },
+      "counts": {
+        "unlabeled_surface": 13124,
+        "bootstrap object": 26384
       }
     }
   },
@@ -202,5 +226,7 @@
   "freeSpaceGridAssetUrl": "assets/img-9205-openmvs-free-space-r144-m1-d2.ply",
   "navigableGridAssetUrl": "assets/img-9205-openmvs-navigable-r144-m1-d2.ply",
   "semanticVoxelUrl": "assets/img-9205-openmvs-semantic-r144-m1-d2.json",
-  "semanticVoxelAssetUrl": "assets/img-9205-openmvs-semantic-r144-m1-d2.ply"
+  "semanticVoxelAssetUrl": "assets/img-9205-openmvs-semantic-r144-m1-d2.ply",
+  "samSemanticVoxelUrl": "assets/img-9205-openmvs-sam-semantic-r144-m1-d2.json",
+  "samSemanticVoxelAssetUrl": "assets/img-9205-openmvs-sam-semantic-r144-m1-d2.ply"
 }

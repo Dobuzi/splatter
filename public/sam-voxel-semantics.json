@@ -7,11 +7,50 @@
       "capture": "img-9142-fps2",
       "maskDir": "captures/img-9142-fps2/sam_masks",
       "sparseModel": "captures/img-9142-fps2/colmap/sparse/0",
-      "status": "missing SAM masks",
-      "nextAction": "write SAM/SAM3 mask PNGs into captures/img-9142-fps2/sam_masks",
+      "samSemanticVoxelUrl": "assets/img-9142-openmvs-sam-semantic-r144-m2-d1.json",
+      "samSemanticVoxelAssetUrl": "assets/img-9142-openmvs-sam-semantic-r144-m2-d1.ply",
+      "assetBytes": 721041,
+      "schemaVersion": 1,
+      "method": "sam-mask-multiview-projection",
+      "occupancySource": "public/assets/img-9142-openmvs-occupancy-r144-m2-d1.json",
+      "cameraSource": "captures/img-9142-fps2/colmap/sparse/0",
+      "semanticAsset": "public/assets/img-9142-openmvs-sam-semantic-r144-m2-d1.ply",
+      "minVotes": 1,
+      "registeredImages": 59,
+      "maskFrames": 24,
+      "matchedMaskFrames": 24,
+      "maskFiles": 24,
+      "projectedVoxelTests": 305842,
+      "positiveVotes": 32298,
+      "labeledVoxels": 17530,
+      "surfaceVoxels": 45052,
+      "labelCoverage": 0.38910592204563615,
+      "labels": {
+        "unlabeled_surface": {
+          "id": 1,
+          "color": [
+            226,
+            180,
+            92
+          ]
+        },
+        "bootstrap object": {
+          "id": 2,
+          "color": [
+            158,
+            93,
+            146
+          ]
+        }
+      },
+      "counts": {
+        "unlabeled_surface": 27522,
+        "bootstrap object": 17530
+      },
+      "status": "segmented",
       "inputContract": {
-        "layoutA": "sam_masks/<label>/<frame_stem>.png",
-        "layoutB": "sam_masks/<frame_stem>__<label>.png",
+        "layoutA": "masks/<label>/<frame_stem>.png",
+        "layoutB": "masks/<frame_stem>__<label>.png",
         "threshold": "mask pixel > 127"
       }
     },
@@ -20,11 +59,50 @@
       "capture": "img-9205-fps1-pinhole",
       "maskDir": "captures/img-9205-fps1-pinhole/sam_masks",
       "sparseModel": "captures/img-9205-fps1-pinhole/colmap/sparse/0",
-      "status": "missing SAM masks",
-      "nextAction": "write SAM/SAM3 mask PNGs into captures/img-9205-fps1-pinhole/sam_masks",
+      "samSemanticVoxelUrl": "assets/img-9205-openmvs-sam-semantic-r144-m1-d2.json",
+      "samSemanticVoxelAssetUrl": "assets/img-9205-openmvs-sam-semantic-r144-m1-d2.ply",
+      "assetBytes": 632337,
+      "schemaVersion": 1,
+      "method": "sam-mask-multiview-projection",
+      "occupancySource": "public/assets/img-9205-openmvs-occupancy-r144-m1-d2.json",
+      "cameraSource": "captures/img-9205-fps1-pinhole/colmap/sparse/0",
+      "semanticAsset": "public/assets/img-9205-openmvs-sam-semantic-r144-m1-d2.ply",
+      "minVotes": 1,
+      "registeredImages": 80,
+      "maskFrames": 32,
+      "matchedMaskFrames": 32,
+      "maskFiles": 32,
+      "projectedVoxelTests": 255533,
+      "positiveVotes": 62818,
+      "labeledVoxels": 26384,
+      "surfaceVoxels": 39508,
+      "labelCoverage": 0.6678141135972461,
+      "labels": {
+        "unlabeled_surface": {
+          "id": 1,
+          "color": [
+            226,
+            180,
+            92
+          ]
+        },
+        "bootstrap object": {
+          "id": 2,
+          "color": [
+            158,
+            93,
+            146
+          ]
+        }
+      },
+      "counts": {
+        "unlabeled_surface": 13124,
+        "bootstrap object": 26384
+      },
+      "status": "segmented",
       "inputContract": {
-        "layoutA": "sam_masks/<label>/<frame_stem>.png",
-        "layoutB": "sam_masks/<frame_stem>__<label>.png",
+        "layoutA": "masks/<label>/<frame_stem>.png",
+        "layoutB": "masks/<frame_stem>__<label>.png",
         "threshold": "mask pixel > 127"
       }
     }
