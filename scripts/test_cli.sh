@@ -35,6 +35,7 @@ fi
 "$cli" --help | grep -q "voxel-stage-semantics"
 "$cli" --help | grep -q "sam-mask-voxel-segment"
 "$cli" --help | grep -q "sam-select-mask-frames"
+"$cli" --help | grep -q "sam-prepare-mask-workspace"
 "$cli" --help | grep -q "sam-generate-mask-assets"
 "$cli" --help | grep -q "sam-stage-voxel-semantics"
 "$cli" --help | grep -q "voxel-improve-primary"

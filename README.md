@@ -275,6 +275,9 @@ bin/splatter sam-stage-voxel-semantics
 bin/splatter sam-select-mask-frames img-9142-fps2 24
 bin/splatter sam-select-mask-frames img-9205-fps1-pinhole 32
 
+# Package the selected frames, expected mask paths, and per-package README files.
+bin/splatter sam-prepare-mask-workspace
+
 # If no SAM/SAM3 masks are available yet, create SAM-compatible bootstrap masks
 # from representative registered frames. These are replaceable placeholders,
 # not real SAM model outputs.

@@ -52,6 +52,7 @@ Commands:
   sam-mask-voxel-segment <voxels.json> <colmap-sparse> <mask-dir> <summary.json> <semantic.ply> [min-votes]
                                              Project SAM/SAM3 masks into occupied voxel labels
   sam-select-mask-frames <capture> [max]      Select representative frames for SAM/SAM3 masking
+  sam-prepare-mask-workspace [out]            Package selected frames for SAM/SAM3 masking
   sam-generate-mask-assets <capture> [max-frames] [label]
                                              Generate SAM-compatible bootstrap mask assets
   sam-stage-voxel-semantics [min-votes]      Stage SAM-mask voxel labels for primary OpenMVS scenes
@@ -245,6 +246,14 @@ case "$1" in
   sam-select-mask-frames)
     shift
     scripts/select_sam_mask_frames.py "$@"
+    ;;
+  sam-prepare-mask-workspace)
+    shift
+    if (( $# > 1 )); then
+      echo "Usage: splatter sam-prepare-mask-workspace [output-dir]" >&2
+      exit 1
+    fi
+    scripts/prepare_sam_mask_workspace.py "$@"
     ;;
   sam-generate-mask-assets)
     shift
