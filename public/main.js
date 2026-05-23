@@ -24,9 +24,43 @@ const pipelineStatus = document.querySelector('#pipelineStatus');
 const pipelineSummary = document.querySelector('#pipelineSummary');
 const tools = document.querySelector('#tools');
 const sceneSelect = document.querySelector('#sceneSelect');
+const hud = document.querySelector('#hud');
+const hudDetails = document.querySelector('#hudDetails');
+const hudDetailsToggle = document.querySelector('#hudDetailsToggle');
 
 function setStatus(message) {
   status.textContent = message;
+}
+
+function defaultHudDetailsCollapsed() {
+  return window.matchMedia('(max-width: 620px)').matches;
+}
+
+function hudDetailsStorageKey(config) {
+  return `splatter:hud-details:${config.assetUrl}`;
+}
+
+function setHudDetailsCollapsed(collapsed) {
+  if (!hud || !hudDetails || !hudDetailsToggle) {
+    return;
+  }
+  hud.dataset.detailsCollapsed = String(collapsed);
+  hudDetailsToggle.textContent = collapsed ? 'Show' : 'Hide';
+  hudDetailsToggle.setAttribute('aria-expanded', String(!collapsed));
+}
+
+function installHudDetailsToggle(config) {
+  if (!hudDetailsToggle) {
+    return;
+  }
+  const storageKey = hudDetailsStorageKey(config);
+  const saved = localStorage.getItem(storageKey);
+  setHudDetailsCollapsed(saved === null ? defaultHudDetailsCollapsed() : saved === 'collapsed');
+  hudDetailsToggle.addEventListener('click', () => {
+    const collapsed = hud?.dataset.detailsCollapsed !== 'true';
+    setHudDetailsCollapsed(collapsed);
+    localStorage.setItem(storageKey, collapsed ? 'collapsed' : 'expanded');
+  });
 }
 
 function setMetadata(config) {
@@ -1157,6 +1191,7 @@ async function boot() {
 
   title.textContent = config.title || 'Gaussian Splat Viewer';
   setStatus('Loading scene');
+  installHudDetailsToggle(config);
   setMetadata(config);
   setPipelineStatus(pipelineManifest, activeScene, config);
   setPipelineSummary(pipelineManifest);

@@ -61,6 +61,9 @@ if (!indexHtml.includes('data-action="render-free-space"') || !indexHtml.include
 if (!indexHtml.includes('id="pipelineSummary"')) {
   failures.push('viewer is missing the pipeline summary surface');
 }
+if (!indexHtml.includes('id="hudDetailsToggle"') || !indexHtml.includes('id="hudDetails"')) {
+  failures.push('viewer is missing the collapsible HUD details controls');
+}
 if (!pipelineManifest.localPolicy || pipelineManifest.externalAccelerators?.sam3dObjects?.execution !== 'external-cuda-worker') {
   failures.push('pipeline manifest must expose local policy and external accelerator status');
 }
@@ -72,6 +75,9 @@ if (!mainJs.includes('freeSpaceGridAssetUrl') || !mainJs.includes('navigableGrid
 }
 if (!mainJs.includes('setPipelineSummary') || !mainJs.includes('pipelineSummaryItems')) {
   failures.push('viewer is missing pipeline summary rendering');
+}
+if (!mainJs.includes('installHudDetailsToggle') || !mainJs.includes('detailsCollapsed')) {
+  failures.push('viewer is missing persisted HUD details collapse handling');
 }
 if (!mainJs.includes('scene.label || scene.input || scene.id')) {
   failures.push('scene selector should prefer distinct scene labels over raw input names');
